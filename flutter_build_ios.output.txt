@@ -1,0 +1,411 @@
+ % flutter build ios
+Building com.example.covidTrends for device (ios-release)...
+Signing iOS app for device deployment using developer identity: "Apple Development: Stephen Roe (9B3RB3KKSX)"
+Running pod install...                                             12.2s
+CocoaPods' output:
+↳
+      Preparing
+
+    Analyzing dependencies
+
+    Inspecting targets to integrate
+      Using `ARCHS` setting to build architectures of target `Pods-Runner`: (``)
+
+    Finding Podfile changes
+      A Flutter
+      A cloud_firestore
+      A firebase_core
+
+    Fetching external sources
+    -> Fetching podspec for `Flutter` from `Flutter`
+    -> Fetching podspec for `cloud_firestore` from `.symlinks/plugins/cloud_firestore/ios`
+    cloud_firestore: Using Firebase SDK version '7.3.0' defined in 'firebase_core'
+    -> Fetching podspec for `firebase_core` from `.symlinks/plugins/firebase_core/ios`
+    firebase_core: Using Firebase SDK version '7.3.0' defined in 'firebase_core'
+
+    Resolving dependencies of `Podfile`
+      CDN: trunk Relative path: CocoaPods-version.yml exists! Returning local because checking is only perfomed in repo update
+      CDN: trunk Relative path: all_pods_versions_0_3_5.txt exists! Returning local because checking is only perfomed in repo update
+      CDN: trunk Relative path: Specs/0/3/5/Firebase/7.10.0/Firebase.podspec.json exists! Returning local because checking is only
+      perfomed in repo update
+      CDN: trunk Relative path: Specs/0/3/5/Firebase/7.3.0/Firebase.podspec.json exists! Returning local because checking is only
+      perfomed in repo update
+      CDN: trunk Relative path: Specs/0/3/5/Firebase/7.3.0/Firebase.podspec.json exists! Returning local because checking is only
+      perfomed in repo update
+      CDN: trunk Relative path: all_pods_versions_0_9_f.txt exists! Returning local because checking is only perfomed in repo update
+      CDN: trunk Relative path: Specs/0/9/f/FirebaseFirestore/7.10.0/FirebaseFirestore.podspec.json exists! Returning local because
+      checking is only perfomed in repo update
+      CDN: trunk Relative path: all_pods_versions_8_b_d.txt exists! Returning local because checking is only perfomed in repo update
+      CDN: trunk Relative path: Specs/8/b/d/FirebaseCore/7.10.0/FirebaseCore.podspec.json exists! Returning local because checking is
+      only perfomed in repo update
+      CDN: trunk Relative path: Specs/0/9/f/FirebaseFirestore/7.3.0/FirebaseFirestore.podspec.json exists! Returning local because
+      checking is only perfomed in repo update
+      CDN: trunk Relative path: all_pods_versions_3_8_6.txt exists! Returning local because checking is only perfomed in repo update
+      CDN: trunk Relative path: Specs/3/8/6/abseil/1.20210324.0/abseil.podspec.json exists! Returning local because checking is only
+      perfomed in repo update
+      CDN: trunk Relative path: Specs/3/8/6/abseil/0.20200225.0/abseil.podspec.json exists! Returning local because checking is only
+      perfomed in repo update
+      CDN: trunk Relative path: Specs/3/8/6/abseil/0.20200225.0/abseil.podspec.json exists! Returning local because checking is only
+      perfomed in repo update
+      CDN: trunk Relative path: Specs/3/8/6/abseil/0.20200225.0/abseil.podspec.json exists! Returning local because checking is only
+      perfomed in repo update
+      CDN: trunk Relative path: Specs/3/8/6/abseil/0.20200225.0/abseil.podspec.json exists! Returning local because checking is only
+      perfomed in repo update
+      CDN: trunk Relative path: Specs/3/8/6/abseil/0.20200225.0/abseil.podspec.json exists! Returning local because checking is only
+      perfomed in repo update
+      CDN: trunk Relative path: Specs/3/8/6/abseil/0.20200225.0/abseil.podspec.json exists! Returning local because checking is only
+      perfomed in repo update
+      CDN: trunk Relative path: Specs/3/8/6/abseil/0.20200225.0/abseil.podspec.json exists! Returning local because checking is only
+      perfomed in repo update
+      CDN: trunk Relative path: all_pods_versions_c_8_7.txt exists! Returning local because checking is only perfomed in repo update
+      CDN: trunk Relative path: Specs/c/8/7/gRPC-C++/1.37.0/gRPC-C++.podspec.json exists! Returning local because checking is only
+      perfomed in repo update
+      CDN: trunk Relative path: all_pods_versions_a_d_a.txt exists! Returning local because checking is only perfomed in repo update
+      CDN: trunk Relative path: Specs/a/d/a/leveldb-library/1.22.1/leveldb-library.podspec.json exists! Returning local because
+      checking is only perfomed in repo update
+      CDN: trunk Relative path: all_pods_versions_6_1_e.txt exists! Returning local because checking is only perfomed in repo update
+      CDN: trunk Relative path: Specs/6/1/e/nanopb/2.30908.0/nanopb.podspec.json exists! Returning local because checking is only
+      perfomed in repo update
+      CDN: trunk Relative path: Specs/6/1/e/nanopb/2.30906.0/nanopb.podspec.json exists! Returning local because checking is only
+      perfomed in repo update
+      CDN: trunk Relative path: Specs/6/1/e/nanopb/2.30906.0/nanopb.podspec.json exists! Returning local because checking is only
+      perfomed in repo update
+      CDN: trunk Relative path: Specs/6/1/e/nanopb/2.30906.0/nanopb.podspec.json exists! Returning local because checking is only
+      perfomed in repo update
+      CDN: trunk Relative path: Specs/3/8/6/abseil/0.20200225.0/abseil.podspec.json exists! Returning local because checking is only
+      perfomed in repo update
+      CDN: trunk Relative path: Specs/3/8/6/abseil/0.20200225.0/abseil.podspec.json exists! Returning local because checking is only
+      perfomed in repo update
+      CDN: trunk Relative path: Specs/3/8/6/abseil/0.20200225.0/abseil.podspec.json exists! Returning local because checking is only
+      perfomed in repo update
+      CDN: trunk Relative path: Specs/3/8/6/abseil/0.20200225.0/abseil.podspec.json exists! Returning local because checking is only
+      perfomed in repo update
+      CDN: trunk Relative path: Specs/3/8/6/abseil/0.20200225.0/abseil.podspec.json exists! Returning local because checking is only
+      perfomed in repo update
+      CDN: trunk Relative path: Specs/3/8/6/abseil/0.20200225.0/abseil.podspec.json exists! Returning local because checking is only
+      perfomed in repo update
+      CDN: trunk Relative path: Specs/3/8/6/abseil/0.20200225.0/abseil.podspec.json exists! Returning local because checking is only
+      perfomed in repo update
+      CDN: trunk Relative path: Specs/3/8/6/abseil/0.20200225.0/abseil.podspec.json exists! Returning local because checking is only
+      perfomed in repo update
+      CDN: trunk Relative path: Specs/3/8/6/abseil/0.20200225.0/abseil.podspec.json exists! Returning local because checking is only
+      perfomed in repo update
+      CDN: trunk Relative path: Specs/8/b/d/FirebaseCore/7.3.0/FirebaseCore.podspec.json exists! Returning local because checking is
+      only perfomed in repo update
+      CDN: trunk Relative path: all_pods_versions_0_8_4.txt exists! Returning local because checking is only perfomed in repo update
+      CDN: trunk Relative path: Specs/0/8/4/GoogleUtilities/7.3.1/GoogleUtilities.podspec.json exists! Returning local because
+      checking is only perfomed in repo update
+      CDN: trunk Relative path: Specs/0/8/4/GoogleUtilities/7.0.0/GoogleUtilities.podspec.json exists! Returning local because
+      checking is only perfomed in repo update
+      CDN: trunk Relative path: Specs/0/8/4/GoogleUtilities/7.1.0/GoogleUtilities.podspec.json exists! Returning local because
+      checking is only perfomed in repo update
+      CDN: trunk Relative path: Specs/0/8/4/GoogleUtilities/7.1.1/GoogleUtilities.podspec.json exists! Returning local because
+      checking is only perfomed in repo update
+      CDN: trunk Relative path: Specs/0/8/4/GoogleUtilities/7.2.0/GoogleUtilities.podspec.json exists! Returning local because
+      checking is only perfomed in repo update
+      CDN: trunk Relative path: Specs/0/8/4/GoogleUtilities/7.2.2/GoogleUtilities.podspec.json exists! Returning local because
+      checking is only perfomed in repo update
+      CDN: trunk Relative path: Specs/0/8/4/GoogleUtilities/7.3.0/GoogleUtilities.podspec.json exists! Returning local because
+      checking is only perfomed in repo update
+      CDN: trunk Relative path: Specs/0/8/4/GoogleUtilities/7.3.1/GoogleUtilities.podspec.json exists! Returning local because
+      checking is only perfomed in repo update
+      CDN: trunk Relative path: Specs/0/8/4/GoogleUtilities/7.0.0/GoogleUtilities.podspec.json exists! Returning local because
+      checking is only perfomed in repo update
+      CDN: trunk Relative path: Specs/0/8/4/GoogleUtilities/7.1.0/GoogleUtilities.podspec.json exists! Returning local because
+      checking is only perfomed in repo update
+      CDN: trunk Relative path: Specs/0/8/4/GoogleUtilities/7.1.1/GoogleUtilities.podspec.json exists! Returning local because
+      checking is only perfomed in repo update
+      CDN: trunk Relative path: Specs/0/8/4/GoogleUtilities/7.2.0/GoogleUtilities.podspec.json exists! Returning local because
+      checking is only perfomed in repo update
+      CDN: trunk Relative path: Specs/0/8/4/GoogleUtilities/7.2.2/GoogleUtilities.podspec.json exists! Returning local because
+      checking is only perfomed in repo update
+      CDN: trunk Relative path: Specs/0/8/4/GoogleUtilities/7.3.0/GoogleUtilities.podspec.json exists! Returning local because
+      checking is only perfomed in repo update
+      CDN: trunk Relative path: Specs/0/8/4/GoogleUtilities/7.3.1/GoogleUtilities.podspec.json exists! Returning local because
+      checking is only perfomed in repo update
+      CDN: trunk Relative path: all_pods_versions_8_3_c.txt exists! Returning local because checking is only perfomed in repo update
+      CDN: trunk Relative path: Specs/8/3/c/FirebaseCoreDiagnostics/7.10.0/FirebaseCoreDiagnostics.podspec.json exists! Returning
+      local because checking is only perfomed in repo update
+      CDN: trunk Relative path: Specs/8/b/d/FirebaseCore/7.10.0/FirebaseCore.podspec.json exists! Returning local because checking is
+      only perfomed in repo update
+      CDN: trunk Relative path: Specs/8/b/d/FirebaseCore/7.9.0/FirebaseCore.podspec.json exists! Returning local because checking is
+      only perfomed in repo update
+      CDN: trunk Relative path: Specs/8/b/d/FirebaseCore/7.8.0/FirebaseCore.podspec.json exists! Returning local because checking is
+      only perfomed in repo update
+      CDN: trunk Relative path: Specs/8/b/d/FirebaseCore/7.7.0/FirebaseCore.podspec.json exists! Returning local because checking is
+      only perfomed in repo update
+      CDN: trunk Relative path: Specs/8/b/d/FirebaseCore/7.6.0/FirebaseCore.podspec.json exists! Returning local because checking is
+      only perfomed in repo update
+      CDN: trunk Relative path: Specs/8/b/d/FirebaseCore/7.5.0/FirebaseCore.podspec.json exists! Returning local because checking is
+      only perfomed in repo update
+      CDN: trunk Relative path: Specs/8/b/d/FirebaseCore/7.4.0/FirebaseCore.podspec.json exists! Returning local because checking is
+      only perfomed in repo update
+      CDN: trunk Relative path: Specs/8/b/d/FirebaseCore/7.3.0/FirebaseCore.podspec.json exists! Returning local because checking is
+      only perfomed in repo update
+      CDN: trunk Relative path: Specs/8/b/d/FirebaseCore/7.2.0/FirebaseCore.podspec.json exists! Returning local because checking is
+      only perfomed in repo update
+      CDN: trunk Relative path: Specs/8/b/d/FirebaseCore/7.1.0/FirebaseCore.podspec.json exists! Returning local because checking is
+      only perfomed in repo update
+      CDN: trunk Relative path: Specs/8/b/d/FirebaseCore/7.0.0/FirebaseCore.podspec.json exists! Returning local because checking is
+      only perfomed in repo update
+      CDN: trunk Relative path: Specs/3/8/6/abseil/0.20200225.0/abseil.podspec.json exists! Returning local because checking is only
+      perfomed in repo update
+      CDN: trunk Relative path: Specs/3/8/6/abseil/0.20200225.0/abseil.podspec.json exists! Returning local because checking is only
+      perfomed in repo update
+      CDN: trunk Relative path: Specs/3/8/6/abseil/0.20200225.0/abseil.podspec.json exists! Returning local because checking is only
+      perfomed in repo update
+      CDN: trunk Relative path: Specs/3/8/6/abseil/0.20200225.0/abseil.podspec.json exists! Returning local because checking is only
+      perfomed in repo update
+      CDN: trunk Relative path: Specs/3/8/6/abseil/0.20200225.0/abseil.podspec.json exists! Returning local because checking is only
+      perfomed in repo update
+      CDN: trunk Relative path: Specs/3/8/6/abseil/0.20200225.0/abseil.podspec.json exists! Returning local because checking is only
+      perfomed in repo update
+      CDN: trunk Relative path: Specs/3/8/6/abseil/0.20200225.0/abseil.podspec.json exists! Returning local because checking is only
+      perfomed in repo update
+      CDN: trunk Relative path: Specs/3/8/6/abseil/0.20200225.0/abseil.podspec.json exists! Returning local because checking is only
+      perfomed in repo update
+      CDN: trunk Relative path: Specs/3/8/6/abseil/0.20200225.0/abseil.podspec.json exists! Returning local because checking is only
+      perfomed in repo update
+      CDN: trunk Relative path: Specs/3/8/6/abseil/0.20200225.0/abseil.podspec.json exists! Returning local because checking is only
+      perfomed in repo update
+      CDN: trunk Relative path: Specs/3/8/6/abseil/0.20200225.0/abseil.podspec.json exists! Returning local because checking is only
+      perfomed in repo update
+      CDN: trunk Relative path: Specs/3/8/6/abseil/0.20200225.0/abseil.podspec.json exists! Returning local because checking is only
+      perfomed in repo update
+      CDN: trunk Relative path: Specs/3/8/6/abseil/0.20200225.0/abseil.podspec.json exists! Returning local because checking is only
+      perfomed in repo update
+      CDN: trunk Relative path: Specs/3/8/6/abseil/0.20200225.0/abseil.podspec.json exists! Returning local because checking is only
+      perfomed in repo update
+      CDN: trunk Relative path: Specs/3/8/6/abseil/0.20200225.0/abseil.podspec.json exists! Returning local because checking is only
+      perfomed in repo update
+      CDN: trunk Relative path: Specs/3/8/6/abseil/0.20200225.0/abseil.podspec.json exists! Returning local because checking is only
+      perfomed in repo update
+      CDN: trunk Relative path: Specs/3/8/6/abseil/0.20200225.0/abseil.podspec.json exists! Returning local because checking is only
+      perfomed in repo update
+      CDN: trunk Relative path: Specs/3/8/6/abseil/0.20200225.0/abseil.podspec.json exists! Returning local because checking is only
+      perfomed in repo update
+      CDN: trunk Relative path: Specs/3/8/6/abseil/0.20200225.0/abseil.podspec.json exists! Returning local because checking is only
+      perfomed in repo update
+      CDN: trunk Relative path: Specs/3/8/6/abseil/0.20200225.0/abseil.podspec.json exists! Returning local because checking is only
+      perfomed in repo update
+      CDN: trunk Relative path: Specs/3/8/6/abseil/0.20200225.0/abseil.podspec.json exists! Returning local because checking is only
+      perfomed in repo update
+      CDN: trunk Relative path: Specs/3/8/6/abseil/0.20200225.0/abseil.podspec.json exists! Returning local because checking is only
+      perfomed in repo update
+      CDN: trunk Relative path: Specs/3/8/6/abseil/0.20200225.0/abseil.podspec.json exists! Returning local because checking is only
+      perfomed in repo update
+      CDN: trunk Relative path: Specs/3/8/6/abseil/0.20200225.0/abseil.podspec.json exists! Returning local because checking is only
+      perfomed in repo update
+      CDN: trunk Relative path: Specs/3/8/6/abseil/0.20200225.0/abseil.podspec.json exists! Returning local because checking is only
+      perfomed in repo update
+      CDN: trunk Relative path: Specs/3/8/6/abseil/0.20200225.0/abseil.podspec.json exists! Returning local because checking is only
+      perfomed in repo update
+      CDN: trunk Relative path: Specs/3/8/6/abseil/0.20200225.0/abseil.podspec.json exists! Returning local because checking is only
+      perfomed in repo update
+      CDN: trunk Relative path: Specs/3/8/6/abseil/0.20200225.0/abseil.podspec.json exists! Returning local because checking is only
+      perfomed in repo update
+      CDN: trunk Relative path: Specs/3/8/6/abseil/0.20200225.0/abseil.podspec.json exists! Returning local because checking is only
+      perfomed in repo update
+      CDN: trunk Relative path: Specs/a/d/a/leveldb-library/1.22.1/leveldb-library.podspec.json exists! Returning local because
+      checking is only perfomed in repo update
+      CDN: trunk Relative path: Specs/a/d/a/leveldb-library/1.22/leveldb-library.podspec.json exists! Returning local because checking
+      is only perfomed in repo update
+      CDN: trunk Relative path: Specs/c/8/7/gRPC-C++/1.28.2/gRPC-C++.podspec.json exists! Returning local because checking is only
+      perfomed in repo update
+      CDN: trunk Relative path: Specs/c/8/7/gRPC-C++/1.28.0/gRPC-C++.podspec.json exists! Returning local because checking is only
+      perfomed in repo update
+      CDN: trunk Relative path: Specs/c/8/7/gRPC-C++/1.28.2/gRPC-C++.podspec.json exists! Returning local because checking is only
+      perfomed in repo update
+      CDN: trunk Relative path: Specs/c/8/7/gRPC-C++/1.28.2/gRPC-C++.podspec.json exists! Returning local because checking is only
+      perfomed in repo update
+      CDN: trunk Relative path: all_pods_versions_9_1_0.txt exists! Returning local because checking is only perfomed in repo update
+      CDN: trunk Relative path: Specs/9/1/0/gRPC-Core/1.37.0/gRPC-Core.podspec.json exists! Returning local because checking is only
+      perfomed in repo update
+      CDN: trunk Relative path: Specs/3/8/6/abseil/0.20200225.0/abseil.podspec.json exists! Returning local because checking is only
+      perfomed in repo update
+      CDN: trunk Relative path: Specs/3/8/6/abseil/0.20200225.0/abseil.podspec.json exists! Returning local because checking is only
+      perfomed in repo update
+      CDN: trunk Relative path: Specs/3/8/6/abseil/0.20200225.0/abseil.podspec.json exists! Returning local because checking is only
+      perfomed in repo update
+      CDN: trunk Relative path: Specs/9/1/0/gRPC-Core/1.28.2/gRPC-Core.podspec.json exists! Returning local because checking is only
+      perfomed in repo update
+      CDN: trunk Relative path: Specs/9/1/0/gRPC-Core/1.28.2/gRPC-Core.podspec.json exists! Returning local because checking is only
+      perfomed in repo update
+      CDN: trunk Relative path: Specs/9/1/0/gRPC-Core/1.28.2/gRPC-Core.podspec.json exists! Returning local because checking is only
+      perfomed in repo update
+      CDN: trunk Relative path: Specs/3/8/6/abseil/0.20200225.0/abseil.podspec.json exists! Returning local because checking is only
+      perfomed in repo update
+      CDN: trunk Relative path: Specs/3/8/6/abseil/0.20200225.0/abseil.podspec.json exists! Returning local because checking is only
+      perfomed in repo update
+      CDN: trunk Relative path: all_pods_versions_f_8_8.txt exists! Returning local because checking is only perfomed in repo update
+      CDN: trunk Relative path: Specs/f/8/8/BoringSSL-GRPC/0.0.17/BoringSSL-GRPC.podspec.json exists! Returning local because checking
+      is only perfomed in repo update
+      CDN: trunk Relative path: Specs/f/8/8/BoringSSL-GRPC/0.0.7/BoringSSL-GRPC.podspec.json exists! Returning local because checking
+      is only perfomed in repo update
+      CDN: trunk Relative path: Specs/f/8/8/BoringSSL-GRPC/0.0.7/BoringSSL-GRPC.podspec.json exists! Returning local because checking
+      is only perfomed in repo update
+      CDN: trunk Relative path: Specs/f/8/8/BoringSSL-GRPC/0.0.7/BoringSSL-GRPC.podspec.json exists! Returning local because checking
+      is only perfomed in repo update
+      CDN: trunk Relative path: Specs/0/8/4/GoogleUtilities/7.3.1/GoogleUtilities.podspec.json exists! Returning local because
+      checking is only perfomed in repo update
+      CDN: trunk Relative path: all_pods_versions_0_b_5.txt exists! Returning local because checking is only perfomed in repo update
+      CDN: trunk Relative path: Specs/0/b/5/PromisesObjC/1.2.12/PromisesObjC.podspec.json exists! Returning local because checking is
+      only perfomed in repo update
+      CDN: trunk Relative path: Specs/8/3/c/FirebaseCoreDiagnostics/7.10.0/FirebaseCoreDiagnostics.podspec.json exists! Returning
+      local because checking is only perfomed in repo update
+      CDN: trunk Relative path: Specs/8/3/c/FirebaseCoreDiagnostics/7.9.0/FirebaseCoreDiagnostics.podspec.json exists! Returning local
+      because checking is only perfomed in repo update
+      CDN: trunk Relative path: Specs/8/3/c/FirebaseCoreDiagnostics/7.8.0/FirebaseCoreDiagnostics.podspec.json exists! Returning local
+      because checking is only perfomed in repo update
+      CDN: trunk Relative path: Specs/8/3/c/FirebaseCoreDiagnostics/7.7.0/FirebaseCoreDiagnostics.podspec.json exists! Returning local
+      because checking is only perfomed in repo update
+      CDN: trunk Relative path: Specs/8/3/c/FirebaseCoreDiagnostics/7.6.0/FirebaseCoreDiagnostics.podspec.json exists! Returning local
+      because checking is only perfomed in repo update
+      CDN: trunk Relative path: Specs/8/3/c/FirebaseCoreDiagnostics/7.5.0/FirebaseCoreDiagnostics.podspec.json exists! Returning local
+      because checking is only perfomed in repo update
+      CDN: trunk Relative path: Specs/8/3/c/FirebaseCoreDiagnostics/7.4.0/FirebaseCoreDiagnostics.podspec.json exists! Returning local
+      because checking is only perfomed in repo update
+      CDN: trunk Relative path: Specs/8/3/c/FirebaseCoreDiagnostics/7.3.0/FirebaseCoreDiagnostics.podspec.json exists! Returning local
+      because checking is only perfomed in repo update
+      CDN: trunk Relative path: Specs/8/3/c/FirebaseCoreDiagnostics/7.2.0/FirebaseCoreDiagnostics.podspec.json exists! Returning local
+      because checking is only perfomed in repo update
+      CDN: trunk Relative path: Specs/8/3/c/FirebaseCoreDiagnostics/7.1.0/FirebaseCoreDiagnostics.podspec.json exists! Returning local
+      because checking is only perfomed in repo update
+      CDN: trunk Relative path: Specs/8/3/c/FirebaseCoreDiagnostics/7.0.0/FirebaseCoreDiagnostics.podspec.json exists! Returning local
+      because checking is only perfomed in repo update
+      CDN: trunk Relative path: all_pods_versions_0_6_a.txt exists! Returning local because checking is only perfomed in repo update
+      CDN: trunk Relative path: Specs/0/6/a/GoogleDataTransport/8.4.0/GoogleDataTransport.podspec.json exists! Returning local because
+      checking is only perfomed in repo update
+      CDN: trunk Relative path: Specs/6/1/e/nanopb/2.30908.0/nanopb.podspec.json exists! Returning local because checking is only
+      perfomed in repo update
+      CDN: trunk Relative path: Specs/6/1/e/nanopb/2.30907.0/nanopb.podspec.json exists! Returning local because checking is only
+      perfomed in repo update
+      CDN: trunk Relative path: Specs/0/6/a/GoogleDataTransport/8.4.0/GoogleDataTransport.podspec.json exists! Returning local because
+      checking is only perfomed in repo update
+      CDN: trunk Relative path: Specs/0/6/a/GoogleDataTransport/8.3.1/GoogleDataTransport.podspec.json exists! Returning local because
+      checking is only perfomed in repo update
+      CDN: trunk Relative path: Specs/0/6/a/GoogleDataTransport/8.3.0/GoogleDataTransport.podspec.json exists! Returning local because
+      checking is only perfomed in repo update
+      CDN: trunk Relative path: Specs/0/6/a/GoogleDataTransport/8.2.0/GoogleDataTransport.podspec.json exists! Returning local because
+      checking is only perfomed in repo update
+      CDN: trunk Relative path: Specs/0/6/a/GoogleDataTransport/8.1.0/GoogleDataTransport.podspec.json exists! Returning local because
+      checking is only perfomed in repo update
+      CDN: trunk Relative path: Specs/0/6/a/GoogleDataTransport/8.0.1/GoogleDataTransport.podspec.json exists! Returning local because
+      checking is only perfomed in repo update
+      CDN: trunk Relative path: Specs/0/6/a/GoogleDataTransport/8.0.0/GoogleDataTransport.podspec.json exists! Returning local because
+      checking is only perfomed in repo update
+      CDN: trunk Relative path: Specs/0/8/4/GoogleUtilities/7.2.0/GoogleUtilities.podspec.json exists! Returning local because
+      checking is only perfomed in repo update
+      CDN: trunk Relative path: Specs/0/8/4/GoogleUtilities/7.2.2/GoogleUtilities.podspec.json exists! Returning local because
+      checking is only perfomed in repo update
+      CDN: trunk Relative path: Specs/0/8/4/GoogleUtilities/7.3.0/GoogleUtilities.podspec.json exists! Returning local because
+      checking is only perfomed in repo update
+      CDN: trunk Relative path: Specs/0/8/4/GoogleUtilities/7.3.1/GoogleUtilities.podspec.json exists! Returning local because
+      checking is only perfomed in repo update
+      CDN: trunk Relative path: Specs/0/b/5/PromisesObjC/1.2.12/PromisesObjC.podspec.json exists! Returning local because checking is
+      only perfomed in repo update
+      CDN: trunk Relative path: Specs/0/b/5/PromisesObjC/1.2.11/PromisesObjC.podspec.json exists! Returning local because checking is
+      only perfomed in repo update
+      CDN: trunk Relative path: Specs/0/b/5/PromisesObjC/1.2.10/PromisesObjC.podspec.json exists! Returning local because checking is
+      only perfomed in repo update
+      CDN: trunk Relative path: Specs/0/b/5/PromisesObjC/1.2.9/PromisesObjC.podspec.json exists! Returning local because checking is
+      only perfomed in repo update
+      CDN: trunk Relative path: Specs/0/b/5/PromisesObjC/1.2.8/PromisesObjC.podspec.json exists! Returning local because checking is
+      only perfomed in repo update
+      CDN: trunk Relative path: Specs/0/b/5/PromisesObjC/1.2.7/PromisesObjC.podspec.json exists! Returning local because checking is
+      only perfomed in repo update
+      CDN: trunk Relative path: Specs/0/b/5/PromisesObjC/1.2.6/PromisesObjC.podspec.json exists! Returning local because checking is
+      only perfomed in repo update
+      CDN: trunk Relative path: Specs/0/b/5/PromisesObjC/1.2.5/PromisesObjC.podspec.json exists! Returning local because checking is
+      only perfomed in repo update
+      CDN: trunk Relative path: Specs/0/b/5/PromisesObjC/1.2.4/PromisesObjC.podspec.json exists! Returning local because checking is
+      only perfomed in repo update
+      CDN: trunk Relative path: Specs/0/b/5/PromisesObjC/1.2.3/PromisesObjC.podspec.json exists! Returning local because checking is
+      only perfomed in repo update
+      CDN: trunk Relative path: Specs/0/b/5/PromisesObjC/1.2.2/PromisesObjC.podspec.json exists! Returning local because checking is
+      only perfomed in repo update
+      CDN: trunk Relative path: Specs/0/b/5/PromisesObjC/1.2.1/PromisesObjC.podspec.json exists! Returning local because checking is
+      only perfomed in repo update
+      CDN: trunk Relative path: Specs/0/b/5/PromisesObjC/1.2/PromisesObjC.podspec.json exists! Returning local because checking is
+      only perfomed in repo update
+
+    Comparing resolved specification to the sandbox manifest
+      A BoringSSL-GRPC
+      A Firebase
+      A FirebaseCore
+      A FirebaseCoreDiagnostics
+      A FirebaseFirestore
+      A Flutter
+      A GoogleDataTransport
+      A GoogleUtilities
+      A PromisesObjC
+      A abseil
+      A cloud_firestore
+      A firebase_core
+      A gRPC-C++
+      A gRPC-Core
+      A leveldb-library
+      A nanopb
+
+    Downloading dependencies
+
+    -> Installing BoringSSL-GRPC (0.0.7)
+     > Git download
+     > Git download
+         $ /usr/bin/git clone https://github.com/google/boringssl.git
+         /var/folders/6m/lz_6dkhn4t515t3pm9dmv27c0000gn/T/d20210411-8506-k9r3ta --template=
+
+    [!] Error installing BoringSSL-GRPC
+    [!] /usr/bin/git clone https://github.com/google/boringssl.git
+    /var/folders/6m/lz_6dkhn4t515t3pm9dmv27c0000gn/T/d20210411-8506-k9r3ta --template=
+
+    Cloning into '/var/folders/6m/lz_6dkhn4t515t3pm9dmv27c0000gn/T/d20210411-8506-k9r3ta'...
+    fatal: the remote end hung up unexpectedly
+
+    /Library/Ruby/Gems/2.6.0/gems/cocoapods-1.10.1/lib/cocoapods/downloader.rb:142:in `rescue in execute_command'
+    /Library/Ruby/Gems/2.6.0/gems/cocoapods-1.10.1/lib/cocoapods/downloader.rb:139:in `execute_command'
+    /Library/Ruby/Gems/2.6.0/gems/cocoapods-downloader-1.4.0/lib/cocoapods-downloader/base.rb:166:in `block in executable'
+    /Library/Ruby/Gems/2.6.0/gems/cocoapods-downloader-1.4.0/lib/cocoapods-downloader/git.rb:100:in `block in clone'
+    /Library/Ruby/Gems/2.6.0/gems/cocoapods-1.10.1/lib/cocoapods/downloader.rb:173:in `block in ui_sub_action'
+    /Library/Ruby/Gems/2.6.0/gems/cocoapods-1.10.1/lib/cocoapods/user_interface.rb:64:in `section'
+    /Library/Ruby/Gems/2.6.0/gems/cocoapods-1.10.1/lib/cocoapods/downloader.rb:172:in `ui_sub_action'
+    /Library/Ruby/Gems/2.6.0/gems/cocoapods-downloader-1.4.0/lib/cocoapods-downloader/git.rb:98:in `clone'
+    /Library/Ruby/Gems/2.6.0/gems/cocoapods-downloader-1.4.0/lib/cocoapods-downloader/git.rb:66:in `download!'
+    /Library/Ruby/Gems/2.6.0/gems/cocoapods-downloader-1.4.0/lib/cocoapods-downloader/base.rb:82:in `block in download'
+    /Library/Ruby/Gems/2.6.0/gems/cocoapods-1.10.1/lib/cocoapods/downloader.rb:157:in `block in ui_action'
+    /Library/Ruby/Gems/2.6.0/gems/cocoapods-1.10.1/lib/cocoapods/user_interface.rb:64:in `section'
+    /Library/Ruby/Gems/2.6.0/gems/cocoapods-1.10.1/lib/cocoapods/downloader.rb:156:in `ui_action'
+    /Library/Ruby/Gems/2.6.0/gems/cocoapods-downloader-1.4.0/lib/cocoapods-downloader/base.rb:80:in `download'
+    /Library/Ruby/Gems/2.6.0/gems/cocoapods-1.10.1/lib/cocoapods/downloader.rb:108:in `download_source'
+    /Library/Ruby/Gems/2.6.0/gems/cocoapods-1.10.1/lib/cocoapods/downloader.rb:75:in `download_request'
+    /Library/Ruby/Gems/2.6.0/gems/cocoapods-1.10.1/lib/cocoapods/downloader/cache.rb:171:in `download'
+    /Library/Ruby/Gems/2.6.0/gems/cocoapods-1.10.1/lib/cocoapods/downloader/cache.rb:154:in `block in uncached_pod'
+    /Library/Ruby/Gems/2.6.0/gems/cocoapods-1.10.1/lib/cocoapods/downloader/cache.rb:181:in `in_tmpdir'
+    /Library/Ruby/Gems/2.6.0/gems/cocoapods-1.10.1/lib/cocoapods/downloader/cache.rb:153:in `uncached_pod'
+    /Library/Ruby/Gems/2.6.0/gems/cocoapods-1.10.1/lib/cocoapods/downloader/cache.rb:33:in `download_pod'
+    /Library/Ruby/Gems/2.6.0/gems/cocoapods-1.10.1/lib/cocoapods/downloader.rb:42:in `download'
+    /Library/Ruby/Gems/2.6.0/gems/cocoapods-1.10.1/lib/cocoapods/installer/pod_source_installer.rb:118:in `download_source'
+    /Library/Ruby/Gems/2.6.0/gems/cocoapods-1.10.1/lib/cocoapods/installer/pod_source_installer.rb:69:in `install!'
+    /Library/Ruby/Gems/2.6.0/gems/cocoapods-1.10.1/lib/cocoapods/installer.rb:561:in `install_source_of_pod'
+    /Library/Ruby/Gems/2.6.0/gems/cocoapods-1.10.1/lib/cocoapods/installer.rb:512:in `block (2 levels) in install_pod_sources'
+    /Library/Ruby/Gems/2.6.0/gems/cocoapods-1.10.1/lib/cocoapods/user_interface.rb:86:in `titled_section'
+    /Library/Ruby/Gems/2.6.0/gems/cocoapods-1.10.1/lib/cocoapods/installer.rb:511:in `block in install_pod_sources'
+    /Library/Ruby/Gems/2.6.0/gems/cocoapods-1.10.1/lib/cocoapods/installer.rb:494:in `each'
+    /Library/Ruby/Gems/2.6.0/gems/cocoapods-1.10.1/lib/cocoapods/installer.rb:494:in `install_pod_sources'
+    /Library/Ruby/Gems/2.6.0/gems/cocoapods-1.10.1/lib/cocoapods/installer.rb:253:in `block in download_dependencies'
+    /Library/Ruby/Gems/2.6.0/gems/cocoapods-1.10.1/lib/cocoapods/user_interface.rb:64:in `section'
+    /Library/Ruby/Gems/2.6.0/gems/cocoapods-1.10.1/lib/cocoapods/installer.rb:252:in `download_dependencies'
+    /Library/Ruby/Gems/2.6.0/gems/cocoapods-1.10.1/lib/cocoapods/installer.rb:161:in `install!'
+    /Library/Ruby/Gems/2.6.0/gems/cocoapods-1.10.1/lib/cocoapods/command/install.rb:52:in `run'
+    /Library/Ruby/Gems/2.6.0/gems/claide-1.0.3/lib/claide/command.rb:334:in `run'
+    /Library/Ruby/Gems/2.6.0/gems/cocoapods-1.10.1/lib/cocoapods/command.rb:52:in `run'
+    /Library/Ruby/Gems/2.6.0/gems/cocoapods-1.10.1/bin/pod:55:in `<top (required)>'
+    /usr/local/bin/pod:23:in `load'
+    /usr/local/bin/pod:23:in `<main>'
+
+Error output from CocoaPods:
+↳
+         Cloning into '/var/folders/6m/lz_6dkhn4t515t3pm9dmv27c0000gn/T/d20210411-8506-k9r3ta'...
+         fatal: the remote end hung up unexpectedly
+
+Error running pod install
