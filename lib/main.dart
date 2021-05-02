@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 
-import 'covid_timeseries_model.dart';
-import 'simple_covid_chart.dart';
+import 'models/covid_timeseries_model.dart';
+import 'widgets/simple_covid_chart.dart';
 
 //import 'package:cloud_firestore/cloud_firestore.dart';
 
