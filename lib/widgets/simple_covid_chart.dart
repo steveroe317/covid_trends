@@ -2,7 +2,7 @@ import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'covid_timeseries_model.dart';
+import '../models/covid_timeseries_model.dart';
 
 class SimpleCovidChart extends StatelessWidget {
   final String seriesName;
