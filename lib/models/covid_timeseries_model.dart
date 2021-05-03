@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 
 class CovidTimeseriesModel with ChangeNotifier {
-  int _counter = 17;
   bool _initialized = false;
   List<int> worldConfirmed7Days;
   List<int> worldTimestamps;
@@ -33,28 +32,13 @@ class CovidTimeseriesModel with ChangeNotifier {
         }
       }
       worldConfirmed7Days = List<int>.from(worldMap['Confirmed 7-Day']);
-      _counter = worldTimestamps.length;
       notifyListeners();
     }
   }
 
-  void increment() {
-    _counter++;
-    notifyListeners();
-  }
-
-  void decrement() {
-    _counter--;
-    notifyListeners();
-  }
-
-  int get currentCount => _counter;
-
   bool get initialized => _initialized;
 
   List<int> get timestamps => worldTimestamps;
-
-  List<int> get confirmed7Days => worldConfirmed7Days;
 
   List<int> seriesData(String key) {
     if (worldData.containsKey(key)) {

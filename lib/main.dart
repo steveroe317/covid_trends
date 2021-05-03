@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'World Covid Trends'),
+      home: MyHomePage(title: 'Covid Trends'),
     );
   }
 }
@@ -82,12 +82,6 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed:
-            Provider.of<CovidTimeseriesModel>(context, listen: false).increment,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
