@@ -6,16 +6,17 @@ import '../models/covid_timeseries_model.dart';
 
 class SimpleCovidChart extends StatelessWidget {
   final String seriesName;
+  final Color seriesColor;
   final bool animate = true;
 
-  SimpleCovidChart(this.seriesName);
+  SimpleCovidChart(this.seriesName, this.seriesColor);
 
   @override
   Widget build(BuildContext context) {
     var timeseriesModel = Provider.of<CovidTimeseriesModel>(context);
     var timestamps = timeseriesModel.timestamps;
-    var confirmed7Days = timeseriesModel.seriesData(this.seriesName);
-    var seriesList = createTimeseries(timestamps, confirmed7Days);
+    var seriesData = timeseriesModel.seriesData(this.seriesName);
+    var seriesList = createTimeseries(timestamps, seriesData);
 
     return new charts.TimeSeriesChart(
       seriesList,
@@ -40,7 +41,8 @@ class SimpleCovidChart extends StatelessWidget {
     return [
       new charts.Series<TimeSeriesCovid, DateTime>(
         id: 'Sales',
-        colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
+        //colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
+        colorFn: (_, __) => charts.ColorUtil.fromDartColor(seriesColor),
         domainFn: (TimeSeriesCovid sales, _) => sales.time,
         measureFn: (TimeSeriesCovid sales, _) => sales.sales,
         data: data,

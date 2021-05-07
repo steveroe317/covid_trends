@@ -10,9 +10,16 @@
             "request": "attach"
         },
         {
-            "name": "covid_trends",
+            "name": "covid_trends debug",
             "request": "launch",
-            "type": "dart"
+            "type": "dart",
+            "flutterMode": "debug"
+        },
+        {
+            "name": "covid_trends release",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
         }
     ]
 }

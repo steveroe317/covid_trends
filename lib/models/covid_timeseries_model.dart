@@ -1,49 +1,46 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
+
+import 'admin_entity.dart';
 
 class CovidTimeseriesModel with ChangeNotifier {
   bool _initialized = false;
-  List<int> worldConfirmed7Days;
-  List<int> worldTimestamps;
-  var worldData = Map<String, List<int>>();
+  AdminEntity _rootEntity = AdminEntity.empty();
+  AdminEntity _currentEntity = AdminEntity.empty();
 
   void initialize() async {
     if (!_initialized) {
       _initialized = true;
-      final doc = await FirebaseFirestore.instance
-          .collection('time-series')
-          .doc('World')
-          .collection('entities')
-          .doc('US')
-          .collection('entities')
-          .doc('WA')
-          .collection('entities')
-          .doc('King')
-          .get();
-      if (!doc.exists) {
-        throw new Exception('Oops!  Doc doesn;t exist :(');
-      }
-      var worldMap = doc.data();
-      worldTimestamps =
-          List<Timestamp>.from(worldMap['Date']).map((x) => x.seconds).toList();
-      for (var key in worldMap.keys) {
-        if (key != "Date") {
-          worldData[key] = List<int>.from(worldMap[key]);
-        }
-      }
-      worldConfirmed7Days = List<int>.from(worldMap['Confirmed 7-Day']);
+      _rootEntity = await AdminEntity.create(['World'], null);
+      _currentEntity = _rootEntity;
+      notifyListeners();
+      await _rootEntity.loadSubEntities();
       notifyListeners();
     }
   }
 
   bool get initialized => _initialized;
 
-  List<int> get timestamps => worldTimestamps;
+  List<String> get path => _currentEntity.path;
 
-  List<int> seriesData(String key) {
-    if (worldData.containsKey(key)) {
-      return worldData[key];
+  AdminEntity get parent => _currentEntity.parent;
+
+  List<int> get timestamps => _currentEntity.timestamps;
+
+  List<int> seriesData(String key) => _currentEntity.seriesData(key);
+
+  List<String> get subEntityNames => _currentEntity.subEntityNames;
+
+  void openSubEntity(String name) async {
+    _currentEntity = _currentEntity.subEntity(name);
+    notifyListeners();
+    await _currentEntity.loadSubEntities();
+    notifyListeners();
+  }
+
+  void openParent() {
+    if (_currentEntity.parent != null) {
+      _currentEntity = _currentEntity.parent;
+      notifyListeners();
     }
-    return List<int>.filled(worldTimestamps.length, 0);
   }
 }

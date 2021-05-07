@@ -1,10 +1,9 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 import 'models/covid_timeseries_model.dart';
-import 'widgets/simple_covid_chart.dart';
+import 'widgets/simple_chart_page.dart';
 
 //import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -42,67 +41,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Covid Trends'),
+      home: SimpleChartPage(title: 'Covid Trends'),
     );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-  final String title;
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  @override
-  Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: ListView(
-          children: <Widget>[
-            LabelledSimpleCovidChart("Confirmed 7-Day"),
-            LabelledSimpleCovidChart("Deaths 7-Day"),
-            LabelledSimpleCovidChart("Confirmed"),
-            LabelledSimpleCovidChart("Deaths"),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class LabelledSimpleCovidChart extends StatelessWidget {
-  final String seriesName;
-
-  LabelledSimpleCovidChart(this.seriesName);
-
-  @override
-  build(BuildContext context) {
-    return Column(children: [
-      Padding(
-        padding: EdgeInsets.fromLTRB(32.0, 32.0, 32.0, 8.0),
-        child: SizedBox(
-          height: 200.0,
-          child: new SimpleCovidChart(seriesName),
-        ),
-      ),
-      Center(child: Text(seriesName)),
-    ]);
   }
 }
 
