@@ -22,12 +22,6 @@ class CovidTimeseriesModel with ChangeNotifier {
 
   List<String> get path => _currentEntity.path;
 
-  AdminEntity get parent => _currentEntity.parent;
-
-  List<int> get timestamps => _currentEntity.timestamps;
-
-  List<int> seriesData(String key) => _currentEntity.seriesData(key);
-
   List<String> get subEntityNames => _currentEntity.subEntityNames;
 
   void openSubEntity(String name) async {
@@ -37,10 +31,46 @@ class CovidTimeseriesModel with ChangeNotifier {
     notifyListeners();
   }
 
-  void openParent() {
-    if (_currentEntity.parent != null) {
-      _currentEntity = _currentEntity.parent;
+  AdminEntity _findEntity(List<String> path, AdminEntity entity) {
+    if (entity == null) {
+      if (path.first == 'World') {
+        return _findEntity(path.sublist(1), _rootEntity);
+      } else {
+        return null;
+      }
+    }
+    if (path.length == 0) {
+      return entity;
+    } else if (entity.subEntityNames.contains(path.first)) {
+      return _findEntity(path.sublist(1), entity.subEntity(path.first));
+    } else {
+      return null;
+    }
+  }
+
+  void openPath(List<String> path) {
+    var entity = _findEntity(path, null);
+    if (entity != null) {
+      _currentEntity = entity;
       notifyListeners();
+    }
+  }
+
+  List<int> entityTimestamps(List<String> path) {
+    var entity = _findEntity(path, null);
+    if (entity != null) {
+      return entity.timestamps;
+    } else {
+      return List<int>.empty();
+    }
+  }
+
+  List<int> entitySeriesData(List<String> path, String key) {
+    var entity = _findEntity(path, null);
+    if (entity != null) {
+      return entity.seriesData(key);
+    } else {
+      return List<int>.empty();
     }
   }
 }
