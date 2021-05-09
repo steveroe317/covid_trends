@@ -54,7 +54,7 @@ class CovidEntityList extends StatelessWidget {
         },
         style: ButtonStyle(
             foregroundColor: MaterialStateProperty.all<Color>(Colors.black)),
-        child: Text(x))));
+        child: Text(x, style: Theme.of(context).textTheme.headline6))));
     if (currentPath.length > 0) {
       entityList.insert(0, Divider());
     }
@@ -78,7 +78,7 @@ class CovidEntityList extends StatelessWidget {
               style: ButtonStyle(
                   foregroundColor:
                       MaterialStateProperty.all<Color>(Colors.black)),
-              child: Text(name)));
+              child: Text(name, style: Theme.of(context).textTheme.headline6)));
     }
     return ListView(children: entityList);
   }
