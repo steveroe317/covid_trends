@@ -13,8 +13,6 @@ class CovidTimeseriesModel with ChangeNotifier {
       _rootEntity = await AdminEntity.create(['World'], null);
       _currentEntity = _rootEntity;
       notifyListeners();
-      await _rootEntity.loadSubEntities();
-      notifyListeners();
     }
   }
 
@@ -22,16 +20,14 @@ class CovidTimeseriesModel with ChangeNotifier {
 
   List<String> get path => _currentEntity.path;
 
-  List<String> get subEntityNames => _currentEntity.subEntityNames;
-
-  void openSubEntity(String name) async {
-    _currentEntity = _currentEntity.subEntity(name);
-    notifyListeners();
-    await _currentEntity.loadSubEntities();
-    notifyListeners();
+  List<String> subEntityNames() {
+    return _currentEntity.subEntityNames();
   }
 
   AdminEntity _findEntity(List<String> path, AdminEntity entity) {
+    if (path.length == 0) {
+      return entity;
+    }
     if (entity == null) {
       if (path.first == 'World') {
         return _findEntity(path.sublist(1), _rootEntity);
@@ -39,20 +35,34 @@ class CovidTimeseriesModel with ChangeNotifier {
         return null;
       }
     }
-    if (path.length == 0) {
-      return entity;
-    } else if (entity.subEntityNames.contains(path.first)) {
+    if (entity.subEntityNames().contains(path.first)) {
       return _findEntity(path.sublist(1), entity.subEntity(path.first));
     } else {
       return null;
     }
   }
 
-  void openPath(List<String> path) {
+  void openPath(List<String> path) async {
     var entity = _findEntity(path, null);
     if (entity != null) {
       _currentEntity = entity;
       notifyListeners();
+    } else if (path.length > 1) {
+      var parent = _findEntity(path.sublist(0, path.length - 1), null);
+      if (parent != null) {
+        _currentEntity = await AdminEntity.create(path, parent);
+        notifyListeners();
+      }
+    }
+  }
+
+  void loadEntity(List<String> path) async {
+    if (_findEntity(path, null) == null && path.length > 1) {
+      var parent = _findEntity(path.sublist(0, path.length - 1), null);
+      if (parent != null) {
+        await AdminEntity.create(path, parent);
+        notifyListeners();
+      }
     }
   }
 
@@ -72,5 +82,23 @@ class CovidTimeseriesModel with ChangeNotifier {
     } else {
       return List<int>.empty();
     }
+  }
+
+  bool entityHasSubEntities(List<String> path) {
+    if (path.length == 0) {
+      return false;
+    }
+    if (path.length == 1) {
+      var entity = _findEntity(path, null);
+      if (entity != null) {
+        return entity.hasSubEntities;
+      }
+      return false;
+    }
+    var entity = _findEntity(path.sublist(0, path.length - 1), null);
+    if (entity != null) {
+      return entity.subEntityHasChildren(path.last);
+    }
+    return false;
   }
 }

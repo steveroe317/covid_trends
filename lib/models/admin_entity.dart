@@ -4,9 +4,8 @@ class AdminEntity {
   final List<String> _path;
   final List<int> _timestamps;
   final Map<String, List<int>> _timeseries;
-  List<String> _subEntityNames = [];
   Map<String, AdminEntity> _subEntities = {};
-  bool _subEntitiesLoaded = false;
+  Map<String, AdminSubEntityIndexData> _subEntityIndex = {};
   AdminEntity _parent;
 
   AdminEntity.empty()
@@ -14,7 +13,8 @@ class AdminEntity {
         _timestamps = <int>[],
         _timeseries = <String, List<int>>{};
 
-  AdminEntity._(this._path, this._timestamps, this._timeseries, this._parent);
+  AdminEntity._(this._path, this._timestamps, this._timeseries,
+      this._subEntityIndex, this._parent);
 
   static Future<AdminEntity> create(
       List<String> path, AdminEntity parent) async {
@@ -27,7 +27,13 @@ class AdminEntity {
     }
     var timestamps = _extractDocTimestamps(doc.data());
     var timeseries = _extractDocTimeseries(doc.data());
-    return AdminEntity._(path, timestamps, timeseries, parent);
+    var subEntityIndex = _extractDocSubEntityIndex(doc.data());
+    var entity =
+        AdminEntity._(path, timestamps, timeseries, subEntityIndex, parent);
+    if (parent != null) {
+      parent._subEntities[path.last] = entity;
+    }
+    return entity;
   }
 
   static String _docPath(path) {
@@ -50,11 +56,28 @@ class AdminEntity {
       Map<String, dynamic> docData) {
     var timeseries = Map<String, List<int>>();
     for (var key in docData.keys) {
-      if (key != "Date") {
+      if (key != "Date" && key != "Children") {
         timeseries[key] = List<int>.from(docData[key]);
       }
     }
     return timeseries;
+  }
+
+  static Map<String, AdminSubEntityIndexData> _extractDocSubEntityIndex(
+      Map<String, dynamic> docData) {
+    Map<String, AdminSubEntityIndexData> subEntityIndex = {};
+    Map<String, dynamic> docSubEntities = docData['Children'];
+    for (var child in docSubEntities.keys) {
+      Map<String, int> sortKeys = {};
+      Map<String, dynamic> childData = docData['Children'][child];
+      Map<String, dynamic> docSubEntityMetrics = childData['SortKeys'];
+      for (var metric in docSubEntityMetrics.keys) {
+        sortKeys[metric] = childData[metric];
+      }
+      bool hasChildren = childData['HasChildren'];
+      subEntityIndex[child] = AdminSubEntityIndexData(sortKeys, hasChildren);
+    }
+    return subEntityIndex;
   }
 
   List<String> get path => _path;
@@ -68,7 +91,20 @@ class AdminEntity {
     return List<int>.filled(_timestamps.length, 0);
   }
 
-  List<String> get subEntityNames => _subEntityNames;
+  bool get hasSubEntities => _subEntityIndex.isNotEmpty;
+
+  List<String> subEntityNames() {
+    var names = List<String>.from(_subEntityIndex.keys);
+    names.sort();
+    return names;
+  }
+
+  bool subEntityHasChildren(String name) {
+    if (_subEntityIndex.containsKey(name)) {
+      return _subEntityIndex[name].hasChildren;
+    }
+    return false;
+  }
 
   AdminEntity get parent => _parent;
 
@@ -76,25 +112,16 @@ class AdminEntity {
     if (_subEntities.containsKey(name)) {
       return _subEntities[name];
     }
-    return this;
+    return null;
   }
+}
 
-  Future<void> loadSubEntities() async {
-    if (!_subEntitiesLoaded) {
-      final docPath = _docPath(_path);
-      final collectionPath = docPath + '/entities';
-      final query =
-          await FirebaseFirestore.instance.collection(collectionPath).get();
-      for (var doc in query.docs) {
-        var subEntityPath = [..._path, doc.id];
-        var timestamps = _extractDocTimestamps(doc.data());
-        var timeseries = _extractDocTimeseries(doc.data());
-        _subEntities[doc.id] =
-            AdminEntity._(subEntityPath, timestamps, timeseries, this);
-      }
-      _subEntityNames = List<String>.from(_subEntities.keys);
-      _subEntityNames.sort();
-      _subEntitiesLoaded = true;
-    }
-  }
+class AdminSubEntityIndexData {
+  final Map<String, int> _sortKeys;
+  final bool _hasChildren;
+  AdminSubEntityIndexData(this._sortKeys, this._hasChildren);
+
+  Map<String, int> get sortKeys => _sortKeys;
+
+  bool get hasChildren => _hasChildren;
 }

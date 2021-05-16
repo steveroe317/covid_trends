@@ -16,16 +16,8 @@ class CovidEntitiesPage extends StatefulWidget {
 class _CovidEntitiesPageState extends State<CovidEntitiesPage> {
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
       body: CovidEntityList(),
@@ -37,49 +29,87 @@ class CovidEntityList extends StatelessWidget {
   @override
   build(BuildContext context) {
     var timeseriesModel = Provider.of<CovidTimeseriesModel>(context);
-    var subEntityNames = timeseriesModel.subEntityNames;
+    final subEntityNames = timeseriesModel.subEntityNames();
     final currentPath = timeseriesModel.path;
-    var entityList = List<Widget>.from(subEntityNames.map((x) => TextButton(
-        onPressed: () {
-          timeseriesModel.openSubEntity(x);
-        },
-        onLongPress: () {
-          final List<String> path = [...currentPath, x];
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) =>
-                    SimpleChartPage(title: '$x Covid Trends', path: path)),
-          );
-        },
-        style: ButtonStyle(
-            foregroundColor: MaterialStateProperty.all<Color>(Colors.black)),
-        child: Text(x, style: Theme.of(context).textTheme.headline6))));
+
+    var entityList = List<Widget>.from(subEntityNames.map((name) =>
+        EntityListItem([...currentPath, name], _CovidEntityListItemDepth.leaf,
+            timeseriesModel)));
+
     if (currentPath.length > 0) {
       entityList.insert(0, Divider());
     }
+
     for (var index = currentPath.length - 1; index >= 0; --index) {
-      final name = currentPath[index];
       final path = currentPath.sublist(0, index + 1);
-      entityList.insert(
-          0,
-          TextButton(
-              onPressed: () {
-                timeseriesModel.openPath(path);
-              },
-              onLongPress: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => SimpleChartPage(
-                          title: '$name Covid Trends', path: path)),
-                );
-              },
-              style: ButtonStyle(
-                  foregroundColor:
-                      MaterialStateProperty.all<Color>(Colors.black)),
-              child: Text(name, style: Theme.of(context).textTheme.headline6)));
+      var depth = (index == 0)
+          ? _CovidEntityListItemDepth.root
+          : _CovidEntityListItemDepth.stem;
+      entityList.insert(0, EntityListItem(path, depth, timeseriesModel));
     }
+
     return ListView(children: entityList);
+  }
+}
+
+enum _CovidEntityListItemDepth { root, stem, leaf }
+
+class EntityListItem extends StatelessWidget {
+  final List<String> _path;
+  final _CovidEntityListItemDepth _depth;
+  final CovidTimeseriesModel _timeseriesModel;
+
+  EntityListItem(this._path, this._depth, this._timeseriesModel);
+
+  @override
+  build(BuildContext context) {
+    return Row(
+      children: [
+        Opacity(
+          opacity: (_depth != _CovidEntityListItemDepth.root &&
+                  _timeseriesModel.entityHasSubEntities(_path))
+              ? 1.0
+              : 0.0,
+          child: IconButton(
+              icon: Icon(_depth == _CovidEntityListItemDepth.leaf
+                  ? Icons.expand_more
+                  : Icons.expand_less),
+              onPressed: (_depth == _CovidEntityListItemDepth.stem)
+                  ? _openParentPath
+                  : (_depth == _CovidEntityListItemDepth.leaf &&
+                          _timeseriesModel.entityHasSubEntities(_path))
+                      ? _openPath
+                      : null),
+        ),
+        TextButton(
+            onPressed: () {
+              _timeseriesModel.loadEntity(_path);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => SimpleChartPage(
+                        title: '${_path.last} Covid Trends', path: _path)),
+              );
+            },
+            style: ButtonStyle(
+                foregroundColor:
+                    MaterialStateProperty.all<Color>(Colors.black)),
+            child:
+                Text(_path.last, style: Theme.of(context).textTheme.headline6)),
+      ],
+    );
+  }
+
+  void _openParentPath() {
+    var parentPath = _path.sublist(0, _path.length - 1);
+    print(parentPath);
+    _timeseriesModel.openPath(_path.sublist(0, _path.length - 1));
+    print(_path);
+  }
+
+  void _openPath() {
+    print(_path);
+    _timeseriesModel.openPath(_path);
+    print(_path);
   }
 }
