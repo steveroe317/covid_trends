@@ -5,24 +5,16 @@ import 'admin_entity.dart';
 class CovidTimeseriesModel with ChangeNotifier {
   bool _initialized = false;
   AdminEntity _rootEntity = AdminEntity.empty();
-  AdminEntity _currentEntity = AdminEntity.empty();
 
   void initialize() async {
     if (!_initialized) {
       _initialized = true;
       _rootEntity = await AdminEntity.create(['World'], null);
-      _currentEntity = _rootEntity;
       notifyListeners();
     }
   }
 
   bool get initialized => _initialized;
-
-  List<String> get path => _currentEntity.path;
-
-  List<String> subEntityNames() {
-    return _currentEntity.subEntityNames();
-  }
 
   AdminEntity _findEntity(List<String> path, AdminEntity entity) {
     if (path.length == 0) {
@@ -39,20 +31,6 @@ class CovidTimeseriesModel with ChangeNotifier {
       return _findEntity(path.sublist(1), entity.subEntity(path.first));
     } else {
       return null;
-    }
-  }
-
-  void openPath(List<String> path) async {
-    var entity = _findEntity(path, null);
-    if (entity != null) {
-      _currentEntity = entity;
-      notifyListeners();
-    } else if (path.length > 1) {
-      var parent = _findEntity(path.sublist(0, path.length - 1), null);
-      if (parent != null) {
-        _currentEntity = await AdminEntity.create(path, parent);
-        notifyListeners();
-      }
     }
   }
 
@@ -100,5 +78,14 @@ class CovidTimeseriesModel with ChangeNotifier {
       return entity.subEntityHasChildren(path.last);
     }
     return false;
+  }
+
+  List<String> entitySubEntityNames(List<String> path) {
+    var entity = _findEntity(path, null);
+    if (entity != null) {
+      return entity.subEntityNames();
+    } else {
+      return List<String>.empty();
+    }
   }
 }

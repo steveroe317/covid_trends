@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../models/covid_entities_page_model.dart';
 import '../models/covid_timeseries_model.dart';
 import 'simple_chart_page.dart';
 
@@ -20,7 +21,9 @@ class _CovidEntitiesPageState extends State<CovidEntitiesPage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: CovidEntityList(),
+      body: ChangeNotifierProvider(
+          create: (context) => CovidEntitiesPageModel(['World']),
+          child: CovidEntityList()),
     );
   }
 }
@@ -29,12 +32,14 @@ class CovidEntityList extends StatelessWidget {
   @override
   build(BuildContext context) {
     var timeseriesModel = Provider.of<CovidTimeseriesModel>(context);
-    final subEntityNames = timeseriesModel.subEntityNames();
-    final currentPath = timeseriesModel.path;
+    var entityPathModel = Provider.of<CovidEntitiesPageModel>(context);
+    final subEntityNames =
+        timeseriesModel.entitySubEntityNames(entityPathModel.path());
+    final currentPath = entityPathModel.path();
 
     var entityList = List<Widget>.from(subEntityNames.map((name) =>
         EntityListItem([...currentPath, name], _CovidEntityListItemDepth.leaf,
-            timeseriesModel)));
+            entityPathModel, timeseriesModel)));
 
     if (currentPath.length > 0) {
       entityList.insert(0, Divider());
@@ -45,7 +50,8 @@ class CovidEntityList extends StatelessWidget {
       var depth = (index == 0)
           ? _CovidEntityListItemDepth.root
           : _CovidEntityListItemDepth.stem;
-      entityList.insert(0, EntityListItem(path, depth, timeseriesModel));
+      entityList.insert(
+          0, EntityListItem(path, depth, entityPathModel, timeseriesModel));
     }
 
     return ListView(children: entityList);
@@ -58,8 +64,10 @@ class EntityListItem extends StatelessWidget {
   final List<String> _path;
   final _CovidEntityListItemDepth _depth;
   final CovidTimeseriesModel _timeseriesModel;
+  final CovidEntitiesPageModel _entityPathModel;
 
-  EntityListItem(this._path, this._depth, this._timeseriesModel);
+  EntityListItem(
+      this._path, this._depth, this._entityPathModel, this._timeseriesModel);
 
   @override
   build(BuildContext context) {
@@ -101,15 +109,11 @@ class EntityListItem extends StatelessWidget {
   }
 
   void _openParentPath() {
-    var parentPath = _path.sublist(0, _path.length - 1);
-    print(parentPath);
-    _timeseriesModel.openPath(_path.sublist(0, _path.length - 1));
-    print(_path);
+    _entityPathModel.setPath(_path.sublist(0, _path.length - 1));
   }
 
   void _openPath() {
-    print(_path);
-    _timeseriesModel.openPath(_path);
-    print(_path);
+    _timeseriesModel.loadEntity(_path);
+    _entityPathModel.setPath(_path);
   }
 }
