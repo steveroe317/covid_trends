@@ -4,6 +4,8 @@ import 'package:firebase_core/firebase_core.dart';
 
 import 'models/covid_timeseries_model.dart';
 import 'widgets/covid_entities_page.dart';
+import 'widgets/initialization_error_page.dart';
+import 'widgets/loading_page.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -40,41 +42,6 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: CovidEntitiesPage(title: 'Covid Trends'),
-    );
-  }
-}
-
-class LoadingPage extends StatelessWidget {
-  @override
-  build(BuildContext context) {
-    return Container(
-        color: Colors.grey,
-        child: Center(
-            child: Column(mainAxisSize: MainAxisSize.min, children: [
-          Padding(
-              padding: EdgeInsets.all(16.0),
-              child: Text('Loading Covid Trends',
-                  textDirection: TextDirection.ltr, textScaleFactor: 2.0)),
-          Padding(
-              padding: EdgeInsets.all(16.0),
-              child: CircularProgressIndicator(
-                  backgroundColor: Colors.blue.shade200)),
-        ])));
-  }
-}
-
-class InitializationErrorPage extends StatelessWidget {
-  @override
-  build(BuildContext context) {
-    return Container(
-      color: Colors.grey,
-      child: Center(
-          child: Text('Error loading Covid Trends',
-              textDirection: TextDirection.ltr,
-              textAlign: TextAlign.center,
-              textScaleFactor: 2.0,
-              style:
-                  TextStyle(color: Colors.black, fontWeight: FontWeight.bold))),
     );
   }
 }
