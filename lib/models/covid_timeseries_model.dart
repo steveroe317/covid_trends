@@ -27,7 +27,7 @@ class CovidTimeseriesModel with ChangeNotifier {
         return null;
       }
     }
-    if (entity.subEntityNames().contains(path.first)) {
+    if (entity.subEntitiesContains(path.first)) {
       return _findEntity(path.sublist(1), entity.subEntity(path.first));
     } else {
       return null;

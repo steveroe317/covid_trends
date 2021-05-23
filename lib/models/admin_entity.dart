@@ -93,6 +93,10 @@ class AdminEntity {
 
   bool get hasSubEntities => _subEntityIndex.isNotEmpty;
 
+  bool subEntitiesContains(String name) {
+    return _subEntityIndex.containsKey(name);
+  }
+
   List<String> subEntityNames() {
     var names = List<String>.from(_subEntityIndex.keys);
     names.sort();
