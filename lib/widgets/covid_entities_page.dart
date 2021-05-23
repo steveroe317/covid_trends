@@ -35,22 +35,24 @@ class CovidEntityList extends StatelessWidget {
         timeseriesModel.entitySubEntityNames(entityPathModel.path());
     final currentPath = entityPathModel.path();
 
-    var entityList = List<Widget>.from(subEntityNames.map((name) =>
-        EntityListItem([...currentPath, name], _CovidEntityListItemDepth.leaf,
-            entityPathModel, timeseriesModel)));
+    List<Widget> entityList = [];
 
-    if (currentPath.length > 0) {
-      entityList.insert(0, Divider());
-    }
-
-    for (var index = currentPath.length - 1; index >= 0; --index) {
+    for (var index = 0; index < currentPath.length; ++index) {
       final path = currentPath.sublist(0, index + 1);
       var depth = (index == 0)
           ? _CovidEntityListItemDepth.root
           : _CovidEntityListItemDepth.stem;
-      entityList.insert(
-          0, EntityListItem(path, depth, entityPathModel, timeseriesModel));
+      entityList
+          .add(EntityListItem(path, depth, entityPathModel, timeseriesModel));
     }
+
+    if (currentPath.length > 0) {
+      entityList.add(Divider());
+    }
+
+    entityList.addAll(List<Widget>.from(subEntityNames.map((name) =>
+        EntityListItem([...currentPath, name], _CovidEntityListItemDepth.leaf,
+            entityPathModel, timeseriesModel))));
 
     return ListView(children: entityList);
   }
