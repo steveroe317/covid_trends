@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 import 'models/covid_timeseries_model.dart';
+import 'models/covid_entities_page_model.dart';
 import 'widgets/covid_entities_page.dart';
 import 'widgets/initialization_error_page.dart';
 import 'widgets/loading_page.dart';
@@ -37,11 +38,13 @@ class MyApp extends StatelessWidget {
 
   MaterialApp buildMaterialApp() {
     return MaterialApp(
-      title: 'Covid Trends',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: CovidEntitiesPage(title: 'Covid Trends'),
-    );
+        title: 'Covid Trends',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: ChangeNotifierProvider(
+          create: (context) => CovidEntitiesPageModel(['World']),
+          child: CovidEntitiesPage(title: 'Covid Trends'),
+        ));
   }
 }

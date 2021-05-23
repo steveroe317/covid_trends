@@ -21,9 +21,7 @@ class _CovidEntitiesPageState extends State<CovidEntitiesPage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: ChangeNotifierProvider(
-          create: (context) => CovidEntitiesPageModel(['World']),
-          child: CovidEntityList()),
+      body: CovidEntityList(),
     );
   }
 }
