@@ -31,8 +31,8 @@ class CovidEntityList extends StatelessWidget {
   build(BuildContext context) {
     var timeseriesModel = Provider.of<CovidTimeseriesModel>(context);
     var entityPathModel = Provider.of<CovidEntitiesPageModel>(context);
-    final subEntityNames =
-        timeseriesModel.entitySubEntityNames(entityPathModel.path());
+    final childNames = timeseriesModel.entityChildNames(entityPathModel.path(),
+        sortBy: 'Confirmed 7-Day', sortUp: false);
     final currentPath = entityPathModel.path();
 
     List<Widget> entityList = [];
@@ -50,9 +50,11 @@ class CovidEntityList extends StatelessWidget {
       entityList.add(Divider());
     }
 
-    entityList.addAll(List<Widget>.from(subEntityNames.map((name) =>
-        EntityListItem([...currentPath, name], _CovidEntityListItemDepth.leaf,
-            entityPathModel, timeseriesModel))));
+    entityList.addAll(List<Widget>.from(childNames.map((name) => EntityListItem(
+        [...currentPath, name],
+        _CovidEntityListItemDepth.leaf,
+        entityPathModel,
+        timeseriesModel))));
 
     return ListView(children: entityList);
   }
@@ -75,7 +77,7 @@ class EntityListItem extends StatelessWidget {
       children: [
         Opacity(
           opacity: (_depth != _CovidEntityListItemDepth.root &&
-                  _timeseriesModel.entityHasSubEntities(_path))
+                  _timeseriesModel.entityHasChildren(_path))
               ? 1.0
               : 0.0,
           child: IconButton(
@@ -85,7 +87,7 @@ class EntityListItem extends StatelessWidget {
               onPressed: (_depth == _CovidEntityListItemDepth.stem)
                   ? _openParentPath
                   : (_depth == _CovidEntityListItemDepth.leaf &&
-                          _timeseriesModel.entityHasSubEntities(_path))
+                          _timeseriesModel.entityHasChildren(_path))
                       ? _openPath
                       : null),
         ),

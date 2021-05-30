@@ -4,8 +4,8 @@ class AdminEntity {
   final List<String> _path;
   final List<int> _timestamps;
   final Map<String, List<int>> _timeseries;
-  Map<String, AdminEntity> _subEntities = {};
-  Map<String, AdminSubEntityIndexData> _subEntityIndex = {};
+  Map<String, AdminEntity> _children = {};
+  Map<String, AdminChildIndexData> _childIndex = {};
   AdminEntity _parent;
 
   AdminEntity.empty()
@@ -14,7 +14,7 @@ class AdminEntity {
         _timeseries = <String, List<int>>{};
 
   AdminEntity._(this._path, this._timestamps, this._timeseries,
-      this._subEntityIndex, this._parent);
+      this._childIndex, this._parent);
 
   static Future<AdminEntity> create(
       List<String> path, AdminEntity parent) async {
@@ -27,11 +27,11 @@ class AdminEntity {
     }
     var timestamps = _extractDocTimestamps(doc.data());
     var timeseries = _extractDocTimeseries(doc.data());
-    var subEntityIndex = _extractDocSubEntityIndex(doc.data());
+    var childIndex = _extractDocChildIndex(doc.data());
     var entity =
-        AdminEntity._(path, timestamps, timeseries, subEntityIndex, parent);
+        AdminEntity._(path, timestamps, timeseries, childIndex, parent);
     if (parent != null) {
-      parent._subEntities[path.last] = entity;
+      parent._children[path.last] = entity;
     }
     return entity;
   }
@@ -63,21 +63,21 @@ class AdminEntity {
     return timeseries;
   }
 
-  static Map<String, AdminSubEntityIndexData> _extractDocSubEntityIndex(
+  static Map<String, AdminChildIndexData> _extractDocChildIndex(
       Map<String, dynamic> docData) {
-    Map<String, AdminSubEntityIndexData> subEntityIndex = {};
-    Map<String, dynamic> docSubEntities = docData['Children'];
-    for (var child in docSubEntities.keys) {
+    Map<String, AdminChildIndexData> childIndex = {};
+    Map<String, dynamic> docChildren = docData['Children'];
+    for (var child in docChildren.keys) {
       Map<String, int> sortKeys = {};
       Map<String, dynamic> childData = docData['Children'][child];
-      Map<String, dynamic> docSubEntityMetrics = childData['SortKeys'];
-      for (var metric in docSubEntityMetrics.keys) {
-        sortKeys[metric] = childData[metric];
+      Map<String, dynamic> docChildMetrics = childData['SortKeys'];
+      for (var metric in docChildMetrics.keys) {
+        sortKeys[metric] = docChildMetrics[metric];
       }
       bool hasChildren = childData['HasChildren'];
-      subEntityIndex[child] = AdminSubEntityIndexData(sortKeys, hasChildren);
+      childIndex[child] = AdminChildIndexData(sortKeys, hasChildren);
     }
-    return subEntityIndex;
+    return childIndex;
   }
 
   List<String> get path => _path;
@@ -91,39 +91,53 @@ class AdminEntity {
     return List<int>.filled(_timestamps.length, 0);
   }
 
-  bool get hasSubEntities => _subEntityIndex.isNotEmpty;
+  bool get hasChildren => _childIndex.isNotEmpty;
 
-  bool subEntitiesContains(String name) {
-    return _subEntityIndex.containsKey(name);
+  bool childrenContains(String name) {
+    return _childIndex.containsKey(name);
   }
 
-  List<String> subEntityNames() {
-    var names = List<String>.from(_subEntityIndex.keys);
-    names.sort();
+  List<String> childNames({String sortBy = '', bool sortUp = true}) {
+    var names = List<String>.from(_childIndex.keys);
+
+    names.sort((String a, String b) {
+      if (_childIndex[a].sortKeys.containsKey(sortBy) &&
+          _childIndex[b].sortKeys.containsKey(sortBy) &&
+          _childIndex[a].sortKeys[sortBy] != _childIndex[b].sortKeys[sortBy]) {
+        var keyCompare =
+            _childIndex[a].sortKeys[sortBy] - _childIndex[b].sortKeys[sortBy];
+        if (!sortUp) {
+          keyCompare = -keyCompare;
+        }
+        return keyCompare;
+      }
+      return a.compareTo(b);
+    });
+
     return names;
   }
 
-  bool subEntityHasChildren(String name) {
-    if (_subEntityIndex.containsKey(name)) {
-      return _subEntityIndex[name].hasChildren;
+  bool childHasChildren(String name) {
+    if (_childIndex.containsKey(name)) {
+      return _childIndex[name].hasChildren;
     }
     return false;
   }
 
   AdminEntity get parent => _parent;
 
-  AdminEntity subEntity(String name) {
-    if (_subEntities.containsKey(name)) {
-      return _subEntities[name];
+  AdminEntity child(String name) {
+    if (_children.containsKey(name)) {
+      return _children[name];
     }
     return null;
   }
 }
 
-class AdminSubEntityIndexData {
+class AdminChildIndexData {
   final Map<String, int> _sortKeys;
   final bool _hasChildren;
-  AdminSubEntityIndexData(this._sortKeys, this._hasChildren);
+  AdminChildIndexData(this._sortKeys, this._hasChildren);
 
   Map<String, int> get sortKeys => _sortKeys;
 

@@ -27,8 +27,8 @@ class CovidTimeseriesModel with ChangeNotifier {
         return null;
       }
     }
-    if (entity.subEntitiesContains(path.first)) {
-      return _findEntity(path.sublist(1), entity.subEntity(path.first));
+    if (entity.childrenContains(path.first)) {
+      return _findEntity(path.sublist(1), entity.child(path.first));
     } else {
       return null;
     }
@@ -62,28 +62,29 @@ class CovidTimeseriesModel with ChangeNotifier {
     }
   }
 
-  bool entityHasSubEntities(List<String> path) {
+  bool entityHasChildren(List<String> path) {
     if (path.length == 0) {
       return false;
     }
     if (path.length == 1) {
       var entity = _findEntity(path, null);
       if (entity != null) {
-        return entity.hasSubEntities;
+        return entity.hasChildren;
       }
       return false;
     }
     var entity = _findEntity(path.sublist(0, path.length - 1), null);
     if (entity != null) {
-      return entity.subEntityHasChildren(path.last);
+      return entity.childHasChildren(path.last);
     }
     return false;
   }
 
-  List<String> entitySubEntityNames(List<String> path) {
+  List<String> entityChildNames(List<String> path,
+      {String sortBy = '', bool sortUp = true}) {
     var entity = _findEntity(path, null);
     if (entity != null) {
-      return entity.subEntityNames();
+      return entity.childNames(sortBy: sortBy, sortUp: sortUp);
     } else {
       return List<String>.empty();
     }
