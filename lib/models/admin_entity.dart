@@ -97,6 +97,13 @@ class AdminEntity {
     return _childIndex.containsKey(name);
   }
 
+  List<String> childMetricNames() {
+    if (_childIndex.isNotEmpty) {
+      return List<String>.from(_childIndex.values.first._sortKeys.keys);
+    }
+    return List<String>.empty();
+  }
+
   List<String> childNames({String sortBy = '', bool sortUp = true}) {
     var names = List<String>.from(_childIndex.keys);
 
@@ -115,6 +122,16 @@ class AdminEntity {
     });
 
     return names;
+  }
+
+  int childSortMetricValue(String childName, String sortMetric) {
+    if (!_childIndex.containsKey(childName)) {
+      return 0;
+    }
+    if (!_childIndex[childName].sortKeys.containsKey(sortMetric)) {
+      return 0;
+    }
+    return _childIndex[childName].sortKeys[sortMetric];
   }
 
   bool childHasChildren(String name) {

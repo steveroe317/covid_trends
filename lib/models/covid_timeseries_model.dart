@@ -89,4 +89,22 @@ class CovidTimeseriesModel with ChangeNotifier {
       return List<String>.empty();
     }
   }
+
+  int entitySortMetric(List<String> path, String sortMetric) {
+    if (path.length < 2) {
+      return 0;
+    }
+
+    var parentPath = path.sublist(0, path.length - 1);
+    var entity = _findEntity(parentPath, null);
+    if (entity == null) {
+      return 0;
+    }
+
+    return entity.childSortMetricValue(path.last, sortMetric);
+  }
+
+  List<String> sortMetrics() {
+    return _rootEntity.childMetricNames();
+  }
 }
