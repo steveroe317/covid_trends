@@ -91,8 +91,16 @@ class CovidTimeseriesModel with ChangeNotifier {
   }
 
   int entitySortMetric(List<String> path, String sortMetric) {
-    if (path.length < 2) {
+    if (path.isEmpty) {
       return 0;
+    }
+
+    if (path.length == 1) {
+      var root = _findEntity(path, null);
+      if (root == null) {
+        return 0;
+      }
+      return root.seriesDataLast(sortMetric);
     }
 
     var parentPath = path.sublist(0, path.length - 1);

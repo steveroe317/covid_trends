@@ -15,6 +15,7 @@ class _CovidEntityListConsts {
   static const iconWidth = 24.0;
   static const entityRowWidth = buttonWidth + metricWidth + iconWidth + 24;
   static const noMetricName = 'Name';
+  static const defaultMetric = 'Confirmed 7-Day';
 }
 
 class CovidEntitiesPage extends StatefulWidget {
@@ -205,7 +206,7 @@ class EntityListHeader extends StatelessWidget {
                 child: Text((_pageModel.sortMetric !=
                         _CovidEntityListConsts.noMetricName)
                     ? _pageModel.sortMetric
-                    : ''),
+                    : _CovidEntityListConsts.defaultMetric),
               ),
             ),
           ],
@@ -269,7 +270,7 @@ class EntityListItem extends StatelessWidget {
               width: _CovidEntityListConsts.metricWidth,
               child: Align(
                 alignment: Alignment.centerRight,
-                child: Text(_sortMetricValueString()),
+                child: Text(_metricValueString()),
               ),
             ),
           ],
@@ -285,9 +286,12 @@ class EntityListItem extends StatelessWidget {
     _pageModel.setPath(_path);
   }
 
-  String _sortMetricValueString() {
-    String sortMetric = _pageModel.sortMetric;
-    var metricValue = _timeseriesModel.entitySortMetric(_path, sortMetric);
+  String _metricValueString() {
+    String displayMetric = _pageModel.sortMetric;
+    if (displayMetric == _CovidEntityListConsts.noMetricName) {
+      displayMetric = _CovidEntityListConsts.defaultMetric;
+    }
+    var metricValue = _timeseriesModel.entitySortMetric(_path, displayMetric);
     return (metricValue != 0) ? numberFormatter.format(metricValue) : '';
   }
 }

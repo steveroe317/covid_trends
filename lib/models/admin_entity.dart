@@ -91,6 +91,15 @@ class AdminEntity {
     return List<int>.filled(_timestamps.length, 0);
   }
 
+  // TODO: Remove if/when entities contain their own sort metrics in addition
+  // to their children's sort metrics.
+  int seriesDataLast(String key) {
+    if (_timeseries.containsKey(key)) {
+      return _timeseries[key].last;
+    }
+    return 0;
+  }
+
   bool get hasChildren => _childIndex.isNotEmpty;
 
   bool childrenContains(String name) {
