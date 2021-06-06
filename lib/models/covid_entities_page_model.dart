@@ -1,9 +1,14 @@
 import 'package:flutter/foundation.dart';
 
 class CovidEntitiesPageModel with ChangeNotifier {
-  CovidEntitiesPageModel(this._path);
-  List<String> _path;
+  List<String> _path = List<String>.empty();
+  List<String> _chartPath = List<String>.empty();
   String _sortMetric = 'Name';
+
+  CovidEntitiesPageModel(List<String> path) {
+    _path = List<String>.from(path);
+    _chartPath = List<String>.from(path);
+  }
 
   List<String> path() {
     return List<String>.from(_path);
@@ -11,6 +16,16 @@ class CovidEntitiesPageModel with ChangeNotifier {
 
   void setPath(List<String> path) {
     _path = List<String>.from(path);
+    _chartPath = List<String>.from(path);
+    notifyListeners();
+  }
+
+  List<String> chartPath() {
+    return List<String>.from(_chartPath);
+  }
+
+  void setChartPath(List<String> chartPath) {
+    _chartPath = List<String>.from(chartPath);
     notifyListeners();
   }
 

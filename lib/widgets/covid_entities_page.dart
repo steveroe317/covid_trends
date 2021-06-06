@@ -10,8 +10,10 @@ import 'simple_chart_page.dart';
 enum _CovidEntityListItemDepth { root, stem, leaf }
 
 class _CovidEntityListConsts {
-  static const buttonWidth = 200.0;
+  static const buttonWidth = 160.0;
   static const metricWidth = 120.0;
+  static const iconWidth = 24.0;
+  static const entityRowWidth = buttonWidth + metricWidth + iconWidth + 24;
   static const noMetricName = 'Name';
 }
 
@@ -27,12 +29,19 @@ class _CovidEntitiesPageState extends State<CovidEntitiesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-        actions: [buildSortPopupMenuButton(context)],
-      ),
-      body: CovidEntityList(),
-    );
+        appBar: AppBar(
+          title: Text(widget.title),
+          actions: [buildSortPopupMenuButton(context)],
+        ),
+        body: LayoutBuilder(
+          builder: (context, constraints) {
+            if (constraints.maxWidth > 700) {
+              return _CovidEntitiesWidePage();
+            } else {
+              return _CovidEntitiesNarrowPage();
+            }
+          },
+        ));
   }
 
   PopupMenuButton<String> buildSortPopupMenuButton(BuildContext context) {
@@ -61,7 +70,55 @@ class _CovidEntitiesPageState extends State<CovidEntitiesPage> {
   }
 }
 
+class _CovidEntitiesNarrowPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    // The function onRegionPressed() is defined inside build() so that it has
+    // access to build()'s context.
+    void Function(CovidTimeseriesModel, List<String>) onRegionPressed(
+        CovidTimeseriesModel timeseriesModel, List<String> path) {
+      timeseriesModel.loadEntity(path);
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => SimpleChartPage(
+                title: '${path.last} Covid Trends', path: path)),
+      );
+      return null;
+    }
+
+    return CovidEntityList(onRegionPressed);
+  }
+}
+
+class _CovidEntitiesWidePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    var pageModel = Provider.of<CovidEntitiesPageModel>(context);
+
+    // This onRegionPressed() function does not need the build context,
+    // so it can be defined outside build().
+    void Function(CovidTimeseriesModel, List<String>) onRegionPressed(
+        CovidTimeseriesModel timeseriesModel, List<String> path) {
+      timeseriesModel.loadEntity(path);
+      pageModel.setChartPath(path);
+      return null;
+    }
+
+    return Row(children: [
+      SizedBox(
+          width: _CovidEntityListConsts.entityRowWidth,
+          child: CovidEntityList(onRegionPressed)),
+      Expanded(child: SimpleChartGroup(pageModel.chartPath())),
+    ]);
+  }
+}
+
 class CovidEntityList extends StatelessWidget {
+  final void Function(CovidTimeseriesModel, List<String>) _onRegionPressed;
+
+  CovidEntityList(this._onRegionPressed);
+
   @override
   build(BuildContext context) {
     var timeseriesModel = Provider.of<CovidTimeseriesModel>(context);
@@ -78,8 +135,8 @@ class CovidEntityList extends StatelessWidget {
       var depth = (index == 0)
           ? _CovidEntityListItemDepth.root
           : _CovidEntityListItemDepth.stem;
-      entityList.add(EntityListItem(
-          path, depth, pageModel, timeseriesModel, numberFormatter));
+      entityList.add(EntityListItem(path, depth, _onRegionPressed, pageModel,
+          timeseriesModel, numberFormatter));
     }
 
     if (currentPath.length > 0) {
@@ -89,13 +146,16 @@ class CovidEntityList extends StatelessWidget {
     entityList.addAll(List<Widget>.from(childNames.map((name) => EntityListItem(
         [...currentPath, name],
         _CovidEntityListItemDepth.leaf,
+        _onRegionPressed,
         pageModel,
         timeseriesModel,
         numberFormatter))));
 
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
+        SizedBox(
+          width: _CovidEntityListConsts.entityRowWidth,
           child: EntityListHeader(pageModel),
         ),
         Container(child: Divider()),
@@ -112,105 +172,108 @@ class EntityListHeader extends StatelessWidget {
 
   @override
   build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        Opacity(
-          opacity: 0.0,
-          child: IconButton(
-            icon: Icon(Icons.expand_more),
-            onPressed: () {},
-          ),
-        ),
-        SizedBox(
-          width: _CovidEntityListConsts.buttonWidth,
-          child: TextButton(
-            onPressed: () {},
-            style: ButtonStyle(
-                foregroundColor: MaterialStateProperty.all<Color>(Colors.black),
-                alignment: AlignmentDirectional(0, 0)),
-            child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text('Region',
-                    style: Theme.of(context).textTheme.headline6)),
-          ),
-        ),
-        SizedBox(
-          width: _CovidEntityListConsts.metricWidth,
-          child: Align(
-            alignment: Alignment.centerRight,
-            child: Text(
-                (_pageModel.sortMetric != _CovidEntityListConsts.noMetricName)
+    return SizedBox(
+        width: _CovidEntityListConsts.entityRowWidth,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Opacity(
+              opacity: 0.0,
+              child: IconButton(
+                icon: Icon(Icons.expand_more),
+                onPressed: () {},
+              ),
+            ),
+            SizedBox(
+              width: _CovidEntityListConsts.buttonWidth,
+              child: TextButton(
+                onPressed: () {},
+                style: ButtonStyle(
+                    foregroundColor:
+                        MaterialStateProperty.all<Color>(Colors.black),
+                    alignment: AlignmentDirectional(0, 0)),
+                child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text('Region',
+                        style: Theme.of(context).textTheme.headline6)),
+              ),
+            ),
+            SizedBox(
+              width: _CovidEntityListConsts.metricWidth,
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: Text((_pageModel.sortMetric !=
+                        _CovidEntityListConsts.noMetricName)
                     ? _pageModel.sortMetric
                     : ''),
-          ),
-        ),
-      ],
-    );
+              ),
+            ),
+          ],
+        ));
   }
 }
 
 class EntityListItem extends StatelessWidget {
   final List<String> _path;
   final _CovidEntityListItemDepth _depth;
+  final void Function(CovidTimeseriesModel, List<String>) _onRegionPressed;
   final CovidTimeseriesModel _timeseriesModel;
   final CovidEntitiesPageModel _pageModel;
   final numberFormatter;
 
-  EntityListItem(this._path, this._depth, this._pageModel,
-      this._timeseriesModel, this.numberFormatter);
+  EntityListItem(this._path, this._depth, this._onRegionPressed,
+      this._pageModel, this._timeseriesModel, this.numberFormatter);
+
+  void onRegionPressed() {
+    return _onRegionPressed(_timeseriesModel, _path);
+  }
 
   @override
   build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        Opacity(
-          opacity: (_depth != _CovidEntityListItemDepth.root &&
-                  _timeseriesModel.entityHasChildren(_path))
-              ? 1.0
-              : 0.0,
-          child: IconButton(
-              icon: Icon(_depth == _CovidEntityListItemDepth.leaf
-                  ? Icons.expand_more
-                  : Icons.expand_less),
-              onPressed: (_depth == _CovidEntityListItemDepth.stem)
-                  ? _openParentPath
-                  : (_depth == _CovidEntityListItemDepth.leaf &&
-                          _timeseriesModel.entityHasChildren(_path))
-                      ? _openPath
-                      : null),
-        ),
-        SizedBox(
-          width: _CovidEntityListConsts.buttonWidth,
-          child: TextButton(
-            onPressed: () {
-              _timeseriesModel.loadEntity(_path);
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => SimpleChartPage(
-                        title: '${_path.last} Covid Trends', path: _path)),
-              );
-            },
-            style: ButtonStyle(
-                foregroundColor: MaterialStateProperty.all<Color>(Colors.black),
-                alignment: AlignmentDirectional(0, 0)),
-            child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text(_path.last,
-                    style: Theme.of(context).textTheme.headline6)),
-          ),
-        ),
-        SizedBox(
-          width: _CovidEntityListConsts.metricWidth,
-          child: Align(
-            alignment: Alignment.centerRight,
-            child: Text(_sortMetricValueString()),
-          ),
-        ),
-      ],
-    );
+    return SizedBox(
+        width: _CovidEntityListConsts.entityRowWidth,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Opacity(
+              opacity: (_depth != _CovidEntityListItemDepth.root &&
+                      _timeseriesModel.entityHasChildren(_path))
+                  ? 1.0
+                  : 0.0,
+              child: IconButton(
+                  icon: Icon(_depth == _CovidEntityListItemDepth.leaf
+                      ? Icons.expand_more
+                      : Icons.expand_less),
+                  onPressed: (_depth == _CovidEntityListItemDepth.stem)
+                      ? _openParentPath
+                      : (_depth == _CovidEntityListItemDepth.leaf &&
+                              _timeseriesModel.entityHasChildren(_path))
+                          ? _openPath
+                          : null),
+            ),
+            SizedBox(
+              width: _CovidEntityListConsts.buttonWidth,
+              child: TextButton(
+                onPressed: onRegionPressed,
+                style: ButtonStyle(
+                    foregroundColor:
+                        MaterialStateProperty.all<Color>(Colors.black),
+                    alignment: AlignmentDirectional(0, 0)),
+                child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(_path.last,
+                        style: Theme.of(context).textTheme.headline6)),
+              ),
+            ),
+            SizedBox(
+              width: _CovidEntityListConsts.metricWidth,
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: Text(_sortMetricValueString()),
+              ),
+            ),
+          ],
+        ));
   }
 
   void _openParentPath() {
