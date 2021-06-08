@@ -2,11 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AdminEntity {
   final List<String> _path;
-  final List<int> _timestamps;
-  final Map<String, List<int>> _timeseries;
+  List<int> _timestamps;
+  Map<String, List<int>> _timeseries;
   Map<String, AdminEntity> _children = {};
   Map<String, AdminChildIndexData> _childIndex = {};
   AdminEntity _parent;
+  bool _isStale = false;
 
   AdminEntity.empty()
       : _path = <String>[],
@@ -34,6 +35,21 @@ class AdminEntity {
       parent._children[path.last] = entity;
     }
     return entity;
+  }
+
+  Future<void> refresh() async {
+    if (!_isStale) {
+      return null;
+    }
+    _isStale = false;
+
+    final doc = await FirebaseFirestore.instance.doc(_docPath(path)).get();
+    if (!doc.exists) {
+      throw new Exception('Doc "${_docPath(path)}" does not exist.');
+    }
+    _timestamps = _extractDocTimestamps(doc.data());
+    _timeseries = _extractDocTimeseries(doc.data());
+    _childIndex = _extractDocChildIndex(doc.data());
   }
 
   static String _docPath(path) {
@@ -81,6 +97,8 @@ class AdminEntity {
   }
 
   List<String> get path => _path;
+
+  bool get isStale => _isStale;
 
   List<int> get timestamps => _timestamps;
 
@@ -157,6 +175,26 @@ class AdminEntity {
       return _children[name];
     }
     return null;
+  }
+
+  void halveTreeHistory() {
+    var prunedHistorySize = _timestamps.length ~/ 2;
+    _timestamps = timestamps.sublist(0, prunedHistorySize);
+    for (var metricName in _timeseries.keys) {
+      _timeseries[metricName] =
+          _timeseries[metricName].sublist(0, prunedHistorySize);
+    }
+
+    for (var node in _children.values) {
+      node.halveTreeHistory();
+    }
+  }
+
+  void markTreeStale() {
+    _isStale = true;
+    for (var node in _children.values) {
+      node.markTreeStale();
+    }
   }
 }
 

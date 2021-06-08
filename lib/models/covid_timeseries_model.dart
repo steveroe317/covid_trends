@@ -18,6 +18,9 @@ class CovidTimeseriesModel with ChangeNotifier {
 
   AdminEntity _findEntity(List<String> path, AdminEntity entity) {
     if (path.length == 0) {
+      if (entity != null && entity.isStale) {
+        refreshEntity(entity);
+      }
       return entity;
     }
     if (entity == null) {
@@ -42,6 +45,11 @@ class CovidTimeseriesModel with ChangeNotifier {
         notifyListeners();
       }
     }
+  }
+
+  void refreshEntity(AdminEntity entity) async {
+    await entity.refresh();
+    notifyListeners();
   }
 
   List<int> entityTimestamps(List<String> path) {
@@ -114,5 +122,17 @@ class CovidTimeseriesModel with ChangeNotifier {
 
   List<String> sortMetrics() {
     return _rootEntity.childMetricNames();
+  }
+
+  void halveHistory() {
+    print('DEBUG: Halve History');
+    _rootEntity.halveTreeHistory();
+    notifyListeners();
+  }
+
+  void markStale() {
+    print('DEBUG: Mark stale');
+    _rootEntity.markTreeStale();
+    notifyListeners();
   }
 }

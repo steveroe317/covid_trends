@@ -13,7 +13,7 @@ class _CovidEntityListConsts {
   static const buttonWidth = 160.0;
   static const metricWidth = 120.0;
   static const iconWidth = 24.0;
-  static const entityRowWidth = buttonWidth + metricWidth + iconWidth + 24;
+  static const entityRowWidth = buttonWidth + metricWidth + iconWidth + 24 + 12;
   static const noMetricName = 'Name';
   static const defaultMetric = 'Confirmed 7-Day';
 }
@@ -27,12 +27,20 @@ class CovidEntitiesPage extends StatefulWidget {
 }
 
 class _CovidEntitiesPageState extends State<CovidEntitiesPage> {
+  var _timeseriesModel;
+
   @override
   Widget build(BuildContext context) {
+    _timeseriesModel =
+        Provider.of<CovidTimeseriesModel>(context, listen: false);
+
     return Scaffold(
         appBar: AppBar(
           title: Text(widget.title),
-          actions: [buildSortPopupMenuButton(context)],
+          actions: [
+            buildSortPopupMenuButton(context),
+            buildDebugPopupMenuButton(context)
+          ],
         ),
         body: LayoutBuilder(
           builder: (context, constraints) {
@@ -69,16 +77,37 @@ class _CovidEntitiesPageState extends State<CovidEntitiesPage> {
                   checked: name == pageModel.sortMetric)));
         });
   }
+
+  PopupMenuButton<String> buildDebugPopupMenuButton(BuildContext context) {
+    return PopupMenuButton<String>(
+        icon: const Icon(Icons.plumbing),
+        tooltip: 'Internal testing',
+        onSelected: (String debugAction) {
+          if (debugAction == 'Halve History') {
+            _timeseriesModel.halveHistory();
+          } else if (debugAction == 'Refresh') {
+            _timeseriesModel.markStale();
+          }
+        },
+        itemBuilder: (BuildContext context) {
+          var debugActions = List<String>.from(['Halve History', 'Refresh']);
+          return List<PopupMenuEntry<String>>.from(debugActions
+              .map((name) => PopupMenuItem(value: name, child: Text(name))));
+        });
+  }
 }
 
 class _CovidEntitiesNarrowPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    var pageModel = Provider.of<CovidEntitiesPageModel>(context);
+
     // The function onRegionPressed() is defined inside build() so that it has
     // access to build()'s context.
     void Function(CovidTimeseriesModel, List<String>) onRegionPressed(
         CovidTimeseriesModel timeseriesModel, List<String> path) {
       timeseriesModel.loadEntity(path);
+      pageModel.setChartPath(path);
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -231,8 +260,11 @@ class EntityListItem extends StatelessWidget {
 
   @override
   build(BuildContext context) {
-    return SizedBox(
+    var pageModel = Provider.of<CovidEntitiesPageModel>(context);
+    return Container(
         width: _CovidEntityListConsts.entityRowWidth,
+        color: listEquals(_path, pageModel.chartPath()) ? Colors.black12 : null,
+        padding: EdgeInsets.only(left: 6, right: 6),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
