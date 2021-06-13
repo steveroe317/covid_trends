@@ -10,7 +10,7 @@ import 'simple_chart_page.dart';
 enum _CovidEntityListItemDepth { root, stem, leaf }
 
 class _CovidEntityListConsts {
-  static const buttonWidth = 160.0;
+  static const buttonWidth = 170.0;
   static const metricWidth = 120.0;
   static const iconWidth = 24.0;
   static const entityRowWidth = buttonWidth + metricWidth + iconWidth + 24 + 12;
