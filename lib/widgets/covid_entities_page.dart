@@ -38,8 +38,8 @@ class _CovidEntitiesPageState extends State<CovidEntitiesPage> {
         appBar: AppBar(
           title: Text(widget.title),
           actions: [
-            buildSortPopupMenuButton(context),
             buildDateRangePopupMenuButton(context),
+            buildSortPopupMenuButton(context),
             buildDebugPopupMenuButton(context)
           ],
         ),

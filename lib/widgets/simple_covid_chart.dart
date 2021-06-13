@@ -45,21 +45,20 @@ class SimpleCovidChart extends StatelessWidget {
 
     return [
       new charts.Series<TimeSeriesCovid, DateTime>(
-        id: 'Sales',
-        //colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
+        id: 'Metric',
         colorFn: (_, __) => charts.ColorUtil.fromDartColor(seriesColor),
-        domainFn: (TimeSeriesCovid sales, _) => sales.time,
-        measureFn: (TimeSeriesCovid sales, _) => sales.sales,
+        domainFn: (TimeSeriesCovid metric, _) => metric.time,
+        measureFn: (TimeSeriesCovid metric, _) => metric.value,
         data: data,
       )
     ];
   }
 }
 
-/// Sample time series data type.
+/// Covid time series data type.
 class TimeSeriesCovid {
   final DateTime time;
-  final int sales;
+  final int value;
 
-  TimeSeriesCovid(this.time, this.sales);
+  TimeSeriesCovid(this.time, this.value);
 }
