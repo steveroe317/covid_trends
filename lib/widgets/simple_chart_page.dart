@@ -41,6 +41,26 @@ class SimpleChartGroup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (constraints.maxWidth > 600 && constraints.maxHeight > 520) {
+          return SimpleChartTable(path, seriesLength);
+        } else {
+          return SimpleChartList(path, seriesLength);
+        }
+      },
+    );
+  }
+}
+
+class SimpleChartList extends StatelessWidget {
+  final List<String> path;
+  final int seriesLength;
+
+  SimpleChartList(this.path, this.seriesLength);
+
+  @override
+  Widget build(BuildContext context) {
     return ListView(
       children: <Widget>[
         _LabelledSimpleCovidChart(
@@ -50,6 +70,38 @@ class SimpleChartGroup extends StatelessWidget {
         _LabelledSimpleCovidChart(
             path, "Confirmed", seriesLength, Colors.black),
         _LabelledSimpleCovidChart(path, "Deaths", seriesLength, Colors.red),
+      ],
+    );
+  }
+}
+
+class SimpleChartTable extends StatelessWidget {
+  final List<String> path;
+  final int seriesLength;
+
+  SimpleChartTable(this.path, this.seriesLength);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+            child:
+                Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+          _LabelledSimpleCovidChart(
+              path, "Confirmed 7-Day", seriesLength, Colors.black),
+          _LabelledSimpleCovidChart(
+              path, "Deaths 7-Day", seriesLength, Colors.red)
+        ])),
+        Expanded(
+            child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            _LabelledSimpleCovidChart(
+                path, "Confirmed", seriesLength, Colors.black),
+            _LabelledSimpleCovidChart(path, "Deaths", seriesLength, Colors.red),
+          ],
+        )),
       ],
     );
   }
