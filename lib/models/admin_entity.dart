@@ -100,13 +100,29 @@ class AdminEntity {
 
   bool get isStale => _isStale;
 
-  List<int> get timestamps => _timestamps;
-
-  List<int> seriesData(String key) {
-    if (_timeseries.containsKey(key)) {
-      return _timeseries[key];
+  int _displayStart(int displayLength) {
+    if (displayLength == 0) {
+      return 0;
     }
-    return List<int>.filled(_timestamps.length, 0);
+    var displayStart = _timestamps.length - displayLength;
+    if (displayStart > 0) {
+      return displayStart;
+    }
+    return 0;
+  }
+
+  List<int> timestamps({seriesLength = 0}) {
+    var displayStart = _displayStart(seriesLength);
+    return _timestamps.sublist(displayStart);
+  }
+
+  List<int> seriesData(String key, {seriesLength = 0}) {
+    var displayStart = _displayStart(seriesLength);
+    if (_timeseries.containsKey(key)) {
+      return _timeseries[key].sublist(displayStart);
+    }
+
+    return List<int>.filled(_timestamps.length - displayStart, 0);
   }
 
   // TODO: Remove if/when entities contain their own sort metrics in addition
@@ -179,7 +195,7 @@ class AdminEntity {
 
   void halveTreeHistory() {
     var prunedHistorySize = _timestamps.length ~/ 2;
-    _timestamps = timestamps.sublist(0, prunedHistorySize);
+    _timestamps = _timestamps.sublist(0, prunedHistorySize);
     for (var metricName in _timeseries.keys) {
       _timeseries[metricName] =
           _timeseries[metricName].sublist(0, prunedHistorySize);

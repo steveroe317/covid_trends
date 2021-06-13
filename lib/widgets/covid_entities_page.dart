@@ -39,6 +39,7 @@ class _CovidEntitiesPageState extends State<CovidEntitiesPage> {
           title: Text(widget.title),
           actions: [
             buildSortPopupMenuButton(context),
+            buildDateRangePopupMenuButton(context),
             buildDebugPopupMenuButton(context)
           ],
         ),
@@ -65,9 +66,9 @@ class _CovidEntitiesPageState extends State<CovidEntitiesPage> {
         itemBuilder: (BuildContext context) {
           var timeseriesModel =
               Provider.of<CovidTimeseriesModel>(context, listen: false);
-          var metricNames = timeseriesModel.sortMetrics();
           var pageModel =
               Provider.of<CovidEntitiesPageModel>(context, listen: false);
+          var metricNames = timeseriesModel.sortMetrics();
           metricNames.sort();
           metricNames.insert(0, _CovidEntityListConsts.noMetricName);
           return List<PopupMenuEntry<String>>.from(metricNames.map((name) =>
@@ -75,6 +76,27 @@ class _CovidEntitiesPageState extends State<CovidEntitiesPage> {
                   value: name,
                   child: Text(name),
                   checked: name == pageModel.sortMetric)));
+        });
+  }
+
+  PopupMenuButton<int> buildDateRangePopupMenuButton(BuildContext context) {
+    return PopupMenuButton<int>(
+        icon: const Icon(Icons.date_range),
+        tooltip: 'Date Range',
+        onSelected: (int seriesLength) {
+          var pageModel =
+              Provider.of<CovidEntitiesPageModel>(context, listen: false);
+          pageModel.setSeriesLength(seriesLength);
+        },
+        itemBuilder: (BuildContext context) {
+          var pageModel =
+              Provider.of<CovidEntitiesPageModel>(context, listen: false);
+          return List<PopupMenuEntry<int>>.from([0, 240, 120, 60].map(
+            (days) => CheckedPopupMenuItem(
+                child: Text(days == 0 ? 'All' : '$days Days'),
+                value: days,
+                checked: days == pageModel.seriesLength),
+          ));
         });
   }
 
@@ -112,7 +134,10 @@ class _CovidEntitiesNarrowPage extends StatelessWidget {
         context,
         MaterialPageRoute(
             builder: (context) => SimpleChartPage(
-                title: '${path.last} Covid Trends', path: path)),
+                  title: '${path.last} Covid Trends',
+                  path: path,
+                  seriesLength: pageModel.seriesLength,
+                )),
       );
       return null;
     }
@@ -139,7 +164,9 @@ class _CovidEntitiesWidePage extends StatelessWidget {
       SizedBox(
           width: _CovidEntityListConsts.entityRowWidth,
           child: CovidEntityList(onRegionPressed)),
-      Expanded(child: SimpleChartGroup(pageModel.chartPath())),
+      Expanded(
+          child:
+              SimpleChartGroup(pageModel.chartPath(), pageModel.seriesLength)),
     ]);
   }
 }

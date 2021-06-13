@@ -7,16 +7,20 @@ import '../models/covid_timeseries_model.dart';
 class SimpleCovidChart extends StatelessWidget {
   final List<String> path;
   final String seriesName;
+  final int seriesLength;
   final Color seriesColor;
   final bool animate = true;
 
-  SimpleCovidChart(this.path, this.seriesName, this.seriesColor);
+  SimpleCovidChart(
+      this.path, this.seriesName, this.seriesLength, this.seriesColor);
 
   @override
   Widget build(BuildContext context) {
     var timeseriesModel = Provider.of<CovidTimeseriesModel>(context);
-    var timestamps = timeseriesModel.entityTimestamps(path);
-    var seriesData = timeseriesModel.entitySeriesData(path, seriesName);
+    var timestamps =
+        timeseriesModel.entityTimestamps(path, seriesLength: seriesLength);
+    var seriesData = timeseriesModel.entitySeriesData(path, seriesName,
+        seriesLength: seriesLength);
     var seriesList = createTimeseries(timestamps, seriesData);
 
     return new charts.TimeSeriesChart(

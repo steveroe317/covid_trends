@@ -52,19 +52,20 @@ class CovidTimeseriesModel with ChangeNotifier {
     notifyListeners();
   }
 
-  List<int> entityTimestamps(List<String> path) {
+  List<int> entityTimestamps(List<String> path, {seriesLength = 0}) {
     var entity = _findEntity(path, null);
     if (entity != null) {
-      return entity.timestamps;
+      return entity.timestamps(seriesLength: seriesLength);
     } else {
       return List<int>.empty();
     }
   }
 
-  List<int> entitySeriesData(List<String> path, String key) {
+  List<int> entitySeriesData(List<String> path, String key,
+      {seriesLength = 0}) {
     var entity = _findEntity(path, null);
     if (entity != null) {
-      return entity.seriesData(key);
+      return entity.seriesData(key, seriesLength: seriesLength);
     } else {
       return List<int>.empty();
     }
