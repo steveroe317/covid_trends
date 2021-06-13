@@ -4,7 +4,7 @@ class CovidEntitiesPageModel with ChangeNotifier {
   List<String> _path = List<String>.empty();
   List<String> _chartPath = List<String>.empty();
   String _sortMetric = 'Name';
-  int _seriesLength = 60;
+  int _seriesLength = 0;
 
   CovidEntitiesPageModel(List<String> path) {
     _path = List<String>.from(path);
