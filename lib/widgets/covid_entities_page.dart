@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 
 import '../models/covid_entities_page_model.dart';
 import '../models/covid_timeseries_model.dart';
+import 'date_range_popup_menu.dart';
 import 'simple_chart_page.dart';
 
 enum _CovidEntityListItemDepth { root, stem, leaf }
@@ -79,27 +80,6 @@ class _CovidEntitiesPageState extends State<CovidEntitiesPage> {
         });
   }
 
-  PopupMenuButton<int> buildDateRangePopupMenuButton(BuildContext context) {
-    return PopupMenuButton<int>(
-        icon: const Icon(Icons.date_range),
-        tooltip: 'Date Range',
-        onSelected: (int seriesLength) {
-          var pageModel =
-              Provider.of<CovidEntitiesPageModel>(context, listen: false);
-          pageModel.setSeriesLength(seriesLength);
-        },
-        itemBuilder: (BuildContext context) {
-          var pageModel =
-              Provider.of<CovidEntitiesPageModel>(context, listen: false);
-          return List<PopupMenuEntry<int>>.from([0, 240, 120, 60].map(
-            (days) => CheckedPopupMenuItem(
-                child: Text(days == 0 ? 'All' : '$days Days'),
-                value: days,
-                checked: days == pageModel.seriesLength),
-          ));
-        });
-  }
-
   PopupMenuButton<String> buildDebugPopupMenuButton(BuildContext context) {
     return PopupMenuButton<String>(
         icon: const Icon(Icons.plumbing),
@@ -136,7 +116,6 @@ class _CovidEntitiesNarrowPage extends StatelessWidget {
             builder: (context) => SimpleChartPage(
                   title: '${path.last} Covid Trends',
                   path: path,
-                  seriesLength: pageModel.seriesLength,
                 )),
       );
       return null;
@@ -164,9 +143,7 @@ class _CovidEntitiesWidePage extends StatelessWidget {
       SizedBox(
           width: _CovidEntityListConsts.entityRowWidth,
           child: CovidEntityList(onRegionPressed)),
-      Expanded(
-          child:
-              SimpleChartGroup(pageModel.chartPath(), pageModel.seriesLength)),
+      Expanded(child: SimpleChartGroup(pageModel.chartPath())),
     ]);
   }
 }

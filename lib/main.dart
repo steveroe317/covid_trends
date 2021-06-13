@@ -12,8 +12,11 @@ import 'widgets/loading_page.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(
-    ChangeNotifierProvider(
-        create: (context) => CovidTimeseriesModel(), child: MyApp()),
+    MultiProvider(providers: [
+      ChangeNotifierProvider(create: (context) => CovidTimeseriesModel()),
+      ChangeNotifierProvider(
+          create: (context) => CovidEntitiesPageModel(['World'])),
+    ], child: MyApp()),
   );
 }
 
@@ -41,13 +44,11 @@ class MyApp extends StatelessWidget {
 
   MaterialApp buildMaterialApp() {
     return MaterialApp(
-        title: 'Covid Trends',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
-        home: ChangeNotifierProvider(
-          create: (context) => CovidEntitiesPageModel(['World']),
-          child: CovidEntitiesPage(title: 'Covid Trends'),
-        ));
+      title: 'Covid Trends',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: CovidEntitiesPage(title: 'Covid Trends'),
+    );
   }
 }
