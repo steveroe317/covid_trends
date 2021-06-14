@@ -82,14 +82,15 @@ class SimpleChartTable extends StatelessWidget {
     return Row(
       children: [
         Expanded(
-            child:
-                Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-          _LabelledSimpleCovidChart(path, "Confirmed 7-Day", Colors.black),
-          _LabelledSimpleCovidChart(path, "Deaths 7-Day", Colors.red)
-        ])),
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+              _LabelledSimpleCovidChart(path, "Confirmed 7-Day", Colors.black),
+              _LabelledSimpleCovidChart(path, "Deaths 7-Day", Colors.red)
+            ])),
         Expanded(
             child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             _LabelledSimpleCovidChart(path, "Confirmed", Colors.black),
             _LabelledSimpleCovidChart(path, "Deaths", Colors.red),
