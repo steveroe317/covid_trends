@@ -62,10 +62,11 @@ class CovidTimeseriesModel with ChangeNotifier {
   }
 
   List<int> entitySeriesData(List<String> path, String key,
-      {seriesLength = 0}) {
+      {seriesLength = 0, per100k = false}) {
     var entity = _findEntity(path, null);
     if (entity != null) {
-      return entity.seriesData(key, seriesLength: seriesLength);
+      return entity.seriesData(key,
+          seriesLength: seriesLength, per100k: per100k);
     } else {
       return List<int>.empty();
     }
@@ -90,35 +91,37 @@ class CovidTimeseriesModel with ChangeNotifier {
   }
 
   List<String> entityChildNames(List<String> path,
-      {String sortBy = '', bool sortUp = true}) {
+      {String sortBy = '', bool sortUp = true, bool per100k = false}) {
     var entity = _findEntity(path, null);
     if (entity != null) {
-      return entity.childNames(sortBy: sortBy, sortUp: sortUp);
+      return entity.childNames(
+          sortBy: sortBy, sortUp: sortUp, per100k: per100k);
     } else {
       return List<String>.empty();
     }
   }
 
-  int entitySortMetric(List<String> path, String sortMetric) {
+  double entitySortMetric(List<String> path, String sortMetric, bool per100k) {
     if (path.isEmpty) {
-      return 0;
+      return 0.0;
     }
 
     if (path.length == 1) {
       var root = _findEntity(path, null);
       if (root == null) {
-        return 0;
+        return 0.0;
       }
-      return root.seriesDataLast(sortMetric);
+      return 100000.0 *
+          root.seriesDataLast(sortMetric) /
+          root.seriesDataLast('Population');
     }
-
     var parentPath = path.sublist(0, path.length - 1);
     var entity = _findEntity(parentPath, null);
     if (entity == null) {
       return 0;
     }
 
-    return entity.childSortMetricValue(path.last, sortMetric);
+    return entity.childSortMetricValue(path.last, sortMetric, per100k);
   }
 
   List<String> sortMetrics() {

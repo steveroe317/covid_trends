@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 
 class AdminEntity {
   final List<String> _path;
@@ -116,10 +117,20 @@ class AdminEntity {
     return _timestamps.sublist(displayStart);
   }
 
-  List<int> seriesData(String key, {seriesLength = 0}) {
+  List<int> seriesData(String key, {seriesLength = 0, per100k = false}) {
     var displayStart = _displayStart(seriesLength);
+
     if (_timeseries.containsKey(key)) {
-      return _timeseries[key].sublist(displayStart);
+      if (per100k && _timeseries.containsKey('Population')) {
+        List<int> per100kSeries = [];
+        for (int index = displayStart; index < _timestamps.length; ++index) {
+          per100kSeries.add((100000 * _timeseries[key][index]) ~/
+              _timeseries['Population'][index]);
+        }
+        return per100kSeries;
+      } else {
+        return _timeseries[key].sublist(displayStart);
+      }
     }
 
     return List<int>.filled(_timestamps.length - displayStart, 0);
@@ -142,39 +153,54 @@ class AdminEntity {
 
   List<String> childMetricNames() {
     if (_childIndex.isNotEmpty) {
-      return List<String>.from(_childIndex.values.first._sortKeys.keys);
+      var names = List<String>.from(_childIndex.values.first._sortKeys.keys);
+      names.remove('Population');
+      return names;
     }
     return List<String>.empty();
   }
 
-  List<String> childNames({String sortBy = '', bool sortUp = true}) {
+  List<String> childNames(
+      {String sortBy = '', bool sortUp = true, bool per100k = false}) {
     var names = List<String>.from(_childIndex.keys);
 
     names.sort((String a, String b) {
-      if (_childIndex[a].sortKeys.containsKey(sortBy) &&
-          _childIndex[b].sortKeys.containsKey(sortBy) &&
-          _childIndex[a].sortKeys[sortBy] != _childIndex[b].sortKeys[sortBy]) {
-        var keyCompare =
-            _childIndex[a].sortKeys[sortBy] - _childIndex[b].sortKeys[sortBy];
-        if (!sortUp) {
-          keyCompare = -keyCompare;
-        }
-        return keyCompare;
+      var valueA = childSortMetricValue(a, sortBy, per100k);
+      var valueB = childSortMetricValue(b, sortBy, per100k);
+      if (valueA == valueB) {
+        return a.compareTo(b);
       }
-      return a.compareTo(b);
+      var keyCompare = valueA - valueB;
+      if (!sortUp) {
+        keyCompare = -keyCompare;
+      }
+      if (!per100k) {
+        keyCompare *= 100000;
+      }
+      return keyCompare.toInt();
     });
 
     return names;
   }
 
-  int childSortMetricValue(String childName, String sortMetric) {
+  double childSortMetricValue(
+      String childName, String sortMetric, bool per100k) {
     if (!_childIndex.containsKey(childName)) {
-      return 0;
+      return 0.0;
     }
     if (!_childIndex[childName].sortKeys.containsKey(sortMetric)) {
-      return 0;
+      return 0.0;
     }
-    return _childIndex[childName].sortKeys[sortMetric];
+    var value = _childIndex[childName].sortKeys[sortMetric].toDouble();
+    var population = _childIndex[childName].sortKeys['Population'].toDouble();
+    if (population == 0) {
+      value = 0;
+      population = 1;
+    }
+    if (per100k) {
+      value = (100000 * value) / population;
+    }
+    return value;
   }
 
   bool childHasChildren(String name) {

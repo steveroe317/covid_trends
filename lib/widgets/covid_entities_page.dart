@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import '../models/covid_entities_page_model.dart';
 import '../models/covid_timeseries_model.dart';
 import 'date_range_popup_menu.dart';
+import 'per_100k_popup_menu.dart';
 import 'simple_chart_page.dart';
 
 enum _CovidEntityListItemDepth { root, stem, leaf }
@@ -39,9 +40,10 @@ class _CovidEntitiesPageState extends State<CovidEntitiesPage> {
         appBar: AppBar(
           title: Text(widget.title),
           actions: [
-            buildDateRangePopupMenuButton(context),
             buildSortPopupMenuButton(context),
-            buildDebugPopupMenuButton(context)
+            buildDateRangePopupMenuButton(context),
+            buildper100kPopupMenuButton(context),
+            buildDebugPopupMenuButton(context),
           ],
         ),
         body: LayoutBuilder(
@@ -158,7 +160,9 @@ class CovidEntityList extends StatelessWidget {
     var timeseriesModel = Provider.of<CovidTimeseriesModel>(context);
     var pageModel = Provider.of<CovidEntitiesPageModel>(context);
     final childNames = timeseriesModel.entityChildNames(pageModel.path(),
-        sortBy: pageModel.sortMetric, sortUp: false);
+        sortBy: pageModel.sortMetric,
+        sortUp: false,
+        per100k: pageModel.per100k);
     final currentPath = pageModel.path();
     final numberFormatter = NumberFormat('#,###');
 
@@ -236,14 +240,21 @@ class EntityListHeader extends StatelessWidget {
               width: _CovidEntityListConsts.metricWidth,
               child: Align(
                 alignment: Alignment.centerRight,
-                child: Text((_pageModel.sortMetric !=
-                        _CovidEntityListConsts.noMetricName)
-                    ? _pageModel.sortMetric
-                    : _CovidEntityListConsts.defaultMetric),
+                child: Text(_sortMetricName()),
               ),
             ),
           ],
         ));
+  }
+
+  String _sortMetricName() {
+    var name = (_pageModel.sortMetric != _CovidEntityListConsts.noMetricName)
+        ? _pageModel.sortMetric
+        : _CovidEntityListConsts.defaultMetric;
+    if (_pageModel.per100k) {
+      name = '$name\nper 100,000';
+    }
+    return name;
   }
 }
 
@@ -327,7 +338,8 @@ class EntityListItem extends StatelessWidget {
     if (displayMetric == _CovidEntityListConsts.noMetricName) {
       displayMetric = _CovidEntityListConsts.defaultMetric;
     }
-    var metricValue = _timeseriesModel.entitySortMetric(_path, displayMetric);
+    var metricValue = _timeseriesModel.entitySortMetric(
+        _path, displayMetric, _pageModel.per100k);
     return (metricValue != 0) ? numberFormatter.format(metricValue) : '';
   }
 }

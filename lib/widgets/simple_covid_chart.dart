@@ -8,11 +8,12 @@ class SimpleCovidChart extends StatelessWidget {
   final List<String> path;
   final String seriesName;
   final int seriesLength;
+  final bool per100k;
   final Color seriesColor;
   final bool animate = true;
 
-  SimpleCovidChart(
-      this.path, this.seriesName, this.seriesLength, this.seriesColor);
+  SimpleCovidChart(this.path, this.seriesName, this.seriesLength, this.per100k,
+      this.seriesColor);
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +21,7 @@ class SimpleCovidChart extends StatelessWidget {
     var timestamps =
         timeseriesModel.entityTimestamps(path, seriesLength: seriesLength);
     var seriesData = timeseriesModel.entitySeriesData(path, seriesName,
-        seriesLength: seriesLength);
+        seriesLength: seriesLength, per100k: per100k);
     var seriesList = createTimeseries(timestamps, seriesData);
 
     return new charts.TimeSeriesChart(

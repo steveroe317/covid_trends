@@ -5,6 +5,7 @@ class CovidEntitiesPageModel with ChangeNotifier {
   List<String> _chartPath = List<String>.empty();
   String _sortMetric = 'Name';
   int _seriesLength = 0;
+  bool _per100k = false;
 
   CovidEntitiesPageModel(List<String> path) {
     _path = List<String>.from(path);
@@ -41,6 +42,13 @@ class CovidEntitiesPageModel with ChangeNotifier {
 
   void setSeriesLength(seriesLength) {
     _seriesLength = seriesLength;
+    notifyListeners();
+  }
+
+  bool get per100k => _per100k;
+
+  void setPer100k(bool value) {
+    _per100k = value;
     notifyListeners();
   }
 }

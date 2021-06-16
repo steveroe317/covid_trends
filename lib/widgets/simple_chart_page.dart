@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../models/covid_entities_page_model.dart';
 import 'date_range_popup_menu.dart';
+import 'per_100k_popup_menu.dart';
 import 'simple_covid_chart.dart';
 
 class SimpleChartPage extends StatefulWidget {
@@ -26,9 +27,10 @@ class _SimpleChartPageState extends State<SimpleChartPage> {
     return Consumer<CovidEntitiesPageModel>(
         builder: (context, pageModel, child) {
       return Scaffold(
-        appBar: AppBar(
-            title: Text(widget.title),
-            actions: [buildDateRangePopupMenuButton(context)]),
+        appBar: AppBar(title: Text(widget.title), actions: [
+          buildDateRangePopupMenuButton(context),
+          buildper100kPopupMenuButton(context),
+        ]),
         body: Center(child: SimpleChartGroup(path)),
       );
     });
@@ -111,17 +113,18 @@ class _LabelledSimpleCovidChart extends StatelessWidget {
   @override
   build(BuildContext context) {
     final pageModel = Provider.of<CovidEntitiesPageModel>(context);
-    final regionName = (path.length > 0) ? path.last : '';
+    final regionName = (path.length > 0) ? '${path.last} ' : '';
+    final scaleSuffix = (pageModel.per100k) ? ' per 100k' : '';
     return Column(children: [
       Padding(
         padding: EdgeInsets.fromLTRB(32.0, 32.0, 32.0, 8.0),
         child: SizedBox(
           height: 200.0,
-          child: new SimpleCovidChart(
-              path, seriesName, pageModel.seriesLength, seriesColor),
+          child: new SimpleCovidChart(path, seriesName, pageModel.seriesLength,
+              pageModel.per100k, seriesColor),
         ),
       ),
-      Center(child: Text('$regionName $seriesName')),
+      Center(child: Text('$regionName$seriesName$scaleSuffix')),
     ]);
   }
 }
