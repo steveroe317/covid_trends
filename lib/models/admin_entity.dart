@@ -1,10 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 
 class AdminEntity {
   final List<String> _path;
   List<int> _timestamps;
-  Map<String, List<int>> _timeseries;
+  Map<String, List<double>> _timeseries;
   Map<String, AdminEntity> _children = {};
   Map<String, AdminChildIndexData> _childIndex = {};
   AdminEntity _parent;
@@ -13,7 +12,7 @@ class AdminEntity {
   AdminEntity.empty()
       : _path = <String>[],
         _timestamps = <int>[],
-        _timeseries = <String, List<int>>{};
+        _timeseries = <String, List<double>>{};
 
   AdminEntity._(this._path, this._timestamps, this._timeseries,
       this._childIndex, this._parent);
@@ -69,12 +68,13 @@ class AdminEntity {
     return timestamps;
   }
 
-  static Map<String, List<int>> _extractDocTimeseries(
+  static Map<String, List<double>> _extractDocTimeseries(
       Map<String, dynamic> docData) {
-    var timeseries = Map<String, List<int>>();
+    var timeseries = Map<String, List<double>>();
     for (var key in docData.keys) {
       if (key != "Date" && key != "Children") {
-        timeseries[key] = List<int>.from(docData[key]);
+        timeseries[key] =
+            List<double>.from(docData[key].map((x) => x.toDouble()));
       }
     }
     return timeseries;
@@ -117,28 +117,28 @@ class AdminEntity {
     return _timestamps.sublist(displayStart);
   }
 
-  List<int> seriesData(String key, {seriesLength = 0, per100k = false}) {
+  List<double> seriesData(String key, {seriesLength = 0, per100k = false}) {
     var displayStart = _displayStart(seriesLength);
 
     if (_timeseries.containsKey(key)) {
       if (per100k && _timeseries.containsKey('Population')) {
-        List<int> per100kSeries = [];
+        List<double> per100kSeries = [];
         for (int index = displayStart; index < _timestamps.length; ++index) {
-          per100kSeries.add((100000 * _timeseries[key][index]) ~/
+          per100kSeries.add((100000 * _timeseries[key][index]) /
               _timeseries['Population'][index]);
         }
         return per100kSeries;
       } else {
-        return _timeseries[key].sublist(displayStart);
+        return List<double>.from(_timeseries[key].sublist(displayStart));
       }
     }
 
-    return List<int>.filled(_timestamps.length - displayStart, 0);
+    return List<double>.filled(_timestamps.length - displayStart, 0);
   }
 
   // TODO: Remove if/when entities contain their own sort metrics in addition
   // to their children's sort metrics.
-  int seriesDataLast(String key) {
+  double seriesDataLast(String key) {
     if (_timeseries.containsKey(key)) {
       return _timeseries[key].last;
     }

@@ -36,7 +36,7 @@ class SimpleCovidChart extends StatelessWidget {
 
   /// Create one series.
   List<charts.Series<TimeSeriesCovid, DateTime>> createTimeseries(
-      List<int> timestamps, List<int> values) {
+      List<int> timestamps, List<double> values) {
     List<TimeSeriesCovid> data = <TimeSeriesCovid>[];
     for (var i = 0; i < timestamps.length; i++) {
       data.add(new TimeSeriesCovid(
@@ -59,7 +59,7 @@ class SimpleCovidChart extends StatelessWidget {
 /// Covid time series data type.
 class TimeSeriesCovid {
   final DateTime time;
-  final int value;
+  final double value;
 
   TimeSeriesCovid(this.time, this.value);
 }

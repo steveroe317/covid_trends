@@ -61,14 +61,14 @@ class CovidTimeseriesModel with ChangeNotifier {
     }
   }
 
-  List<int> entitySeriesData(List<String> path, String key,
+  List<double> entitySeriesData(List<String> path, String key,
       {seriesLength = 0, per100k = false}) {
     var entity = _findEntity(path, null);
     if (entity != null) {
       return entity.seriesData(key,
           seriesLength: seriesLength, per100k: per100k);
     } else {
-      return List<int>.empty();
+      return List<double>.empty();
     }
   }
 
