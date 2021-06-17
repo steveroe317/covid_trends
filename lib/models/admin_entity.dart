@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AdminEntity {
@@ -14,8 +16,7 @@ class AdminEntity {
         _timestamps = <int>[],
         _timeseries = <String, List<double>>{};
 
-  AdminEntity._(this._path, this._timestamps, this._timeseries,
-      this._childIndex, this._parent);
+  AdminEntity._(this._path, this._parent);
 
   static Future<AdminEntity> create(
       List<String> path, AdminEntity parent) async {
@@ -26,11 +27,8 @@ class AdminEntity {
     if (!doc.exists) {
       throw new Exception('Doc "${_docPath(path)}" does not exist.');
     }
-    var timestamps = _extractDocTimestamps(doc.data());
-    var timeseries = _extractDocTimeseries(doc.data());
-    var childIndex = _extractDocChildIndex(doc.data());
-    var entity =
-        AdminEntity._(path, timestamps, timeseries, childIndex, parent);
+    var entity = AdminEntity._(path, parent);
+    entity.importDocData(doc.data());
     if (parent != null) {
       parent._children[path.last] = entity;
     }
@@ -47,9 +45,15 @@ class AdminEntity {
     if (!doc.exists) {
       throw new Exception('Doc "${_docPath(path)}" does not exist.');
     }
-    _timestamps = _extractDocTimestamps(doc.data());
-    _timeseries = _extractDocTimeseries(doc.data());
-    _childIndex = _extractDocChildIndex(doc.data());
+    importDocData(doc.data());
+  }
+
+  void importDocData(Map<String, dynamic> docData) {
+    _timestamps = _extractDocTimestamps(docData);
+    _timeseries = _extractDocTimeseries(docData);
+    _childIndex = _extractDocChildIndex(docData);
+    createRollingAverageDiff('Confirmed', 'Confirmed 7-Day', 7);
+    createRollingAverageDiff('Deaths', 'Deaths 7-Day', 7);
   }
 
   static String _docPath(path) {
@@ -95,6 +99,39 @@ class AdminEntity {
       childIndex[child] = AdminChildIndexData(sortKeys, hasChildren);
     }
     return childIndex;
+  }
+
+  void createRollingAverageDiff(String source, String target, windowSize) {
+    if (!_timeseries.containsKey(source)) {
+      return;
+    }
+
+    // Calculate daily diffs.
+    List<double> daily = [];
+    var prevValue = 0.0;
+    for (var value in _timeseries[source]) {
+      if (value >= 0 && prevValue >= 0 && value >= prevValue) {
+        daily.add(value - prevValue);
+      } else {
+        daily.add(0.0);
+      }
+      prevValue = value;
+    }
+
+    // Calculate rolling N day average.
+    List<double> rollingAverage = [];
+    double rollingSum = 0.0;
+    var rollingSamples = Queue<double>();
+    for (var sample in daily) {
+      rollingSum += sample;
+      rollingSamples.addLast(sample);
+      if (rollingSamples.length > windowSize) {
+        rollingSum -= rollingSamples.removeFirst();
+      }
+      rollingAverage.add(rollingSum / rollingSamples.length);
+    }
+
+    _timeseries[target] = rollingAverage;
   }
 
   List<String> get path => _path;
