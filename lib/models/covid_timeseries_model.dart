@@ -111,10 +111,14 @@ class CovidTimeseriesModel with ChangeNotifier {
       if (root == null) {
         return 0.0;
       }
-      return 100000.0 *
-          root.seriesDataLast(sortMetric) /
-          root.seriesDataLast('Population');
+      var metricValue = root.seriesDataLast(sortMetric);
+      if (per100k) {
+        metricValue =
+            100000.0 * metricValue / root.seriesDataLast('Population');
+      }
+      return metricValue;
     }
+
     var parentPath = path.sublist(0, path.length - 1);
     var entity = _findEntity(parentPath, null);
     if (entity == null) {
