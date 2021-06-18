@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -54,6 +55,8 @@ class AdminEntity {
     _childIndex = _extractDocChildIndex(docData);
     createRollingAverageDiff('Confirmed', 'Confirmed 7-Day', 7);
     createRollingAverageDiff('Deaths', 'Deaths 7-Day', 7);
+    // TODO: Why do we need to filter outliers?  Check source data.
+    filterOutliers('Population', 3);
   }
 
   static String _docPath(path) {
@@ -132,6 +135,45 @@ class AdminEntity {
     }
 
     _timeseries[target] = rollingAverage;
+  }
+
+  void filterOutliers(String seriesName, historyLength) {
+    if (historyLength < 5) {
+      return;
+    }
+    if (!_timeseries.containsKey(seriesName)) {
+      return;
+    }
+    if (_timeseries[seriesName].length < historyLength) {
+      return;
+    }
+
+    // TODO: Check for efficiency, improve if needed.
+    // Maybe move this caclulation into database loading code.
+    var unfiltered = _timeseries[seriesName];
+    List<double> filtered = unfiltered.sublist(0, historyLength);
+    for (int index = historyLength; index < unfiltered.length; ++index) {
+      List<double> history = [];
+      for (int historyIndex = max(0, index - historyLength);
+          historyIndex < index;
+          ++historyIndex) {
+        history.add(filtered[historyIndex]);
+      }
+      var historyMin = history.reduce(min);
+      var historyMax = history.reduce(max);
+      var historyDelta = historyMax - historyMin;
+      var historyAverage = history.reduce((a, b) => a + b) / history.length;
+      var sample = unfiltered[index];
+      var sampleDistance = (sample - historyAverage).abs();
+      if (sampleDistance > 100 * historyDelta) {
+        filtered.add(filtered[index - 1]);
+      } else {
+        filtered.add(sample);
+      }
+    }
+
+    _timeseries[seriesName] = filtered;
+    //_timeseries[seriesName] = List<double>.filled(unfiltered.length, 100000.0);
   }
 
   List<String> get path => _path;
