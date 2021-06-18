@@ -56,7 +56,7 @@ class AdminEntity {
     createRollingAverageDiff('Confirmed', 'Confirmed 7-Day', 7);
     createRollingAverageDiff('Deaths', 'Deaths 7-Day', 7);
     // TODO: Why do we need to filter outliers?  Check source data.
-    filterOutliers('Population', 3);
+    filterOutliers('Population', 5);
   }
 
   static String _docPath(path) {
@@ -165,7 +165,7 @@ class AdminEntity {
       var historyAverage = history.reduce((a, b) => a + b) / history.length;
       var sample = unfiltered[index];
       var sampleDistance = (sample - historyAverage).abs();
-      if (sampleDistance > 100 * historyDelta) {
+      if (sampleDistance > 10 * historyDelta) {
         filtered.add(filtered[index - 1]);
       } else {
         filtered.add(sample);
