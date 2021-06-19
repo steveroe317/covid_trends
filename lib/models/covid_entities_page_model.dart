@@ -6,6 +6,7 @@ class CovidEntitiesPageModel with ChangeNotifier {
   String _sortMetric = 'Name';
   int _seriesLength = 0;
   bool _per100k = false;
+  bool _multipleRegion = false;
 
   CovidEntitiesPageModel(List<String> path) {
     _path = List<String>.from(path);
@@ -49,6 +50,13 @@ class CovidEntitiesPageModel with ChangeNotifier {
 
   void setPer100k(bool value) {
     _per100k = value;
+    notifyListeners();
+  }
+
+  bool get multipleRegion => _multipleRegion;
+
+  void setMultipleRegion(bool value) {
+    _multipleRegion = value;
     notifyListeners();
   }
 }

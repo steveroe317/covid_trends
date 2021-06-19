@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import '../models/covid_entities_page_model.dart';
 import '../models/covid_timeseries_model.dart';
 import 'date_range_popup_menu.dart';
+import 'multiple_region_popup_menu.dart';
 import 'per_100k_popup_menu.dart';
 import 'simple_chart_page.dart';
 
@@ -41,6 +42,7 @@ class _CovidEntitiesPageState extends State<CovidEntitiesPage> {
           title: Text(widget.title),
           actions: [
             buildSortPopupMenuButton(context),
+            buildMultipleRegionPopupMenuButton(context),
             buildDateRangePopupMenuButton(context),
             buildper100kPopupMenuButton(context),
             buildDebugPopupMenuButton(context),
