@@ -132,6 +132,8 @@ class CovidTimeseriesModel with ChangeNotifier {
     return _rootEntity.childMetricNames();
   }
 
+  String get noSortMetricName => 'Name';
+
   void halveHistory() {
     print('DEBUG: Halve History');
     _rootEntity.halveTreeHistory();

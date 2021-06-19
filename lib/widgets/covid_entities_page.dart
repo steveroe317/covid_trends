@@ -6,20 +6,21 @@ import 'package:provider/provider.dart';
 import '../models/covid_entities_page_model.dart';
 import '../models/covid_timeseries_model.dart';
 import 'date_range_popup_menu.dart';
+import 'debug_popup_menu.dart';
 import 'multiple_region_popup_menu.dart';
 import 'per_100k_popup_menu.dart';
 import 'simple_chart_page.dart';
-
-enum _CovidEntityListItemDepth { root, stem, leaf }
+import 'sort_popup_menu.dart';
 
 class _CovidEntityListConsts {
   static const buttonWidth = 170.0;
   static const metricWidth = 120.0;
   static const iconWidth = 24.0;
   static const entityRowWidth = buttonWidth + metricWidth + iconWidth + 24 + 12;
-  static const noMetricName = 'Name';
-  static const defaultMetric = 'Confirmed 7-Day';
+  static const defaultDisplayMetric = 'Confirmed 7-Day';
 }
+
+enum _CovidEntityListItemDepth { root, stem, leaf }
 
 class CovidEntitiesPage extends StatefulWidget {
   CovidEntitiesPage({Key key, this.title}) : super(key: key);
@@ -30,13 +31,8 @@ class CovidEntitiesPage extends StatefulWidget {
 }
 
 class _CovidEntitiesPageState extends State<CovidEntitiesPage> {
-  var _timeseriesModel;
-
   @override
   Widget build(BuildContext context) {
-    _timeseriesModel =
-        Provider.of<CovidTimeseriesModel>(context, listen: false);
-
     return Scaffold(
         appBar: AppBar(
           title: Text(widget.title),
@@ -57,49 +53,6 @@ class _CovidEntitiesPageState extends State<CovidEntitiesPage> {
             }
           },
         ));
-  }
-
-  PopupMenuButton<String> buildSortPopupMenuButton(BuildContext context) {
-    return PopupMenuButton<String>(
-        icon: const Icon(Icons.sort),
-        tooltip: 'Sort By',
-        onSelected: (String sortMetric) {
-          var pageModel =
-              Provider.of<CovidEntitiesPageModel>(context, listen: false);
-          pageModel.sortMetric = sortMetric;
-        },
-        itemBuilder: (BuildContext context) {
-          var timeseriesModel =
-              Provider.of<CovidTimeseriesModel>(context, listen: false);
-          var pageModel =
-              Provider.of<CovidEntitiesPageModel>(context, listen: false);
-          var metricNames = timeseriesModel.sortMetrics();
-          metricNames.sort();
-          metricNames.insert(0, _CovidEntityListConsts.noMetricName);
-          return List<PopupMenuEntry<String>>.from(metricNames.map((name) =>
-              CheckedPopupMenuItem(
-                  value: name,
-                  child: Text(name),
-                  checked: name == pageModel.sortMetric)));
-        });
-  }
-
-  PopupMenuButton<String> buildDebugPopupMenuButton(BuildContext context) {
-    return PopupMenuButton<String>(
-        icon: const Icon(Icons.plumbing),
-        tooltip: 'Internal testing',
-        onSelected: (String debugAction) {
-          if (debugAction == 'Halve History') {
-            _timeseriesModel.halveHistory();
-          } else if (debugAction == 'Refresh') {
-            _timeseriesModel.markStale();
-          }
-        },
-        itemBuilder: (BuildContext context) {
-          var debugActions = List<String>.from(['Halve History', 'Refresh']);
-          return List<PopupMenuEntry<String>>.from(debugActions
-              .map((name) => PopupMenuItem(value: name, child: Text(name))));
-        });
   }
 }
 
@@ -196,7 +149,7 @@ class CovidEntityList extends StatelessWidget {
       children: [
         SizedBox(
           width: _CovidEntityListConsts.entityRowWidth,
-          child: EntityListHeader(pageModel),
+          child: EntityListHeader(pageModel, timeseriesModel),
         ),
         Container(child: Divider()),
         Expanded(child: ListView(children: entityList)),
@@ -207,8 +160,9 @@ class CovidEntityList extends StatelessWidget {
 
 class EntityListHeader extends StatelessWidget {
   final CovidEntitiesPageModel _pageModel;
+  final CovidTimeseriesModel _timeseriesModel;
 
-  EntityListHeader(this._pageModel);
+  EntityListHeader(this._pageModel, this._timeseriesModel);
 
   @override
   build(BuildContext context) {
@@ -250,9 +204,9 @@ class EntityListHeader extends StatelessWidget {
   }
 
   String _sortMetricName() {
-    var name = (_pageModel.sortMetric != _CovidEntityListConsts.noMetricName)
+    var name = (_pageModel.sortMetric != _timeseriesModel.noSortMetricName)
         ? _pageModel.sortMetric
-        : _CovidEntityListConsts.defaultMetric;
+        : _CovidEntityListConsts.defaultDisplayMetric;
     if (_pageModel.per100k) {
       name = '$name\nper 100,000';
     }
@@ -337,8 +291,8 @@ class EntityListItem extends StatelessWidget {
 
   String _metricValueString() {
     String displayMetric = _pageModel.sortMetric;
-    if (displayMetric == _CovidEntityListConsts.noMetricName) {
-      displayMetric = _CovidEntityListConsts.defaultMetric;
+    if (displayMetric == _timeseriesModel.noSortMetricName) {
+      displayMetric = _CovidEntityListConsts.defaultDisplayMetric;
     }
     var metricValue = _timeseriesModel.entitySortMetric(
         _path, displayMetric, _pageModel.per100k);

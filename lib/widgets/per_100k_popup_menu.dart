@@ -4,24 +4,27 @@ import 'package:provider/provider.dart';
 import '../models/covid_entities_page_model.dart';
 
 PopupMenuButton<String> buildper100kPopupMenuButton(BuildContext context) {
+  final chartTotalsLabel = 'Total';
+  final chartPer100kLabel = 'Per 100,000';
   var pageModel = Provider.of<CovidEntitiesPageModel>(context, listen: false);
 
   return PopupMenuButton<String>(
       icon: const Icon(Icons.group),
-      tooltip: 'Internal testing',
+      tooltip: 'per 100,000',
       onSelected: (String debugAction) {
-        if (debugAction == 'Total') {
+        if (debugAction == chartTotalsLabel) {
           pageModel.setPer100k(false);
-        } else if (debugAction == 'Per 100,000') {
+        } else if (debugAction == chartPer100kLabel) {
           pageModel.setPer100k(true);
         }
       },
       itemBuilder: (BuildContext context) {
-        var debugActions = List<String>.from(['Total', 'Per 100,000']);
+        var debugActions =
+            List<String>.from([chartTotalsLabel, chartPer100kLabel]);
         return List<PopupMenuEntry<String>>.from(debugActions.map((name) =>
             CheckedPopupMenuItem(
                 value: name,
                 child: Text(name),
-                checked: pageModel.per100k ^ (name == 'Total'))));
+                checked: pageModel.per100k ^ (name == chartTotalsLabel))));
       });
 }
