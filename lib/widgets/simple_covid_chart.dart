@@ -37,20 +37,21 @@ class SimpleCovidChart extends StatelessWidget {
   /// Create one series.
   List<charts.Series<TimeSeriesCovid, DateTime>> createTimeseries(
       List<int> timestamps, List<double> values) {
-    List<TimeSeriesCovid> data = <TimeSeriesCovid>[];
+    List<TimeSeriesCovid> chartData = <TimeSeriesCovid>[];
     for (var i = 0; i < timestamps.length; i++) {
-      data.add(new TimeSeriesCovid(
+      chartData.add(new TimeSeriesCovid(
           DateTime.fromMillisecondsSinceEpoch(1000 * timestamps[i]),
           values[i]));
     }
 
+    final regionName = (path.length > 0) ? '${path.last} ' : '';
     return [
       new charts.Series<TimeSeriesCovid, DateTime>(
-        id: 'Metric',
+        id: '$regionName',
         colorFn: (_, __) => charts.ColorUtil.fromDartColor(seriesColor),
         domainFn: (TimeSeriesCovid metric, _) => metric.time,
         measureFn: (TimeSeriesCovid metric, _) => metric.value,
-        data: data,
+        data: chartData,
       )
     ];
   }

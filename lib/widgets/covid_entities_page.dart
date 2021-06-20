@@ -10,6 +10,7 @@ import 'debug_popup_menu.dart';
 import 'multiple_region_popup_menu.dart';
 import 'per_100k_popup_menu.dart';
 import 'simple_chart_page.dart';
+import 'multiple_chart_page.dart';
 import 'sort_popup_menu.dart';
 
 class _CovidEntityListConsts {
@@ -61,20 +62,31 @@ class _CovidEntitiesNarrowPage extends StatelessWidget {
   Widget build(BuildContext context) {
     var pageModel = Provider.of<CovidEntitiesPageModel>(context);
 
-    // The function onRegionPressed() is defined inside build() so that it has
-    // access to build()'s context.
+    // onRegionPressed() is inside build() so that it has access to the context.
     void Function(CovidTimeseriesModel, List<String>) onRegionPressed(
         CovidTimeseriesModel timeseriesModel, List<String> path) {
       timeseriesModel.loadEntity(path);
       pageModel.setChartPath(path);
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => SimpleChartPage(
-                  title: '${path.last} Covid Trends',
-                  path: path,
-                )),
-      );
+      pageModel.addPathList(path);
+      if (pageModel.multipleRegion) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => MultipleChartPage(
+                    title: '${path.last} Covid Trends',
+                    paths: pageModel.pathList,
+                  )),
+        );
+      } else {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => SimpleChartPage(
+                    title: '${path.last} Covid Trends',
+                    path: path,
+                  )),
+        );
+      }
       return null;
     }
 
@@ -93,6 +105,7 @@ class _CovidEntitiesWidePage extends StatelessWidget {
         CovidTimeseriesModel timeseriesModel, List<String> path) {
       timeseriesModel.loadEntity(path);
       pageModel.setChartPath(path);
+      pageModel.addPathList(path);
       return null;
     }
 
@@ -100,7 +113,10 @@ class _CovidEntitiesWidePage extends StatelessWidget {
       SizedBox(
           width: _CovidEntityListConsts.entityRowWidth,
           child: CovidEntityList(onRegionPressed)),
-      Expanded(child: SimpleChartGroup(pageModel.chartPath())),
+      Expanded(
+          child: (pageModel.multipleRegion)
+              ? MultipleChartGroup(pageModel.pathList)
+              : SimpleChartGroup(pageModel.chartPath())),
     ]);
   }
 }
@@ -259,6 +275,7 @@ class EntityListItem extends StatelessWidget {
               width: _CovidEntityListConsts.buttonWidth,
               child: TextButton(
                 onPressed: onRegionPressed,
+                onLongPress: onRegionLongPress,
                 style: ButtonStyle(
                     foregroundColor:
                         MaterialStateProperty.all<Color>(Colors.black),
@@ -278,6 +295,11 @@ class EntityListItem extends StatelessWidget {
             ),
           ],
         ));
+  }
+
+  void onRegionLongPress() {
+    _pageModel.clearPathList();
+    onRegionPressed();
   }
 
   void _openParentPath() {

@@ -1,8 +1,13 @@
 import 'package:flutter/foundation.dart';
 
 class CovidEntitiesPageModel with ChangeNotifier {
+  static const maxPathListLength = 4;
   List<String> _path = List<String>.empty();
   List<String> _chartPath = List<String>.empty();
+  var _pathList = <List<String>>[
+    // TODO: Is this a reasonable initial value?
+    ['World']
+  ];
   String _sortMetric = 'Name';
   int _seriesLength = 0;
   bool _per100k = false;
@@ -29,6 +34,26 @@ class CovidEntitiesPageModel with ChangeNotifier {
 
   void setChartPath(List<String> chartPath) {
     _chartPath = List<String>.from(chartPath);
+    notifyListeners();
+  }
+
+  List<List<String>> get pathList => _pathList;
+
+  void addPathList(List<String> path) {
+    for (var existingPath in _pathList) {
+      if (listEquals(path, existingPath)) {
+        return;
+      }
+    }
+    if (_pathList.length >= maxPathListLength) {
+      _pathList.removeAt(0);
+    }
+    _pathList.add(path);
+    notifyListeners();
+  }
+
+  void clearPathList() {
+    _pathList = <List<String>>[];
     notifyListeners();
   }
 
