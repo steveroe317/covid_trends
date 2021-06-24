@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../models/covid_timeseries_model.dart';
 
-class MultipleCovidChart extends StatelessWidget {
+class CompareCovidChart extends StatelessWidget {
   final List<List<String>> paths;
   final String seriesName;
   final int seriesLength;
@@ -12,7 +12,7 @@ class MultipleCovidChart extends StatelessWidget {
   final List<Color> seriesColors;
   final bool animate = true;
 
-  MultipleCovidChart(this.paths, this.seriesName, this.seriesLength,
+  CompareCovidChart(this.paths, this.seriesName, this.seriesLength,
       this.per100k, this.seriesColors);
 
   @override

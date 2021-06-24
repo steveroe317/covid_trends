@@ -7,20 +7,20 @@ import 'date_range_popup_menu.dart';
 import 'per_100k_popup_menu.dart';
 import 'simple_covid_chart.dart';
 
-class SimpleChartPage extends StatefulWidget {
+class SimpleChartGroupPage extends StatefulWidget {
   final String title;
   final List<String> path;
 
-  SimpleChartPage({Key key, this.title, this.path}) : super(key: key);
+  SimpleChartGroupPage({Key key, this.title, this.path}) : super(key: key);
 
   @override
-  _SimpleChartPageState createState() => _SimpleChartPageState(path);
+  _SimpleChartGroupPageState createState() => _SimpleChartGroupPageState(path);
 }
 
-class _SimpleChartPageState extends State<SimpleChartPage> {
+class _SimpleChartGroupPageState extends State<SimpleChartGroupPage> {
   final List<String> path;
 
-  _SimpleChartPageState(this.path);
+  _SimpleChartGroupPageState(this.path);
 
   @override
   Widget build(BuildContext context) {

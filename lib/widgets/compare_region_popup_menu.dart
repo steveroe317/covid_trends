@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../models/covid_entities_page_model.dart';
 
-PopupMenuButton<String> buildMultipleRegionPopupMenuButton(
+PopupMenuButton<String> buildCompareRegionPopupMenuButton(
     BuildContext context) {
   final singleRegionLabel = 'Show One Region';
   final multipleRegionLabel = 'Compare Regions';
@@ -11,12 +11,12 @@ PopupMenuButton<String> buildMultipleRegionPopupMenuButton(
 
   return PopupMenuButton<String>(
       icon: const Icon(Icons.stacked_line_chart),
-      tooltip: 'Single or Multiple Region Charts',
+      tooltip: 'Single or Comparison Region Charts',
       onSelected: (String debugAction) {
         if (debugAction == singleRegionLabel) {
-          pageModel.setMultipleRegion(false);
+          pageModel.setCompareRegion(false);
         } else if (debugAction == multipleRegionLabel) {
-          pageModel.setMultipleRegion(true);
+          pageModel.setCompareRegion(true);
         }
       },
       itemBuilder: (BuildContext context) {
@@ -27,6 +27,6 @@ PopupMenuButton<String> buildMultipleRegionPopupMenuButton(
                 value: name,
                 child: Text(name),
                 checked:
-                    pageModel.multipleRegion ^ (name == singleRegionLabel))));
+                    pageModel.compareRegion ^ (name == singleRegionLabel))));
       });
 }

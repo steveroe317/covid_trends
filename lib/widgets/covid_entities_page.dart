@@ -39,7 +39,7 @@ class _CovidEntitiesPageState extends State<CovidEntitiesPage> {
           title: Text(widget.title),
           actions: [
             buildSortPopupMenuButton(context),
-            buildMultipleRegionPopupMenuButton(context),
+            buildCompareRegionPopupMenuButton(context),
             buildDateRangePopupMenuButton(context),
             buildper100kPopupMenuButton(context),
             //buildDebugPopupMenuButton(context),
@@ -68,11 +68,11 @@ class _CovidEntitiesNarrowPage extends StatelessWidget {
       timeseriesModel.loadEntity(path);
       pageModel.setChartPath(path);
       pageModel.addPathList(path);
-      if (pageModel.multipleRegion) {
+      if (pageModel.compareRegion) {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => MultipleChartPage(
+              builder: (context) => CompareChartGroupPage(
                     title: '${path.last} Covid Trends',
                     paths: pageModel.pathList,
                   )),
@@ -81,7 +81,7 @@ class _CovidEntitiesNarrowPage extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => SimpleChartPage(
+              builder: (context) => SimpleChartGroupPage(
                     title: '${path.last} Covid Trends',
                     path: path,
                   )),
@@ -114,8 +114,8 @@ class _CovidEntitiesWidePage extends StatelessWidget {
           width: _CovidEntityListConsts.entityRowWidth,
           child: CovidEntityList(onRegionPressed)),
       Expanded(
-          child: (pageModel.multipleRegion)
-              ? MultipleChartGroup(pageModel.pathList)
+          child: (pageModel.compareRegion)
+              ? CompareChartGroup(pageModel.pathList)
               : SimpleChartGroup(pageModel.chartPath())),
     ]);
   }

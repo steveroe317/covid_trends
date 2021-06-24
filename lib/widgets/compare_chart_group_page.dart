@@ -7,20 +7,21 @@ import 'date_range_popup_menu.dart';
 import 'per_100k_popup_menu.dart';
 import 'compare_covid_chart.dart';
 
-class MultipleChartPage extends StatefulWidget {
+class CompareChartGroupPage extends StatefulWidget {
   final String title;
   final List<List<String>> paths;
 
-  MultipleChartPage({Key key, this.title, this.paths}) : super(key: key);
+  CompareChartGroupPage({Key key, this.title, this.paths}) : super(key: key);
 
   @override
-  _MultipleChartPageState createState() => _MultipleChartPageState(paths);
+  _CompareChartGroupPageState createState() =>
+      _CompareChartGroupPageState(paths);
 }
 
-class _MultipleChartPageState extends State<MultipleChartPage> {
+class _CompareChartGroupPageState extends State<CompareChartGroupPage> {
   final List<List<String>> paths;
 
-  _MultipleChartPageState(this.paths);
+  _CompareChartGroupPageState(this.paths);
 
   @override
   Widget build(BuildContext context) {
@@ -31,53 +32,53 @@ class _MultipleChartPageState extends State<MultipleChartPage> {
           buildDateRangePopupMenuButton(context),
           buildper100kPopupMenuButton(context),
         ]),
-        body: Center(child: MultipleChartGroup(paths)),
+        body: Center(child: CompareChartGroup(paths)),
       );
     });
   }
 }
 
-class MultipleChartGroup extends StatelessWidget {
+class CompareChartGroup extends StatelessWidget {
   final List<List<String>> paths;
 
-  MultipleChartGroup(this.paths);
+  CompareChartGroup(this.paths);
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
         if (constraints.maxWidth > 600 && constraints.maxHeight > 520) {
-          return MultipleChartTable(paths);
+          return CompareChartTable(paths);
         } else {
-          return MultipleChartList(paths);
+          return CompareChartList(paths);
         }
       },
     );
   }
 }
 
-class MultipleChartList extends StatelessWidget {
+class CompareChartList extends StatelessWidget {
   final List<List<String>> paths;
 
-  MultipleChartList(this.paths);
+  CompareChartList(this.paths);
 
   @override
   Widget build(BuildContext context) {
     return ListView(
       children: <Widget>[
-        _LabelledMultipleCovidChart(paths, "Confirmed 7-Day", Colors.black),
-        _LabelledMultipleCovidChart(paths, "Deaths 7-Day", Colors.red),
-        _LabelledMultipleCovidChart(paths, "Confirmed", Colors.black),
-        _LabelledMultipleCovidChart(paths, "Deaths", Colors.red),
+        _LabelledCompareCovidChart(paths, "Confirmed 7-Day", Colors.black),
+        _LabelledCompareCovidChart(paths, "Deaths 7-Day", Colors.red),
+        _LabelledCompareCovidChart(paths, "Confirmed", Colors.black),
+        _LabelledCompareCovidChart(paths, "Deaths", Colors.red),
       ],
     );
   }
 }
 
-class MultipleChartTable extends StatelessWidget {
+class CompareChartTable extends StatelessWidget {
   final List<List<String>> paths;
 
-  MultipleChartTable(this.paths);
+  CompareChartTable(this.paths);
 
   @override
   Widget build(BuildContext context) {
@@ -87,16 +88,16 @@ class MultipleChartTable extends StatelessWidget {
             child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-              _LabelledMultipleCovidChart(
+              _LabelledCompareCovidChart(
                   paths, "Confirmed 7-Day", Colors.black),
-              _LabelledMultipleCovidChart(paths, "Deaths 7-Day", Colors.red)
+              _LabelledCompareCovidChart(paths, "Deaths 7-Day", Colors.red)
             ])),
         Expanded(
             child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            _LabelledMultipleCovidChart(paths, "Confirmed", Colors.black),
-            _LabelledMultipleCovidChart(paths, "Deaths", Colors.red),
+            _LabelledCompareCovidChart(paths, "Confirmed", Colors.black),
+            _LabelledCompareCovidChart(paths, "Deaths", Colors.red),
           ],
         )),
       ],
@@ -104,12 +105,12 @@ class MultipleChartTable extends StatelessWidget {
   }
 }
 
-class _LabelledMultipleCovidChart extends StatelessWidget {
+class _LabelledCompareCovidChart extends StatelessWidget {
   final List<List<String>> paths;
   final String seriesName;
   final Color seriesColor;
 
-  _LabelledMultipleCovidChart(this.paths, this.seriesName, this.seriesColor);
+  _LabelledCompareCovidChart(this.paths, this.seriesName, this.seriesColor);
 
   @override
   build(BuildContext context) {
@@ -121,7 +122,7 @@ class _LabelledMultipleCovidChart extends StatelessWidget {
           padding: EdgeInsets.fromLTRB(32.0, 32.0, 32.0, 8.0),
           child: SizedBox(
             height: 200.0,
-            child: new MultipleCovidChart(paths, seriesName,
+            child: new CompareCovidChart(paths, seriesName,
                 pageModel.seriesLength, pageModel.per100k, seriesColors),
           )),
       Center(child: Text('$seriesName$scaleSuffix')),
