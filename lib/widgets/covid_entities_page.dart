@@ -7,10 +7,10 @@ import '../models/covid_entities_page_model.dart';
 import '../models/covid_timeseries_model.dart';
 import 'date_range_popup_menu.dart';
 //import 'debug_popup_menu.dart';
-import 'multiple_region_popup_menu.dart';
+import 'compare_region_popup_menu.dart';
 import 'per_100k_popup_menu.dart';
-import 'simple_chart_page.dart';
-import 'multiple_chart_page.dart';
+import 'simple_chart_group_page.dart';
+import 'compare_chart_group_page.dart';
 import 'sort_popup_menu.dart';
 
 class _CovidEntityListConsts {
