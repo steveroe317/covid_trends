@@ -118,13 +118,12 @@ class _LabelledMultipleCovidChart extends StatelessWidget {
     final seriesColors = generateColors(paths.length);
     return Column(children: [
       Padding(
-        padding: EdgeInsets.fromLTRB(32.0, 32.0, 32.0, 8.0),
-        child: SizedBox(
-          height: 200.0,
-          child: new MultipleCovidChart(paths, seriesName,
-              pageModel.seriesLength, pageModel.per100k, seriesColors),
-        ),
-      ),
+          padding: EdgeInsets.fromLTRB(32.0, 32.0, 32.0, 8.0),
+          child: SizedBox(
+            height: 200.0,
+            child: new MultipleCovidChart(paths, seriesName,
+                pageModel.seriesLength, pageModel.per100k, seriesColors),
+          )),
       Center(child: Text('$seriesName$scaleSuffix')),
     ]);
   }

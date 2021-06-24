@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import '../models/covid_entities_page_model.dart';
 
 PopupMenuButton<String> buildper100kPopupMenuButton(BuildContext context) {
-  final chartTotalsLabel = 'Total';
+  final chartTotalsLabel = 'Show Totals';
   final chartPer100kLabel = 'Per 100,000';
   var pageModel = Provider.of<CovidEntitiesPageModel>(context, listen: false);
 

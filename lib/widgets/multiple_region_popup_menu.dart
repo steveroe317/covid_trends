@@ -5,8 +5,8 @@ import '../models/covid_entities_page_model.dart';
 
 PopupMenuButton<String> buildMultipleRegionPopupMenuButton(
     BuildContext context) {
-  final singleRegionLabel = 'Single Region';
-  final multipleRegionLabel = 'Multiple Region';
+  final singleRegionLabel = 'Show One Region';
+  final multipleRegionLabel = 'Compare Regions';
   var pageModel = Provider.of<CovidEntitiesPageModel>(context, listen: false);
 
   return PopupMenuButton<String>(

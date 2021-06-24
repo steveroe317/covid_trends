@@ -8,7 +8,8 @@ class CovidEntitiesPageModel with ChangeNotifier {
     // TODO: Is this a reasonable initial value?
     ['World']
   ];
-  String _sortMetric = 'Name';
+  // TODO: Make _sortMetric's default  depend on sort popup menu's default.
+  String _sortMetric = 'Sort By Name';
   int _seriesLength = 0;
   bool _per100k = false;
   bool _multipleRegion = false;

@@ -7,7 +7,7 @@ import '../models/covid_timeseries_model.dart';
 PopupMenuButton<String> buildSortPopupMenuButton(BuildContext context) {
   return PopupMenuButton<String>(
       icon: const Icon(Icons.sort),
-      tooltip: 'Sort By',
+      tooltip: 'Sort By Name',
       onSelected: (String sortMetric) {
         var pageModel =
             Provider.of<CovidEntitiesPageModel>(context, listen: false);

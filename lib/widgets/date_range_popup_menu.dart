@@ -17,7 +17,7 @@ PopupMenuButton<int> buildDateRangePopupMenuButton(BuildContext context) {
             Provider.of<CovidEntitiesPageModel>(context, listen: false);
         return List<PopupMenuEntry<int>>.from([0, 240, 120, 60].map(
           (days) => CheckedPopupMenuItem(
-              child: Text(days == 0 ? 'All' : '$days Days'),
+              child: Text(days == 0 ? 'Full History' : '$days Days'),
               value: days,
               checked: days == pageModel.seriesLength),
         ));
