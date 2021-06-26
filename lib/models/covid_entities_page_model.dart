@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import '../widgets/ui_consts.dart';
+
 class CovidEntitiesPageModel with ChangeNotifier {
   static const maxPathListLength = 4;
   List<String> _path = List<String>.empty();
@@ -9,8 +11,7 @@ class CovidEntitiesPageModel with ChangeNotifier {
     // TODO: Is this a reasonable initial value?
     ['World']
   ];
-  // TODO: Make _sortMetric's default  depend on sort popup menu's default.
-  String _sortMetric = 'Sort By Name';
+  String _sortMetric = UiConsts.noSortMetricName;
   int _seriesLength = 0;
   bool _per100k = false;
   bool _compareRegion = false;
