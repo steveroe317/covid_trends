@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../models/covid_entities_page_model.dart';
 import '../models/covid_timeseries_model.dart';
+import 'ui_consts.dart';
 
 PopupMenuButton<String> buildSortPopupMenuButton(BuildContext context) {
   return PopupMenuButton<String>(
@@ -20,7 +21,7 @@ PopupMenuButton<String> buildSortPopupMenuButton(BuildContext context) {
             Provider.of<CovidEntitiesPageModel>(context, listen: false);
         var metricNames = timeseriesModel.sortMetrics();
         metricNames.sort();
-        metricNames.insert(0, timeseriesModel.noSortMetricName);
+        metricNames.insert(0, UiConsts.noSortMetricName);
         return List<PopupMenuEntry<String>>.from(metricNames.map((name) =>
             CheckedPopupMenuItem(
                 value: name,

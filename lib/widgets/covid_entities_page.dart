@@ -12,14 +12,7 @@ import 'per_100k_popup_menu.dart';
 import 'simple_chart_group_page.dart';
 import 'compare_chart_group_page.dart';
 import 'sort_popup_menu.dart';
-
-class _CovidEntityListConsts {
-  static const buttonWidth = 170.0;
-  static const metricWidth = 120.0;
-  static const iconWidth = 24.0;
-  static const entityRowWidth = buttonWidth + metricWidth + iconWidth + 24 + 12;
-  static const defaultDisplayMetric = 'Confirmed 7-Day';
-}
+import 'ui_consts.dart';
 
 enum _CovidEntityListItemDepth { root, stem, leaf }
 
@@ -111,7 +104,7 @@ class _CovidEntitiesWidePage extends StatelessWidget {
 
     return Row(children: [
       SizedBox(
-          width: _CovidEntityListConsts.entityRowWidth,
+          width: UiConsts.entityRowWidth,
           child: CovidEntityList(onRegionPressed)),
       Expanded(
           child: (pageModel.compareRegion)
@@ -164,8 +157,8 @@ class CovidEntityList extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(
-          width: _CovidEntityListConsts.entityRowWidth,
-          child: EntityListHeader(pageModel, timeseriesModel),
+          width: UiConsts.entityRowWidth,
+          child: EntityListHeader(pageModel),
         ),
         Container(child: Divider()),
         Expanded(child: ListView(children: entityList)),
@@ -176,14 +169,13 @@ class CovidEntityList extends StatelessWidget {
 
 class EntityListHeader extends StatelessWidget {
   final CovidEntitiesPageModel _pageModel;
-  final CovidTimeseriesModel _timeseriesModel;
 
-  EntityListHeader(this._pageModel, this._timeseriesModel);
+  EntityListHeader(this._pageModel);
 
   @override
   build(BuildContext context) {
     return SizedBox(
-        width: _CovidEntityListConsts.entityRowWidth,
+        width: UiConsts.entityRowWidth,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
@@ -195,7 +187,7 @@ class EntityListHeader extends StatelessWidget {
               ),
             ),
             SizedBox(
-              width: _CovidEntityListConsts.buttonWidth,
+              width: UiConsts.entityButtonWidth,
               child: TextButton(
                 onPressed: () {},
                 style: ButtonStyle(
@@ -209,7 +201,7 @@ class EntityListHeader extends StatelessWidget {
               ),
             ),
             SizedBox(
-              width: _CovidEntityListConsts.metricWidth,
+              width: UiConsts.entityMetricWidth,
               child: Align(
                 alignment: Alignment.centerRight,
                 child: Text(_sortMetricName()),
@@ -220,9 +212,9 @@ class EntityListHeader extends StatelessWidget {
   }
 
   String _sortMetricName() {
-    var name = (_pageModel.sortMetric != _timeseriesModel.noSortMetricName)
+    var name = (_pageModel.sortMetric != UiConsts.noSortMetricName)
         ? _pageModel.sortMetric
-        : _CovidEntityListConsts.defaultDisplayMetric;
+        : UiConsts.defaultDisplayMetric;
     if (_pageModel.per100k) {
       name = '$name\nper 100,000';
     }
@@ -249,7 +241,7 @@ class EntityListItem extends StatelessWidget {
   build(BuildContext context) {
     var pageModel = Provider.of<CovidEntitiesPageModel>(context);
     return Container(
-        width: _CovidEntityListConsts.entityRowWidth,
+        width: UiConsts.entityRowWidth,
         color: listEquals(_path, pageModel.chartPath()) ? Colors.black12 : null,
         padding: EdgeInsets.only(left: 6, right: 6),
         child: Row(
@@ -272,7 +264,7 @@ class EntityListItem extends StatelessWidget {
                           : null),
             ),
             SizedBox(
-              width: _CovidEntityListConsts.buttonWidth,
+              width: UiConsts.entityButtonWidth,
               child: TextButton(
                 onPressed: onRegionPressed,
                 onLongPress: onRegionLongPress,
@@ -287,7 +279,7 @@ class EntityListItem extends StatelessWidget {
               ),
             ),
             SizedBox(
-              width: _CovidEntityListConsts.metricWidth,
+              width: UiConsts.entityMetricWidth,
               child: Align(
                 alignment: Alignment.centerRight,
                 child: Text(_metricValueString()),
@@ -313,8 +305,8 @@ class EntityListItem extends StatelessWidget {
 
   String _metricValueString() {
     String displayMetric = _pageModel.sortMetric;
-    if (displayMetric == _timeseriesModel.noSortMetricName) {
-      displayMetric = _CovidEntityListConsts.defaultDisplayMetric;
+    if (displayMetric == UiConsts.noSortMetricName) {
+      displayMetric = UiConsts.defaultDisplayMetric;
     }
     var metricValue = _timeseriesModel.entitySortMetric(
         _path, displayMetric, _pageModel.per100k);
