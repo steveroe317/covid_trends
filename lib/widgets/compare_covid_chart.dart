@@ -2,6 +2,7 @@ import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../models/covid_entities_page_model.dart';
 import '../models/covid_timeseries_model.dart';
 
 class CompareCovidChart extends StatelessWidget {
@@ -10,16 +11,18 @@ class CompareCovidChart extends StatelessWidget {
   final int seriesLength;
   final bool per100k;
   final List<Color> seriesColors;
+  final bool showTitle;
   final bool animate = true;
 
   CompareCovidChart(this.paths, this.seriesName, this.seriesLength,
-      this.per100k, this.seriesColors);
+      this.per100k, this.seriesColors, this.showTitle);
 
   @override
   Widget build(BuildContext context) {
     assert(paths.length == seriesColors.length);
 
     var timeseriesModel = Provider.of<CovidTimeseriesModel>(context);
+    var pageModel = Provider.of<CovidEntitiesPageModel>(context);
     var timestamps =
         timeseriesModel.entityTimestamps(paths[0], seriesLength: seriesLength);
     var seriesDataList = paths
@@ -27,18 +30,25 @@ class CompareCovidChart extends StatelessWidget {
             seriesLength: seriesLength, per100k: per100k))
         .toList();
     var seriesList = createTimeseries(timestamps, seriesDataList);
+    var scaleSuffix = (pageModel.per100k) ? ' per 100k' : '';
+    var title = '$seriesName$scaleSuffix';
+
+    List<charts.ChartBehavior> chartBehaviors = [
+      new charts.SeriesLegend(
+          desiredMaxColumns: 2, cellPadding: const EdgeInsets.all(2.0))
+    ];
+    if (showTitle) {
+      chartBehaviors.add(new charts.ChartTitle(title,
+          behaviorPosition: charts.BehaviorPosition.bottom,
+          titleOutsideJustification:
+              charts.OutsideJustification.middleDrawArea));
+    }
 
     return new charts.TimeSeriesChart(
       seriesList,
       animate: animate,
-      // Optionally pass in a [DateTimeFactory] used by the chart. The factory
-      // should create the same type of [DateTime] as the data provided. If none
-      // specified, the default creates local date time.
       dateTimeFactory: const charts.LocalDateTimeFactory(),
-      behaviors: [
-        new charts.SeriesLegend(
-            desiredMaxColumns: 2, cellPadding: const EdgeInsets.all(2.0))
-      ],
+      behaviors: chartBehaviors,
     );
   }
 

@@ -2,6 +2,7 @@ import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../models/covid_entities_page_model.dart';
 import '../models/covid_timeseries_model.dart';
 
 class SimpleCovidChart extends StatelessWidget {
@@ -10,26 +11,36 @@ class SimpleCovidChart extends StatelessWidget {
   final int seriesLength;
   final bool per100k;
   final Color seriesColor;
+  final bool showTitle;
   final bool animate = true;
 
   SimpleCovidChart(this.path, this.seriesName, this.seriesLength, this.per100k,
-      this.seriesColor);
+      this.seriesColor, this.showTitle);
 
   @override
   Widget build(BuildContext context) {
     var timeseriesModel = Provider.of<CovidTimeseriesModel>(context);
+    var pageModel = Provider.of<CovidEntitiesPageModel>(context);
     var timestamps =
         timeseriesModel.entityTimestamps(path, seriesLength: seriesLength);
     var seriesData = timeseriesModel.entitySeriesData(path, seriesName,
         seriesLength: seriesLength, per100k: per100k);
     var seriesList = createTimeseries(timestamps, seriesData);
+    var regionName = (path.length > 0) ? '${path.last} ' : '';
+    var scaleSuffix = (pageModel.per100k) ? ' per 100k' : '';
+    var title = '$regionName$seriesName$scaleSuffix';
 
     return new charts.TimeSeriesChart(
       seriesList,
       animate: animate,
-      // Optionally pass in a [DateTimeFactory] used by the chart. The factory
-      // should create the same type of [DateTime] as the data provided. If none
-      // specified, the default creates local date time.
+      behaviors: (showTitle)
+          ? [
+              new charts.ChartTitle(title,
+                  behaviorPosition: charts.BehaviorPosition.bottom,
+                  titleOutsideJustification:
+                      charts.OutsideJustification.middleDrawArea),
+            ]
+          : [],
       dateTimeFactory: const charts.LocalDateTimeFactory(),
     );
   }

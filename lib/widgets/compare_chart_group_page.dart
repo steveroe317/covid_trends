@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../models/covid_entities_page_model.dart';
 import 'date_range_popup_menu.dart';
 import 'per_100k_popup_menu.dart';
+import 'compare_chart_page.dart';
 import 'compare_covid_chart.dart';
 
 class CompareChartGroupPage extends StatefulWidget {
@@ -66,10 +67,10 @@ class CompareChartList extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView(
       children: <Widget>[
-        _LabelledCompareCovidChart(paths, "Confirmed 7-Day", Colors.black),
-        _LabelledCompareCovidChart(paths, "Deaths 7-Day", Colors.red),
-        _LabelledCompareCovidChart(paths, "Confirmed", Colors.black),
-        _LabelledCompareCovidChart(paths, "Deaths", Colors.red),
+        _LabelledCompareCovidChart(paths, "Confirmed 7-Day"),
+        _LabelledCompareCovidChart(paths, "Deaths 7-Day"),
+        _LabelledCompareCovidChart(paths, "Confirmed"),
+        _LabelledCompareCovidChart(paths, "Deaths"),
       ],
     );
   }
@@ -88,16 +89,18 @@ class CompareChartTable extends StatelessWidget {
             child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-              _LabelledCompareCovidChart(
-                  paths, "Confirmed 7-Day", Colors.black),
-              _LabelledCompareCovidChart(paths, "Deaths 7-Day", Colors.red)
+              _LabelledCompareCovidChart(paths, "Confirmed 7-Day"),
+              _LabelledCompareCovidChart(paths, "Deaths 7-Day")
             ])),
         Expanded(
             child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            _LabelledCompareCovidChart(paths, "Confirmed", Colors.black),
-            _LabelledCompareCovidChart(paths, "Deaths", Colors.red),
+            _LabelledCompareCovidChart(
+              paths,
+              "Confirmed",
+            ),
+            _LabelledCompareCovidChart(paths, "Deaths"),
           ],
         )),
       ],
@@ -108,39 +111,39 @@ class CompareChartTable extends StatelessWidget {
 class _LabelledCompareCovidChart extends StatelessWidget {
   final List<List<String>> paths;
   final String seriesName;
-  final Color seriesColor;
 
-  _LabelledCompareCovidChart(this.paths, this.seriesName, this.seriesColor);
+  _LabelledCompareCovidChart(this.paths, this.seriesName);
 
   @override
   build(BuildContext context) {
     final pageModel = Provider.of<CovidEntitiesPageModel>(context);
     final scaleSuffix = (pageModel.per100k) ? ' per 100k' : '';
-    final seriesColors = generateColors(paths.length);
+    final seriesColors = pageModel.generateColors(paths.length);
     return Column(children: [
       Padding(
           padding: EdgeInsets.fromLTRB(32.0, 32.0, 32.0, 8.0),
           child: SizedBox(
             height: 200.0,
             child: new CompareCovidChart(paths, seriesName,
-                pageModel.seriesLength, pageModel.per100k, seriesColors),
+                pageModel.seriesLength, pageModel.per100k, seriesColors, false),
           )),
-      Center(child: Text('$seriesName$scaleSuffix')),
+      InkWell(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => CompareChartPage(
+                    title: 'Compare Covid Trends',
+                    paths: paths,
+                    seriesName: seriesName)),
+          );
+        },
+        child: Center(
+            child: Text(
+          '$seriesName$scaleSuffix',
+          style: TextStyle(fontWeight: FontWeight.w600),
+        )),
+      )
     ]);
-  }
-
-  List<Color> generateColors(int count) {
-    var colors = <Color>[];
-    var hue = 240.0;
-    const double hueStep = 77.0;
-    for (var index = 0; index < count; ++index) {
-      var hslColor = HSLColor.fromAHSL(1.0, hue, 0.5, 0.5);
-      colors.add(hslColor.toColor());
-      hue += hueStep;
-      if (hue > 360.0) {
-        hue -= 360;
-      }
-    }
-    return colors;
   }
 }

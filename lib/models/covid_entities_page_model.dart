@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
 class CovidEntitiesPageModel with ChangeNotifier {
   static const maxPathListLength = 4;
@@ -84,5 +85,20 @@ class CovidEntitiesPageModel with ChangeNotifier {
   void setCompareRegion(bool value) {
     _compareRegion = value;
     notifyListeners();
+  }
+
+  List<Color> generateColors(int count) {
+    var colors = <Color>[];
+    var hue = 240.0;
+    const double hueStep = 77.0;
+    for (var index = 0; index < count; ++index) {
+      var hslColor = HSLColor.fromAHSL(1.0, hue, 0.5, 0.5);
+      colors.add(hslColor.toColor());
+      hue += hueStep;
+      if (hue > 360.0) {
+        hue -= 360;
+      }
+    }
+    return colors;
   }
 }

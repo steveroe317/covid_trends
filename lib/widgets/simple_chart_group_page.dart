@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../models/covid_entities_page_model.dart';
 import 'date_range_popup_menu.dart';
 import 'per_100k_popup_menu.dart';
+import 'simple_chart_page.dart';
 import 'simple_covid_chart.dart';
 
 class SimpleChartGroupPage extends StatefulWidget {
@@ -121,10 +122,25 @@ class _LabelledSimpleCovidChart extends StatelessWidget {
         child: SizedBox(
           height: 200.0,
           child: new SimpleCovidChart(path, seriesName, pageModel.seriesLength,
-              pageModel.per100k, seriesColor),
+              pageModel.per100k, seriesColor, false),
         ),
       ),
-      Center(child: Text('$regionName$seriesName$scaleSuffix')),
+      InkWell(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => SimpleChartPage(
+                    title: '${path.last} Covid Trends',
+                    path: path,
+                    seriesName: seriesName,
+                    seriesColor: seriesColor)),
+          );
+        },
+        child: Center(
+            child: Text('$regionName$seriesName$scaleSuffix',
+                style: TextStyle(fontWeight: FontWeight.w600))),
+      )
     ]);
   }
 }
