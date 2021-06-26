@@ -12,7 +12,7 @@ import 'per_100k_popup_menu.dart';
 import 'simple_chart_group_page.dart';
 import 'compare_chart_group_page.dart';
 import 'sort_popup_menu.dart';
-import 'ui_consts.dart';
+import 'ui_constants.dart';
 
 enum _CovidEntityListItemDepth { root, stem, leaf }
 
@@ -104,7 +104,7 @@ class _CovidEntitiesWidePage extends StatelessWidget {
 
     return Row(children: [
       SizedBox(
-          width: UiConsts.entityRowWidth,
+          width: UiConstants.entityRowWidth,
           child: CovidEntityList(onRegionPressed)),
       Expanded(
           child: (pageModel.compareRegion)
@@ -157,7 +157,7 @@ class CovidEntityList extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(
-          width: UiConsts.entityRowWidth,
+          width: UiConstants.entityRowWidth,
           child: EntityListHeader(pageModel),
         ),
         Container(child: Divider()),
@@ -175,7 +175,7 @@ class EntityListHeader extends StatelessWidget {
   @override
   build(BuildContext context) {
     return SizedBox(
-        width: UiConsts.entityRowWidth,
+        width: UiConstants.entityRowWidth,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
@@ -187,7 +187,7 @@ class EntityListHeader extends StatelessWidget {
               ),
             ),
             SizedBox(
-              width: UiConsts.entityButtonWidth,
+              width: UiConstants.entityButtonWidth,
               child: TextButton(
                 onPressed: () {},
                 style: ButtonStyle(
@@ -201,7 +201,7 @@ class EntityListHeader extends StatelessWidget {
               ),
             ),
             SizedBox(
-              width: UiConsts.entityMetricWidth,
+              width: UiConstants.entityMetricWidth,
               child: Align(
                 alignment: Alignment.centerRight,
                 child: Text(_sortMetricName()),
@@ -212,9 +212,9 @@ class EntityListHeader extends StatelessWidget {
   }
 
   String _sortMetricName() {
-    var name = (_pageModel.sortMetric != UiConsts.noSortMetricName)
+    var name = (_pageModel.sortMetric != UiConstants.noSortMetricName)
         ? _pageModel.sortMetric
-        : UiConsts.defaultDisplayMetric;
+        : UiConstants.defaultDisplayMetric;
     if (_pageModel.per100k) {
       name = '$name\nper 100,000';
     }
@@ -241,7 +241,7 @@ class EntityListItem extends StatelessWidget {
   build(BuildContext context) {
     var pageModel = Provider.of<CovidEntitiesPageModel>(context);
     return Container(
-        width: UiConsts.entityRowWidth,
+        width: UiConstants.entityRowWidth,
         color: listEquals(_path, pageModel.chartPath()) ? Colors.black12 : null,
         padding: EdgeInsets.only(left: 6, right: 6),
         child: Row(
@@ -264,7 +264,7 @@ class EntityListItem extends StatelessWidget {
                           : null),
             ),
             SizedBox(
-              width: UiConsts.entityButtonWidth,
+              width: UiConstants.entityButtonWidth,
               child: TextButton(
                 onPressed: onRegionPressed,
                 onLongPress: onRegionLongPress,
@@ -279,7 +279,7 @@ class EntityListItem extends StatelessWidget {
               ),
             ),
             SizedBox(
-              width: UiConsts.entityMetricWidth,
+              width: UiConstants.entityMetricWidth,
               child: Align(
                 alignment: Alignment.centerRight,
                 child: Text(_metricValueString()),
@@ -305,8 +305,8 @@ class EntityListItem extends StatelessWidget {
 
   String _metricValueString() {
     String displayMetric = _pageModel.sortMetric;
-    if (displayMetric == UiConsts.noSortMetricName) {
-      displayMetric = UiConsts.defaultDisplayMetric;
+    if (displayMetric == UiConstants.noSortMetricName) {
+      displayMetric = UiConstants.defaultDisplayMetric;
     }
     var metricValue = _timeseriesModel.entitySortMetric(
         _path, displayMetric, _pageModel.per100k);

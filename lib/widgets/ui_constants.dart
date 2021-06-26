@@ -1,4 +1,4 @@
-class UiConsts {
+class UiConstants {
   static const entityButtonWidth = 170.0;
   static const entityMetricWidth = 120.0;
   static const iconWidth = 24.0;

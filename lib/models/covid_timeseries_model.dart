@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 
 import 'admin_entity.dart';
+import 'model_constants.dart';
 
 class CovidTimeseriesModel with ChangeNotifier {
   bool _initialized = false;
@@ -9,7 +10,8 @@ class CovidTimeseriesModel with ChangeNotifier {
   void initialize() async {
     if (!_initialized) {
       _initialized = true;
-      _rootEntity = await AdminEntity.create(['World'], null);
+      _rootEntity =
+          await AdminEntity.create([ModelConstants.rootEntityName], null);
       notifyListeners();
     }
   }
@@ -24,7 +26,7 @@ class CovidTimeseriesModel with ChangeNotifier {
       return entity;
     }
     if (entity == null) {
-      if (path.first == 'World') {
+      if (path.first == ModelConstants.rootEntityName) {
         return _findEntity(path.sublist(1), _rootEntity);
       } else {
         return null;

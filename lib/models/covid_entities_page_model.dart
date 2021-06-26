@@ -1,17 +1,17 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../widgets/ui_consts.dart';
+import '../widgets/ui_constants.dart';
+import 'model_constants.dart';
 
 class CovidEntitiesPageModel with ChangeNotifier {
   static const maxPathListLength = 4;
   List<String> _path = List<String>.empty();
   List<String> _chartPath = List<String>.empty();
   var _pathList = <List<String>>[
-    // TODO: Is this a reasonable initial value?
-    ['World']
+    [ModelConstants.rootEntityName]
   ];
-  String _sortMetric = UiConsts.noSortMetricName;
+  String _sortMetric = UiConstants.noSortMetricName;
   int _seriesLength = 0;
   bool _per100k = false;
   bool _compareRegion = false;
