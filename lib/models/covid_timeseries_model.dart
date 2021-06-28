@@ -113,12 +113,7 @@ class CovidTimeseriesModel with ChangeNotifier {
       if (root == null) {
         return 0.0;
       }
-      var metricValue = root.seriesDataLast(sortMetric);
-      if (per100k) {
-        metricValue =
-            100000.0 * metricValue / root.seriesDataLast('Population');
-      }
-      return metricValue;
+      return root.sortMetricValue(sortMetric, per100k);
     }
 
     var parentPath = path.sublist(0, path.length - 1);
@@ -126,7 +121,6 @@ class CovidTimeseriesModel with ChangeNotifier {
     if (entity == null) {
       return 0;
     }
-
     return entity.childSortMetricValue(path.last, sortMetric, per100k);
   }
 

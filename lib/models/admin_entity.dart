@@ -7,6 +7,7 @@ class AdminEntity {
   final List<String> _path;
   List<int> _timestamps;
   Map<String, List<double>> _timeseries;
+  Map<String, int> _sortKeys = {};
   Map<String, AdminEntity> _children = {};
   Map<String, AdminChildIndexData> _childIndex = {};
   AdminEntity _parent;
@@ -52,6 +53,7 @@ class AdminEntity {
   void importDocData(Map<String, dynamic> docData) {
     _timestamps = _extractDocTimestamps(docData);
     _timeseries = _extractDocTimeseries(docData);
+    _sortKeys = _extractDocSortKeys(docData);
     _childIndex = _extractDocChildIndex(docData);
     createRollingAverageDiff('Confirmed', 'Confirmed 7-Day', 7);
     createRollingAverageDiff('Deaths', 'Deaths 7-Day', 7);
@@ -79,12 +81,22 @@ class AdminEntity {
       Map<String, dynamic> docData) {
     var timeseries = Map<String, List<double>>();
     for (var key in docData.keys) {
-      if (key != "Date" && key != "Children") {
+      // TODO: Move timeseries into their own "Timeseries" field.
+      if (key != "Date" && key != "Children" && key != "SortKeys") {
         timeseries[key] =
             List<double>.from(docData[key].map((x) => x.toDouble()));
       }
     }
     return timeseries;
+  }
+
+  static Map<String, int> _extractDocSortKeys(Map<String, dynamic> docData) {
+    Map<String, dynamic> docMetrics = docData['SortKeys'];
+    Map<String, int> sortKeys = {};
+    for (var metric in docMetrics.keys) {
+      sortKeys[metric] = docMetrics[metric];
+    }
+    return sortKeys;
   }
 
   static Map<String, AdminChildIndexData> _extractDocChildIndex(
@@ -215,15 +227,6 @@ class AdminEntity {
     return List<double>.filled(_timestamps.length - displayStart, 0);
   }
 
-  // TODO: Remove if/when entities contain their own sort metrics in addition
-  // to their children's sort metrics.
-  double seriesDataLast(String key) {
-    if (_timeseries.containsKey(key)) {
-      return _timeseries[key].last;
-    }
-    return 0;
-  }
-
   bool get hasChildren => _childIndex.isNotEmpty;
 
   bool childrenContains(String name) {
@@ -262,6 +265,23 @@ class AdminEntity {
     return names;
   }
 
+  double normalizedMetric(int metric, int population, bool per100k) {
+    var value = metric.toDouble();
+    if (population == 0) {
+      value = 0.0;
+      population = 1;
+    }
+    if (per100k) {
+      value = (100000 * value) / population;
+    }
+    return value;
+  }
+
+  double sortMetricValue(String sortMetric, bool per100k) {
+    return normalizedMetric(
+        _sortKeys[sortMetric], _sortKeys['Population'], per100k);
+  }
+
   double childSortMetricValue(
       String childName, String sortMetric, bool per100k) {
     if (!_childIndex.containsKey(childName)) {
@@ -270,16 +290,8 @@ class AdminEntity {
     if (!_childIndex[childName].sortKeys.containsKey(sortMetric)) {
       return 0.0;
     }
-    var value = _childIndex[childName].sortKeys[sortMetric].toDouble();
-    var population = _childIndex[childName].sortKeys['Population'].toDouble();
-    if (population == 0) {
-      value = 0;
-      population = 1;
-    }
-    if (per100k) {
-      value = (100000 * value) / population;
-    }
-    return value;
+    return normalizedMetric(_childIndex[childName].sortKeys[sortMetric],
+        _childIndex[childName].sortKeys['Population'], per100k);
   }
 
   bool childHasChildren(String name) {
