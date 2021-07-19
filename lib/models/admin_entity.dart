@@ -13,6 +13,13 @@ class AdminEntity {
   AdminEntity _parent;
   bool _isStale = false;
 
+  final _populationMetrics = [
+    'Confirmed',
+    'Confirmed 7-Day',
+    'Deaths',
+    'Deaths 7-Day'
+  ];
+
   AdminEntity.empty()
       : _path = <String>[],
         _timestamps = <int>[],
@@ -269,13 +276,18 @@ class AdminEntity {
   }
 
   double normalizedMetric(int metric, int population, bool per100k) {
-    var value = metric.toDouble();
+    var value = 0.0;
+    if (metric != null) {
+      value = metric.toDouble();
+    }
     if (population == 0) {
       value = 0.0;
       population = 1;
     }
     if (per100k) {
-      value = (100000.0 * value) / population;
+      if (_populationMetrics.contains(metric)) {
+        value = (100000.0 * value) / population;
+      }
     }
     return value;
   }
