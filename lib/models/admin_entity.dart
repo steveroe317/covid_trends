@@ -252,14 +252,17 @@ class AdminEntity {
       if (valueA == valueB) {
         return a.compareTo(b);
       }
-      var keyCompare = valueA - valueB;
+      var keyDifference = valueA - valueB;
       if (!sortUp) {
-        keyCompare = -keyCompare;
+        keyDifference = -keyDifference;
       }
-      if (!per100k) {
-        keyCompare *= 100000;
+      if (keyDifference > 0.0) {
+        return 1;
+      } else if (keyDifference < 0.0) {
+        return -1;
+      } else {
+        return 0;
       }
-      return keyCompare.toInt();
     });
 
     return names;
@@ -272,7 +275,7 @@ class AdminEntity {
       population = 1;
     }
     if (per100k) {
-      value = (100000 * value) / population;
+      value = (100000.0 * value) / population;
     }
     return value;
   }

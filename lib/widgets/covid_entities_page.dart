@@ -310,6 +310,6 @@ class EntityListItem extends StatelessWidget {
     }
     var metricValue = _timeseriesModel.entitySortMetric(
         _path, displayMetric, _pageModel.per100k);
-    return (metricValue != 0) ? numberFormatter.format(metricValue) : '';
+    return numberFormatter.format(metricValue);
   }
 }

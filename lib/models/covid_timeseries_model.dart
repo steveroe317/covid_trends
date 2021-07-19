@@ -119,7 +119,7 @@ class CovidTimeseriesModel with ChangeNotifier {
     var parentPath = path.sublist(0, path.length - 1);
     var entity = _findEntity(parentPath, null);
     if (entity == null) {
-      return 0;
+      return 0.0;
     }
     return entity.childSortMetricValue(path.last, sortMetric, per100k);
   }
