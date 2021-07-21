@@ -38,6 +38,7 @@ class AdminEntity {
     }
     var entity = AdminEntity._(path, parent);
     entity.importDocData(doc.data());
+    entity._isStale = false;
     if (parent != null) {
       parent._children[path.last] = entity;
     }

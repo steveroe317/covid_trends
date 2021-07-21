@@ -7,6 +7,7 @@ class CovidTimeseriesModel with ChangeNotifier {
   bool _initialized = false;
   AdminEntity _rootEntity = AdminEntity.empty();
 
+  // TODO: Why is initialize() called 3 times on startup?  Can this be reduced?
   void initialize() async {
     if (!_initialized) {
       _initialized = true;
@@ -50,8 +51,10 @@ class CovidTimeseriesModel with ChangeNotifier {
   }
 
   void refreshEntity(AdminEntity entity) async {
-    await entity.refresh();
-    notifyListeners();
+    if (entity.path.length > 0) {
+      await entity.refresh();
+      notifyListeners();
+    }
   }
 
   List<int> entityTimestamps(List<String> path, {seriesLength = 0}) {
