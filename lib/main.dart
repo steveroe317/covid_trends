@@ -68,7 +68,7 @@ class _CovidAppTimestampWrapperState extends State<CovidAppTimestampWrapper> {
           }
           var timeseriesModel =
               Provider.of<CovidTimeseriesModel>(context, listen: false);
-          timeseriesModel.markStale();
+          Future<void>(timeseriesModel.markStale);
           return MaterialApp(
             title: 'Covid Trends',
             theme: ThemeData(
