@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../models/covid_entities_page_model.dart';
 import 'date_range_popup_menu.dart';
 import 'per_100k_popup_menu.dart';
+import 'share_button.dart';
 import 'simple_covid_chart.dart';
 
 class SimpleChartPage extends StatefulWidget {
@@ -26,6 +27,7 @@ class _SimpleChartPageState extends State<SimpleChartPage> {
   final List<String> path;
   final String seriesName;
   final Color seriesColor;
+  final chartGroupKey = GlobalKey();
 
   _SimpleChartPageState(this.path, this.seriesName, this.seriesColor);
 
@@ -34,12 +36,16 @@ class _SimpleChartPageState extends State<SimpleChartPage> {
     return Consumer<CovidEntitiesPageModel>(
         builder: (context, pageModel, child) {
       return Scaffold(
-        appBar: AppBar(title: Text(widget.title), actions: [
-          buildDateRangePopupMenuButton(context),
-          buildper100kPopupMenuButton(context),
-        ]),
-        body: Center(child: SimpleChart(path, seriesName, seriesColor)),
-      );
+          appBar: AppBar(title: Text(widget.title), actions: [
+            buildDateRangePopupMenuButton(context),
+            buildper100kPopupMenuButton(context),
+            buildShareButton(context, chartGroupKey),
+          ]),
+          body: Center(
+            child: RepaintBoundary(
+                key: chartGroupKey,
+                child: SimpleChart(path, seriesName, seriesColor)),
+          ));
     });
   }
 }

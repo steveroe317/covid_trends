@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../models/covid_entities_page_model.dart';
-import 'date_range_popup_menu.dart';
-import 'per_100k_popup_menu.dart';
 import 'compare_chart_page.dart';
 import 'compare_covid_chart.dart';
+import 'date_range_popup_menu.dart';
+import 'per_100k_popup_menu.dart';
+import 'share_button.dart';
 
 class CompareChartGroupPage extends StatefulWidget {
   final String title;
@@ -21,6 +22,7 @@ class CompareChartGroupPage extends StatefulWidget {
 
 class _CompareChartGroupPageState extends State<CompareChartGroupPage> {
   final List<List<String>> paths;
+  final chartGroupKey = GlobalKey();
 
   _CompareChartGroupPageState(this.paths);
 
@@ -29,12 +31,15 @@ class _CompareChartGroupPageState extends State<CompareChartGroupPage> {
     return Consumer<CovidEntitiesPageModel>(
         builder: (context, pageModel, child) {
       return Scaffold(
-        appBar: AppBar(title: Text(widget.title), actions: [
-          buildDateRangePopupMenuButton(context),
-          buildper100kPopupMenuButton(context),
-        ]),
-        body: Center(child: CompareChartGroup(paths)),
-      );
+          appBar: AppBar(title: Text(widget.title), actions: [
+            buildDateRangePopupMenuButton(context),
+            buildper100kPopupMenuButton(context),
+            buildShareButton(context, chartGroupKey),
+          ]),
+          body: Center(
+            child: RepaintBoundary(
+                key: chartGroupKey, child: CompareChartGroup(paths)),
+          ));
     });
   }
 }

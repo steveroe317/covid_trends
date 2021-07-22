@@ -9,6 +9,7 @@ import 'date_range_popup_menu.dart';
 //import 'debug_popup_menu.dart';
 import 'compare_region_popup_menu.dart';
 import 'per_100k_popup_menu.dart';
+import 'share_button.dart';
 import 'simple_chart_group_page.dart';
 import 'compare_chart_group_page.dart';
 import 'sort_popup_menu.dart';
@@ -27,30 +28,43 @@ class CovidEntitiesPage extends StatefulWidget {
 class _CovidEntitiesPageState extends State<CovidEntitiesPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text(widget.title),
-          actions: [
-            buildSortPopupMenuButton(context),
-            buildCompareRegionPopupMenuButton(context),
-            buildDateRangePopupMenuButton(context),
-            buildper100kPopupMenuButton(context),
-            //buildDebugPopupMenuButton(context),
-          ],
-        ),
-        body: LayoutBuilder(
-          builder: (context, constraints) {
-            if (constraints.maxWidth > 700) {
-              return _CovidEntitiesWidePage();
-            } else {
-              return _CovidEntitiesNarrowPage();
-            }
-          },
-        ));
+    final chartGroupKey = GlobalKey();
+    return LayoutBuilder(builder: (context, constraints) {
+      if (constraints.maxWidth > 700) {
+        return Scaffold(
+          appBar: AppBar(
+            title: Text(widget.title),
+            actions: [
+              buildSortPopupMenuButton(context),
+              buildCompareRegionPopupMenuButton(context),
+              buildDateRangePopupMenuButton(context),
+              buildper100kPopupMenuButton(context),
+              buildShareButton(context, chartGroupKey),
+              //buildDebugPopupMenuButton(context),
+            ],
+          ),
+          body: _CovidEntitiesWideListBody(chartGroupKey),
+        );
+      } else {
+        return Scaffold(
+          appBar: AppBar(
+            title: Text(widget.title),
+            actions: [
+              buildSortPopupMenuButton(context),
+              buildCompareRegionPopupMenuButton(context),
+              buildDateRangePopupMenuButton(context),
+              buildper100kPopupMenuButton(context),
+              //buildDebugPopupMenuButton(context),
+            ],
+          ),
+          body: _CovidEntitiesNarrowListBody(),
+        );
+      }
+    });
   }
 }
 
-class _CovidEntitiesNarrowPage extends StatelessWidget {
+class _CovidEntitiesNarrowListBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var pageModel = Provider.of<CovidEntitiesPageModel>(context);
@@ -87,7 +101,10 @@ class _CovidEntitiesNarrowPage extends StatelessWidget {
   }
 }
 
-class _CovidEntitiesWidePage extends StatelessWidget {
+class _CovidEntitiesWideListBody extends StatelessWidget {
+  final Key _chartGroupPage;
+
+  _CovidEntitiesWideListBody(this._chartGroupPage);
   @override
   Widget build(BuildContext context) {
     var pageModel = Provider.of<CovidEntitiesPageModel>(context);
@@ -107,9 +124,12 @@ class _CovidEntitiesWidePage extends StatelessWidget {
           width: UiConstants.entityRowWidth,
           child: CovidEntityList(onRegionPressed)),
       Expanded(
-          child: (pageModel.compareRegion)
-              ? CompareChartGroup(pageModel.pathList)
-              : SimpleChartGroup(pageModel.chartPath())),
+        child: RepaintBoundary(
+            key: _chartGroupPage,
+            child: (pageModel.compareRegion)
+                ? CompareChartGroup(pageModel.pathList)
+                : SimpleChartGroup(pageModel.chartPath())),
+      )
     ]);
   }
 }
