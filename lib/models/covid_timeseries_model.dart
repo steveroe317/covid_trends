@@ -138,7 +138,6 @@ class CovidTimeseriesModel with ChangeNotifier {
   }
 
   void markStale() {
-    print('DEBUG: Mark stale');
     _rootEntity.markTreeStale();
     notifyListeners();
   }
