@@ -276,17 +276,18 @@ class AdminEntity {
     return names;
   }
 
-  double normalizedMetric(int metric, int population, bool per100k) {
+  double normalizedMetric(
+      int metricValue, String metricName, int population, bool per100k) {
     var value = 0.0;
-    if (metric != null) {
-      value = metric.toDouble();
+    if (metricValue != null) {
+      value = metricValue.toDouble();
     }
     if (population == 0) {
       value = 0.0;
       population = 1;
     }
     if (per100k) {
-      if (_populationMetrics.contains(metric)) {
+      if (_populationMetrics.contains(metricName)) {
         value = (100000.0 * value) / population;
       }
     }
@@ -295,7 +296,7 @@ class AdminEntity {
 
   double sortMetricValue(String sortMetric, bool per100k) {
     return normalizedMetric(
-        _sortKeys[sortMetric], _sortKeys['Population'], per100k);
+        _sortKeys[sortMetric], sortMetric, _sortKeys['Population'], per100k);
   }
 
   double childSortMetricValue(
@@ -307,7 +308,7 @@ class AdminEntity {
       return 0.0;
     }
     return normalizedMetric(_childIndex[childName].sortKeys[sortMetric],
-        _childIndex[childName].sortKeys['Population'], per100k);
+        sortMetric, _childIndex[childName].sortKeys['Population'], per100k);
   }
 
   bool childHasChildren(String name) {
