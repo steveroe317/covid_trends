@@ -23,15 +23,31 @@ class CompareCovidChart extends StatelessWidget {
 
     var timeseriesModel = Provider.of<CovidTimeseriesModel>(context);
     var pageModel = Provider.of<CovidEntitiesPageModel>(context);
-    var timestamps =
-        timeseriesModel.entityTimestamps(paths[0], seriesLength: seriesLength);
+
+    var scaleSuffix = (pageModel.per100k) ? ' per 100k' : '';
+    var title = '$seriesName$scaleSuffix';
+
     var seriesDataList = paths
         .map((path) => timeseriesModel.entitySeriesData(path, seriesName,
             seriesLength: seriesLength, per100k: per100k))
         .toList();
+    // Get timestamps from the root of the admin entity tree, as it is most
+    // likely to have been loaded already.
+    var timestamps = timeseriesModel.entityTimestamps(paths[0].sublist(0, 1),
+        seriesLength: seriesLength);
+
+    // If the model timeseries data is not yet loaded, subsitute stub values.
+    // When the data is loaded a rebuild will be triggered.
+    if (timestamps.isEmpty) {
+      timestamps = [0, 1];
+    }
+    for (int index = 0; index < seriesDataList.length; ++index) {
+      if (seriesDataList[index].isEmpty) {
+        seriesDataList[index] = List<double>.filled(timestamps.length, 0.0);
+      }
+    }
+
     var seriesList = createTimeseries(timestamps, seriesDataList);
-    var scaleSuffix = (pageModel.per100k) ? ' per 100k' : '';
-    var title = '$seriesName$scaleSuffix';
 
     List<charts.ChartBehavior> chartBehaviors = [
       new charts.SeriesLegend(
@@ -58,7 +74,7 @@ class CompareCovidChart extends StatelessWidget {
     var chartDataList = <List<TimeSeriesCovid>>[];
     for (var s = 0; s < seriesDataList.length; ++s) {
       var chartData = <TimeSeriesCovid>[];
-      // Use series data length instesad of timestamp length as series data may
+      // Use series data length instead of timestamp length as series data may
       // not be populated yet.
       for (var t = 0; t < seriesDataList[s].length; t++) {
         chartData.add(new TimeSeriesCovid(

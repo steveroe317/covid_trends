@@ -40,6 +40,12 @@ class CovidTimeseriesModel with ChangeNotifier {
     }
   }
 
+  void loadEntities(List<List<String>> paths) async {
+    for (var path in paths) {
+      await loadEntityFromRoot(path);
+    }
+  }
+
   void loadEntity(List<String> path) async {
     if (_findEntity(path, null) == null && path.length > 1) {
       var parent = _findEntity(path.sublist(0, path.length - 1), null);
@@ -47,6 +53,27 @@ class CovidTimeseriesModel with ChangeNotifier {
         await AdminEntity.create(path, parent);
         notifyListeners();
       }
+    }
+  }
+
+  Future<void> loadEntityFromRoot(List<String> path) async {
+    AdminEntity parent;
+    bool entityCreated = false;
+    for (var depth = 1; depth <= path.length; ++depth) {
+      var childLocalPath = path.sublist(depth - 1, depth);
+      var child = _findEntity(childLocalPath, parent);
+      if (child == null) {
+        var childFullPath = path.sublist(0, depth);
+        child = await AdminEntity.create(childFullPath, parent);
+        if (child == null) {
+          break;
+        }
+        entityCreated = true;
+      }
+      parent = child;
+    }
+    if (entityCreated) {
+      notifyListeners();
     }
   }
 

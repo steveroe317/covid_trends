@@ -1,10 +1,14 @@
+import 'package:covid_trends/models/starred_model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../widgets/ui_constants.dart';
+import 'app_data_cache.dart';
 import 'model_constants.dart';
+import 'starred_model.dart';
 
 class CovidEntitiesPageModel with ChangeNotifier {
+  AppDataCache appDataCache;
   static const maxPathListLength = 4;
   List<String> _path = List<String>.empty();
   List<String> _chartPath = List<String>.empty();
@@ -15,10 +19,12 @@ class CovidEntitiesPageModel with ChangeNotifier {
   int _seriesLength = 0;
   bool _per100k = false;
   bool _compareRegion = false;
+  String _editStarName = '';
 
   CovidEntitiesPageModel(List<String> path) {
     _path = List<String>.from(path);
     _chartPath = List<String>.from(path);
+    appDataCache = AppDataCache('app_state');
   }
 
   List<String> path() {
@@ -53,6 +59,16 @@ class CovidEntitiesPageModel with ChangeNotifier {
     }
     _pathList.add(path);
     notifyListeners();
+  }
+
+  List<List<String>> getAllModelPaths() {
+    List<List<String>> allPaths = [];
+    allPaths.add(_path);
+    allPaths.add(_chartPath);
+    for (var path in _pathList) {
+      allPaths.add(path);
+    }
+    return allPaths;
   }
 
   void clearPathList() {
@@ -101,5 +117,44 @@ class CovidEntitiesPageModel with ChangeNotifier {
       }
     }
     return colors;
+  }
+
+  List<String> getStarredNames() {
+    return appDataCache.getStarredNames();
+  }
+
+  String get editStarName => _editStarName;
+
+  set editStarName(value) {
+    _editStarName = value;
+  }
+
+  void addStar(String name) {
+    var star = StarredModel(name, _compareRegion, per100k, seriesLength, _path,
+        _pathList, _chartPath);
+    appDataCache.addStarred(name, star);
+  }
+
+  void deleteStar(String name) {
+    appDataCache.deleteStarred(name);
+  }
+
+  void renameStar(String oldName, String newName) {
+    var star = appDataCache.getStarred(oldName);
+    appDataCache.deleteStarred(oldName);
+    appDataCache.addStarred(newName, star);
+  }
+
+  void loadStar(String name) {
+    var star = appDataCache.getStarred(name);
+    if (star != null) {
+      _compareRegion = star.compareRegion;
+      _per100k = star.per100k;
+      _seriesLength = star.seriesLength;
+      _path = star.path.toList();
+      _pathList = StarredModel.copyListListString(star.pathList);
+      _chartPath = star.chartPath.toList();
+      notifyListeners();
+    }
   }
 }

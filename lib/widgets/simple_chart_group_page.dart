@@ -8,6 +8,7 @@ import 'per_100k_popup_menu.dart';
 import 'share_button.dart';
 import 'simple_chart_page.dart';
 import 'simple_covid_chart.dart';
+import 'star_popup_menu.dart';
 
 class SimpleChartGroupPage extends StatefulWidget {
   final String title;
@@ -33,6 +34,7 @@ class _SimpleChartGroupPageState extends State<SimpleChartGroupPage> {
           appBar: AppBar(title: Text(widget.title), actions: [
             buildDateRangePopupMenuButton(context),
             buildper100kPopupMenuButton(context),
+            buildStarPopupMenuButton(context),
             buildShareButton(context, chartGroupKey),
           ]),
           body: Center(

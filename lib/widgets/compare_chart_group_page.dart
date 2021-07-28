@@ -8,6 +8,7 @@ import 'compare_covid_chart.dart';
 import 'date_range_popup_menu.dart';
 import 'per_100k_popup_menu.dart';
 import 'share_button.dart';
+import 'star_popup_menu.dart';
 
 class CompareChartGroupPage extends StatefulWidget {
   final String title;
@@ -34,6 +35,7 @@ class _CompareChartGroupPageState extends State<CompareChartGroupPage> {
           appBar: AppBar(title: Text(widget.title), actions: [
             buildDateRangePopupMenuButton(context),
             buildper100kPopupMenuButton(context),
+            buildStarPopupMenuButton(context),
             buildShareButton(context, chartGroupKey),
           ]),
           body: Center(

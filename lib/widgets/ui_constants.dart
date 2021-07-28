@@ -6,4 +6,5 @@ class UiConstants {
       entityButtonWidth + entityMetricWidth + iconWidth + 24 + 12;
   static const defaultDisplayMetric = 'Confirmed 7-Day';
   static const noSortMetricName = 'Sort By Name';
+  static const saveStar = 'Save Chart';
 }

@@ -13,6 +13,7 @@ import 'share_button.dart';
 import 'simple_chart_group_page.dart';
 import 'compare_chart_group_page.dart';
 import 'sort_popup_menu.dart';
+import 'star_popup_menu.dart';
 import 'ui_constants.dart';
 
 enum _CovidEntityListItemDepth { root, stem, leaf }
@@ -39,6 +40,7 @@ class _CovidEntitiesPageState extends State<CovidEntitiesPage> {
               buildCompareRegionPopupMenuButton(context),
               buildDateRangePopupMenuButton(context),
               buildper100kPopupMenuButton(context),
+              buildStarPopupMenuButton(context),
               buildShareButton(context, chartGroupKey),
               //buildDebugPopupMenuButton(context),
             ],
