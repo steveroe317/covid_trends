@@ -1,3 +1,4 @@
+import 'package:covid_trends/widgets/ui_parameters.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -15,6 +16,7 @@ import 'compare_chart_group_page.dart';
 import 'sort_popup_menu.dart';
 import 'star_popup_menu.dart';
 import 'ui_constants.dart';
+import 'ui_parameters.dart';
 
 enum _CovidEntityListItemDepth { root, stem, leaf }
 
@@ -29,44 +31,96 @@ class CovidEntitiesPage extends StatefulWidget {
 class _CovidEntitiesPageState extends State<CovidEntitiesPage> {
   @override
   Widget build(BuildContext context) {
-    final chartGroupKey = GlobalKey();
     return LayoutBuilder(builder: (context, constraints) {
       if (constraints.maxWidth > 700) {
-        return Scaffold(
-          appBar: AppBar(
-            title: Text(widget.title),
-            actions: [
-              buildSortPopupMenuButton(context),
-              buildCompareRegionPopupMenuButton(context),
-              buildDateRangePopupMenuButton(context),
-              buildper100kPopupMenuButton(context),
-              buildStarPopupMenuButton(context),
-              buildShareButton(context, chartGroupKey),
-              //buildDebugPopupMenuButton(context),
-            ],
-          ),
-          body: _CovidEntitiesWideListBody(chartGroupKey),
-        );
+        return Provider<UiParameters>(
+            create: (_) => UiParameters(UiAppShape.Wide),
+            child: _buildWideScaffold(context, widget.title));
+      } else if (constraints.maxWidth >= 350) {
+        return Provider<UiParameters>(
+            create: (_) => UiParameters(UiAppShape.Narrow),
+            child: _buildNarrowScaffold(context, false));
       } else {
-        return Scaffold(
-          appBar: AppBar(
-            title: Text(widget.title),
-            actions: [
-              buildSortPopupMenuButton(context),
-              buildCompareRegionPopupMenuButton(context),
-              buildDateRangePopupMenuButton(context),
-              buildper100kPopupMenuButton(context),
-              //buildDebugPopupMenuButton(context),
-            ],
-          ),
-          body: _CovidEntitiesNarrowListBody(),
-        );
+        return Provider<UiParameters>(
+            create: (_) => UiParameters(UiAppShape.Mini),
+            child: _buildNarrowScaffold(context, true));
       }
     });
+  }
+
+  Scaffold _buildWideScaffold(BuildContext context, String title) {
+    final chartGroupKey = GlobalKey();
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(title),
+        actions: [
+          buildSortPopupMenuButton(context),
+          buildCompareRegionPopupMenuButton(context),
+          buildDateRangePopupMenuButton(context),
+          buildper100kPopupMenuButton(context),
+          buildStarPopupMenuButton(context),
+          buildShareButton(context, chartGroupKey),
+          //buildDebugPopupMenuButton(context),
+        ],
+      ),
+      body: _CovidEntitiesWideListBody(chartGroupKey),
+    );
+  }
+}
+
+Scaffold _buildNarrowScaffold(BuildContext context, bool isMini) {
+  return Scaffold(
+    appBar: AppBar(
+      title: null,
+      actions: [
+        buildSortPopupMenuButton(context),
+        buildCompareRegionPopupMenuButton(context),
+        buildDateRangePopupMenuButton(context),
+        buildper100kPopupMenuButton(context),
+        //buildDebugPopupMenuButton(context),
+      ],
+    ),
+    body: _CovidEntitiesNarrowListBody(),
+  );
+}
+
+class _CovidEntitiesWideListBody extends StatelessWidget {
+  final Key _chartGroupPage;
+
+  _CovidEntitiesWideListBody(this._chartGroupPage);
+  @override
+  Widget build(BuildContext context) {
+    var pageModel = Provider.of<CovidEntitiesPageModel>(context);
+    var uiParameters = context.read<UiParameters>();
+
+    // This onRegionPressed() function does not need the build context,
+    // so it can be defined outside build().
+    void Function(CovidTimeseriesModel, List<String>) onRegionPressed(
+        CovidTimeseriesModel timeseriesModel, List<String> path) {
+      timeseriesModel.loadEntity(path);
+      pageModel.setChartPath(path);
+      pageModel.addPathList(path);
+      return null;
+    }
+
+    return Row(children: [
+      SizedBox(
+          width: uiParameters.entityRowWidth,
+          child: CovidEntityList(onRegionPressed)),
+      Expanded(
+        child: RepaintBoundary(
+            key: _chartGroupPage,
+            child: (pageModel.compareRegion)
+                ? CompareChartGroup(pageModel.pathList)
+                : SimpleChartGroup(pageModel.chartPath())),
+      )
+    ]);
   }
 }
 
 class _CovidEntitiesNarrowListBody extends StatelessWidget {
+  _CovidEntitiesNarrowListBody();
+
   @override
   Widget build(BuildContext context) {
     var pageModel = Provider.of<CovidEntitiesPageModel>(context);
@@ -103,39 +157,6 @@ class _CovidEntitiesNarrowListBody extends StatelessWidget {
   }
 }
 
-class _CovidEntitiesWideListBody extends StatelessWidget {
-  final Key _chartGroupPage;
-
-  _CovidEntitiesWideListBody(this._chartGroupPage);
-  @override
-  Widget build(BuildContext context) {
-    var pageModel = Provider.of<CovidEntitiesPageModel>(context);
-
-    // This onRegionPressed() function does not need the build context,
-    // so it can be defined outside build().
-    void Function(CovidTimeseriesModel, List<String>) onRegionPressed(
-        CovidTimeseriesModel timeseriesModel, List<String> path) {
-      timeseriesModel.loadEntity(path);
-      pageModel.setChartPath(path);
-      pageModel.addPathList(path);
-      return null;
-    }
-
-    return Row(children: [
-      SizedBox(
-          width: UiConstants.entityRowWidth,
-          child: CovidEntityList(onRegionPressed)),
-      Expanded(
-        child: RepaintBoundary(
-            key: _chartGroupPage,
-            child: (pageModel.compareRegion)
-                ? CompareChartGroup(pageModel.pathList)
-                : SimpleChartGroup(pageModel.chartPath())),
-      )
-    ]);
-  }
-}
-
 class CovidEntityList extends StatelessWidget {
   final void Function(CovidTimeseriesModel, List<String>) _onRegionPressed;
 
@@ -145,6 +166,7 @@ class CovidEntityList extends StatelessWidget {
   build(BuildContext context) {
     var timeseriesModel = Provider.of<CovidTimeseriesModel>(context);
     var pageModel = Provider.of<CovidEntitiesPageModel>(context);
+    var uiParameters = context.read<UiParameters>();
     final childNames = timeseriesModel.entityChildNames(pageModel.path(),
         sortBy: pageModel.sortMetric,
         sortUp: false,
@@ -179,7 +201,7 @@ class CovidEntityList extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(
-          width: UiConstants.entityRowWidth,
+          width: uiParameters.entityRowWidth,
           child: EntityListHeader(pageModel),
         ),
         Container(child: Divider()),
@@ -196,8 +218,9 @@ class EntityListHeader extends StatelessWidget {
 
   @override
   build(BuildContext context) {
+    var uiParameters = context.read<UiParameters>();
     return SizedBox(
-        width: UiConstants.entityRowWidth,
+        width: uiParameters.entityRowWidth,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
@@ -209,7 +232,7 @@ class EntityListHeader extends StatelessWidget {
               ),
             ),
             SizedBox(
-              width: UiConstants.entityButtonWidth,
+              width: uiParameters.entityButtonWidth,
               child: TextButton(
                 onPressed: () {},
                 style: ButtonStyle(
@@ -223,7 +246,7 @@ class EntityListHeader extends StatelessWidget {
               ),
             ),
             SizedBox(
-              width: UiConstants.entityMetricWidth,
+              width: uiParameters.entityMetricWidth,
               child: Align(
                 alignment: Alignment.centerRight,
                 child: Text(_sortMetricName()),
@@ -262,8 +285,9 @@ class EntityListItem extends StatelessWidget {
   @override
   build(BuildContext context) {
     var pageModel = Provider.of<CovidEntitiesPageModel>(context);
+    var uiParameters = context.read<UiParameters>();
     return Container(
-        width: UiConstants.entityRowWidth,
+        width: uiParameters.entityRowWidth,
         color: listEquals(_path, pageModel.chartPath()) ? Colors.black12 : null,
         padding: EdgeInsets.only(left: 6, right: 6),
         child: Row(
@@ -286,7 +310,7 @@ class EntityListItem extends StatelessWidget {
                           : null),
             ),
             SizedBox(
-              width: UiConstants.entityButtonWidth,
+              width: uiParameters.entityButtonWidth,
               child: TextButton(
                 onPressed: onRegionPressed,
                 onLongPress: onRegionLongPress,
@@ -301,7 +325,7 @@ class EntityListItem extends StatelessWidget {
               ),
             ),
             SizedBox(
-              width: UiConstants.entityMetricWidth,
+              width: uiParameters.entityMetricWidth,
               child: Align(
                 alignment: Alignment.centerRight,
                 child: Text(_metricValueString()),
