@@ -5,54 +5,48 @@ import 'package:provider/provider.dart';
 import '../models/covid_entities_page_model.dart';
 import '../models/covid_timeseries_model.dart';
 
-class CompareCovidChart extends StatelessWidget {
-  final List<List<String>> paths;
+class CovidChart extends StatelessWidget {
   final String seriesName;
-  final int seriesLength;
-  final bool per100k;
-  final List<Color> seriesColors;
+  // TODO: Use enum to control title rather than bool.
   final bool showTitle;
   final bool animate = true;
 
-  CompareCovidChart(this.paths, this.seriesName, this.seriesLength,
-      this.per100k, this.seriesColors, this.showTitle);
+  CovidChart(this.seriesName, this.showTitle);
 
   @override
   Widget build(BuildContext context) {
-    assert(paths.length == seriesColors.length);
-
     var timeseriesModel = Provider.of<CovidTimeseriesModel>(context);
     var pageModel = Provider.of<CovidEntitiesPageModel>(context);
-
+    var seriesLength = pageModel.seriesLength;
+    var per100k = pageModel.per100k;
+    var paths = (pageModel.compareRegion)
+        ? pageModel.pathList
+        : [pageModel.chartPath()];
+    var regionName = (paths.length == 1 && paths.first.length > 0)
+        ? '${paths.first.last} '
+        : '';
     var scaleSuffix = (pageModel.per100k) ? ' per 100k' : '';
-    var title = '$seriesName$scaleSuffix';
+    var title = '$regionName$seriesName$scaleSuffix';
 
-    var seriesDataList = paths
-        .map((path) => timeseriesModel.entitySeriesData(path, seriesName,
-            seriesLength: seriesLength, per100k: per100k))
-        .toList();
     // Get timestamps from the root of the admin entity tree, as it is most
     // likely to have been loaded already.
     var timestamps = timeseriesModel.entityTimestamps(paths[0].sublist(0, 1),
         seriesLength: seriesLength);
 
-    // If the model timeseries data is not yet loaded, subsitute stub values.
-    // When the data is loaded a rebuild will be triggered.
-    if (timestamps.isEmpty) {
-      timestamps = [0, 1];
-    }
-    for (int index = 0; index < seriesDataList.length; ++index) {
-      if (seriesDataList[index].isEmpty) {
-        seriesDataList[index] = List<double>.filled(timestamps.length, 0.0);
-      }
-    }
+    // Build data series for chart.
+    var seriesDataList = paths
+        .map((path) => timeseriesModel.entitySeriesData(path, seriesName,
+            seriesLength: seriesLength, per100k: per100k))
+        .toList();
+    var seriesList =
+        createTimeseries(pageModel, paths, timestamps, seriesDataList);
 
-    var seriesList = createTimeseries(timestamps, seriesDataList);
-
-    List<charts.ChartBehavior> chartBehaviors = [
-      new charts.SeriesLegend(
-          desiredMaxColumns: 2, cellPadding: const EdgeInsets.all(2.0))
-    ];
+    // Add optional chart legend and title.
+    List<charts.ChartBehavior> chartBehaviors = [];
+    if (pageModel.compareRegion) {
+      chartBehaviors.add(new charts.SeriesLegend(
+          desiredMaxColumns: 2, cellPadding: const EdgeInsets.all(2.0)));
+    }
     if (showTitle) {
       chartBehaviors.add(new charts.ChartTitle(title,
           behaviorPosition: charts.BehaviorPosition.bottom,
@@ -60,17 +54,22 @@ class CompareCovidChart extends StatelessWidget {
               charts.OutsideJustification.middleDrawArea));
     }
 
+    // Build the chart wdiget.
     return new charts.TimeSeriesChart(
       seriesList,
       animate: animate,
-      dateTimeFactory: const charts.LocalDateTimeFactory(),
       behaviors: chartBehaviors,
+      dateTimeFactory: const charts.LocalDateTimeFactory(),
     );
   }
 
-  /// Create multiple series.
+  /// Create one or more series.
   List<charts.Series<TimeSeriesCovid, DateTime>> createTimeseries(
-      List<int> timestamps, List<List<double>> seriesDataList) {
+      CovidEntitiesPageModel pageModel,
+      List<List<String>> paths,
+      List<int> timestamps,
+      List<List<double>> seriesDataList) {
+    // Load chart series data.
     var chartDataList = <List<TimeSeriesCovid>>[];
     for (var s = 0; s < seriesDataList.length; ++s) {
       var chartData = <TimeSeriesCovid>[];
@@ -84,7 +83,10 @@ class CompareCovidChart extends StatelessWidget {
       chartDataList.add(chartData);
     }
 
-    //var chartSeriesList = <charts.Series<TimeSeriesCovid, DateTime>>[];
+    // Get colors for chart data series.
+    List<Color> seriesColors = pageModel.chartColors(paths, seriesName);
+
+    // Build the data series.
     var chartSeriesList;
     for (var s = 0; s < seriesDataList.length; ++s) {
       final regionName = (paths[s].length > 0) ? '${paths[s].last} ' : '';

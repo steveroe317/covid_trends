@@ -6,13 +6,13 @@ import 'package:provider/provider.dart';
 
 import '../models/covid_entities_page_model.dart';
 import '../models/covid_timeseries_model.dart';
+import 'compare_region_popup_menu.dart';
+import 'covid_chart_group.dart';
+import 'covid_chart_group_page.dart';
 import 'date_range_popup_menu.dart';
 //import 'debug_popup_menu.dart';
-import 'compare_region_popup_menu.dart';
 import 'per_100k_popup_menu.dart';
 import 'share_button.dart';
-import 'simple_chart_group_page.dart';
-import 'compare_chart_group_page.dart';
 import 'sort_popup_menu.dart';
 import 'star_popup_menu.dart';
 import 'ui_constants.dart';
@@ -108,11 +108,7 @@ class _CovidEntitiesWideListBody extends StatelessWidget {
           width: uiParameters.entityRowWidth,
           child: CovidEntityList(onRegionPressed)),
       Expanded(
-        child: RepaintBoundary(
-            key: _chartGroupPage,
-            child: (pageModel.compareRegion)
-                ? CompareChartGroup(pageModel.pathList)
-                : SimpleChartGroup(pageModel.chartPath())),
+        child: RepaintBoundary(key: _chartGroupPage, child: CovidChartGroup()),
       )
     ]);
   }
@@ -131,25 +127,11 @@ class _CovidEntitiesNarrowListBody extends StatelessWidget {
       timeseriesModel.loadEntity(path);
       pageModel.setChartPath(path);
       pageModel.addPathList(path);
-      if (pageModel.compareRegion) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => CompareChartGroupPage(
-                    title: '${path.last} Covid Trends',
-                    paths: pageModel.pathList,
-                  )),
-        );
-      } else {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => SimpleChartGroupPage(
-                    title: '${path.last} Covid Trends',
-                    path: path,
-                  )),
-        );
-      }
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => CovidChartGroupPage()),
+      );
       return null;
     }
 

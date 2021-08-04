@@ -119,6 +119,18 @@ class CovidEntitiesPageModel with ChangeNotifier {
     return colors;
   }
 
+  List<Color> chartColors(List<List<String>> paths, String seriesName) {
+    List<Color> colors;
+    if (compareRegion == true) {
+      colors = generateColors(paths.length);
+    } else if (seriesName.contains('Death')) {
+      colors = [Colors.red];
+    } else {
+      colors = [Colors.black];
+    }
+    return colors;
+  }
+
   List<String> getStarredNames() {
     return appDataCache.getStarredNames();
   }
