@@ -8,9 +8,7 @@ class AppDatabase {
   var _databaseName;
   var _database;
 
-  AppDatabase(name) {
-    _databaseName = name;
-  }
+  AppDatabase(String name) : _databaseName = name;
 
   Future<void> open() async {
     var databasesPath = await getDatabasesPath();

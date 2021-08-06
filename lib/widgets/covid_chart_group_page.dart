@@ -10,7 +10,7 @@ import 'share_button.dart';
 import 'star_popup_menu.dart';
 
 class CovidChartGroupPage extends StatefulWidget {
-  CovidChartGroupPage({Key key}) : super(key: key);
+  CovidChartGroupPage({Key? key}) : super(key: key);
 
   @override
   _CovidChartGroupPageState createState() => _CovidChartGroupPageState();

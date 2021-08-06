@@ -5,12 +5,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AdminEntity {
   final List<String> _path;
-  List<int> _timestamps;
-  Map<String, List<double>> _timeseries;
+  List<int> _timestamps = <int>[];
+  Map<String, List<double>> _timeseries = <String, List<double>>{};
   Map<String, int> _sortKeys = {};
   Map<String, AdminEntity> _children = {};
   Map<String, AdminChildIndexData> _childIndex = {};
-  AdminEntity _parent;
+  AdminEntity? _parent;
   bool _isStale = false;
 
   final _populationMetrics = [
@@ -20,15 +20,12 @@ class AdminEntity {
     'Deaths 7-Day'
   ];
 
-  AdminEntity.empty()
-      : _path = <String>[],
-        _timestamps = <int>[],
-        _timeseries = <String, List<double>>{};
+  AdminEntity.empty() : _path = <String>[];
 
   AdminEntity._(this._path, this._parent);
 
   static Future<AdminEntity> create(
-      List<String> path, AdminEntity parent) async {
+      List<String> path, AdminEntity? parent) async {
     if (path.isEmpty) {
       return AdminEntity.empty();
     }
@@ -58,7 +55,10 @@ class AdminEntity {
     importDocData(doc.data());
   }
 
-  void importDocData(Map<String, dynamic> docData) {
+  void importDocData(Map<String, dynamic>? docData) {
+    if (docData == null) {
+      return;
+    }
     _timestamps = _extractDocTimestamps(docData);
     _timeseries = _extractDocTimeseries(docData);
     _sortKeys = _extractDocSortKeys(docData);
@@ -124,15 +124,23 @@ class AdminEntity {
     return childIndex;
   }
 
+  List<double>? _lookupTimeseries(String name) {
+    if (!_timeseries.containsKey(name)) {
+      return null;
+    }
+    return _timeseries[name];
+  }
+
   void createRollingAverageDiff(String source, String target, windowSize) {
-    if (!_timeseries.containsKey(source)) {
+    var sourceTimeseries = _timeseries[source];
+    if (sourceTimeseries == null) {
       return;
     }
 
     // Calculate daily diffs.
     List<double> daily = [];
     var prevValue = 0.0;
-    for (var value in _timeseries[source]) {
+    for (var value in sourceTimeseries) {
       if (value >= 0 && prevValue >= 0 && value >= prevValue) {
         daily.add(value - prevValue);
       } else {
@@ -157,20 +165,21 @@ class AdminEntity {
     _timeseries[target] = rollingAverage;
   }
 
-  void filterOutliers(String seriesName, historyLength) {
+  void filterOutliers(String seriesName, int historyLength) {
     if (historyLength < 5) {
       return;
     }
-    if (!_timeseries.containsKey(seriesName)) {
+    var series = _lookupTimeseries(seriesName);
+    if (series == null) {
       return;
     }
-    if (_timeseries[seriesName].length < historyLength) {
+    if (series.length < historyLength) {
       return;
     }
 
     // TODO: Check for efficiency, improve if needed.
     // Maybe move this caclulation into database loading code.
-    var unfiltered = _timeseries[seriesName];
+    var unfiltered = series;
     List<double> filtered = unfiltered.sublist(0, historyLength);
     for (int index = historyLength; index < unfiltered.length; ++index) {
       List<double> history = [];
@@ -193,7 +202,6 @@ class AdminEntity {
     }
 
     _timeseries[seriesName] = filtered;
-    //_timeseries[seriesName] = List<double>.filled(unfiltered.length, 100000.0);
   }
 
   List<String> get path => _path;
@@ -216,19 +224,21 @@ class AdminEntity {
     return _timestamps.sublist(displayStart);
   }
 
-  List<double> seriesData(String key, {seriesLength = 0, per100k = false}) {
+  List<double> seriesData(String name, {seriesLength = 0, per100k = false}) {
     var displayStart = _displayStart(seriesLength);
 
-    if (_timeseries.containsKey(key)) {
-      if (per100k && _timeseries.containsKey('Population')) {
+    var series = _lookupTimeseries(name);
+    if (series != null) {
+      var populationTimeseries = _timeseries['Population'];
+      if (per100k && populationTimeseries != null) {
         List<double> per100kSeries = [];
         for (int index = displayStart; index < _timestamps.length; ++index) {
-          per100kSeries.add((100000 * _timeseries[key][index]) /
-              _timeseries['Population'][index]);
+          per100kSeries
+              .add((100000 * series[index]) / populationTimeseries[index]);
         }
         return per100kSeries;
       } else {
-        return List<double>.from(_timeseries[key].sublist(displayStart));
+        return List<double>.from(series.sublist(displayStart));
       }
     }
 
@@ -277,12 +287,12 @@ class AdminEntity {
   }
 
   double normalizedMetric(
-      int metricValue, String metricName, int population, bool per100k) {
+      int? metricValue, String metricName, int? population, bool per100k) {
     var value = 0.0;
     if (metricValue != null) {
       value = metricValue.toDouble();
     }
-    if (population == 0) {
+    if (population == null || population == 0) {
       value = 0.0;
       population = 1;
     }
@@ -304,23 +314,31 @@ class AdminEntity {
     if (!_childIndex.containsKey(childName)) {
       return 0.0;
     }
-    if (!_childIndex[childName].sortKeys.containsKey(sortMetric)) {
+    AdminChildIndexData? childIndexData = _childIndex[childName];
+    if (childIndexData == null) {
       return 0.0;
     }
-    return normalizedMetric(_childIndex[childName].sortKeys[sortMetric],
-        sortMetric, _childIndex[childName].sortKeys['Population'], per100k);
+    if (!childIndexData.sortKeys.containsKey(sortMetric)) {
+      return 0.0;
+    }
+    return normalizedMetric(childIndexData.sortKeys[sortMetric], sortMetric,
+        childIndexData.sortKeys['Population'], per100k);
   }
 
   bool childHasChildren(String name) {
-    if (_childIndex.containsKey(name)) {
-      return _childIndex[name].hasChildren;
+    if (!_childIndex.containsKey(name)) {
+      return false;
     }
-    return false;
+    AdminChildIndexData? childIndexData = _childIndex[name];
+    if (childIndexData == null) {
+      return false;
+    }
+    return childIndexData.hasChildren;
   }
 
-  AdminEntity get parent => _parent;
+  AdminEntity? get parent => _parent;
 
-  AdminEntity child(String name) {
+  AdminEntity? child(String name) {
     if (_children.containsKey(name)) {
       return _children[name];
     }
@@ -331,8 +349,10 @@ class AdminEntity {
     var prunedHistorySize = _timestamps.length ~/ 2;
     _timestamps = _timestamps.sublist(0, prunedHistorySize);
     for (var metricName in _timeseries.keys) {
-      _timeseries[metricName] =
-          _timeseries[metricName].sublist(0, prunedHistorySize);
+      var series = _timeseries[metricName];
+      if (series != null) {
+        _timeseries[metricName] = series.sublist(0, prunedHistorySize);
+      }
     }
 
     for (var node in _children.values) {

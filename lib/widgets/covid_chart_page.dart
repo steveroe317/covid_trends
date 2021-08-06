@@ -12,7 +12,7 @@ import 'star_popup_menu.dart';
 class CovidChartPage extends StatelessWidget {
   final String seriesName;
 
-  CovidChartPage({Key key, this.seriesName}) : super(key: key);
+  CovidChartPage({Key? key, required this.seriesName}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

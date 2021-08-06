@@ -19,7 +19,7 @@ class CovidTimeseriesModel with ChangeNotifier {
 
   bool get initialized => _initialized;
 
-  AdminEntity _findEntity(List<String> path, AdminEntity entity) {
+  AdminEntity? _findEntity(List<String> path, AdminEntity? entity) {
     if (path.length == 0) {
       if (entity != null && entity.isStale) {
         refreshEntity(entity);
@@ -57,7 +57,7 @@ class CovidTimeseriesModel with ChangeNotifier {
   }
 
   Future<void> loadEntityFromRoot(List<String> path) async {
-    AdminEntity parent;
+    AdminEntity? parent;
     bool entityCreated = false;
     for (var depth = 1; depth <= path.length; ++depth) {
       var childLocalPath = path.sublist(depth - 1, depth);
@@ -65,9 +65,6 @@ class CovidTimeseriesModel with ChangeNotifier {
       if (child == null) {
         var childFullPath = path.sublist(0, depth);
         child = await AdminEntity.create(childFullPath, parent);
-        if (child == null) {
-          break;
-        }
         entityCreated = true;
       }
       parent = child;

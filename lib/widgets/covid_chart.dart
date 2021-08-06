@@ -42,19 +42,20 @@ class CovidChart extends StatelessWidget {
         createTimeseries(pageModel, paths, timestamps, seriesDataList);
 
     // Add optional chart legend and title.
-    List<charts.ChartBehavior> chartBehaviors = [];
+    List<charts.ChartBehavior<DateTime>>? chartBehaviors = [];
+
     if (pageModel.compareRegion) {
       chartBehaviors.add(new charts.SeriesLegend(
           desiredMaxColumns: 2, cellPadding: const EdgeInsets.all(2.0)));
     }
     if (showTitle) {
-      chartBehaviors.add(new charts.ChartTitle(title,
+      chartBehaviors.add(charts.ChartTitle(title,
           behaviorPosition: charts.BehaviorPosition.bottom,
           titleOutsideJustification:
               charts.OutsideJustification.middleDrawArea));
     }
 
-    // Build the chart wdiget.
+    // Build the chart widget.
     return new charts.TimeSeriesChart(
       seriesList,
       animate: animate,

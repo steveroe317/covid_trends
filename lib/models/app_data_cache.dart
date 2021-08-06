@@ -5,25 +5,30 @@ import 'starred_model.dart';
 
 class AppDataCache {
   String _name;
-  AppDatabase _database;
-  Map<String, StarredModel> _starred;
+  AppDatabase? _database;
+  Map<String, StarredModel> _starred = {};
   bool _initialized = false;
 
-  AppDataCache(name) : _name = name {
+  AppDataCache(String name) : _name = name {
     init();
   }
 
   Future<void> init() async {
     _database = AppDatabase(_name);
-    await _database.open();
+    await _database?.open();
 
     _starred = Map<String, StarredModel>();
-    var starredData = await _database.getStarred();
-    for (var data in starredData) {
-      var name = data['name'];
-      var jsonSpec = data['spec'];
-      _starred[name] = StarredModel.fromJson(jsonDecode(jsonSpec));
+    var starredData = await _database?.getStarred();
+    if (starredData != null) {
+      for (var data in starredData) {
+        var name = data['name'];
+        var jsonSpec = data['spec'];
+        if (name != null && jsonSpec != null) {
+          _starred[name] = StarredModel.fromJson(jsonDecode(jsonSpec));
+        }
+      }
     }
+
     _initialized = true;
   }
 
@@ -39,10 +44,10 @@ class AppDataCache {
       return;
     }
     _starred[name] = star;
-    _database.addStarred(name, jsonEncode(star));
+    _database?.addStarred(name, jsonEncode(star));
   }
 
-  StarredModel getStarred(String name) {
+  StarredModel? getStarred(String name) {
     if (!_initialized) {
       return null;
     }
@@ -56,6 +61,6 @@ class AppDataCache {
     if (_starred.containsKey(name)) {
       _starred.remove(name);
     }
-    _database.deleteStarred(name);
+    _database?.deleteStarred(name);
   }
 }

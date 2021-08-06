@@ -18,14 +18,14 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  charts_flutter: ^0.10.0
-  cloud_firestore: ^1.0.7
-  firebase_auth: ^1.1.2
+  charts_flutter: ^0.11.0
+  cloud_firestore: ^2.4.0
+  firebase_auth: ^3.0.1
   firebase_core: ^1.1.0
   hex: ^0.2.0
   intl: ">=0.17.0"

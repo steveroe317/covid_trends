@@ -18,7 +18,7 @@ import 'star_popup_menu.dart';
 import 'ui_parameters.dart';
 
 class CovidEntitiesPage extends StatefulWidget {
-  CovidEntitiesPage({Key key, this.title}) : super(key: key);
+  CovidEntitiesPage({Key? key, required this.title}) : super(key: key);
   final String title;
 
   @override
@@ -92,12 +92,11 @@ class _CovidEntitiesWideListBody extends StatelessWidget {
 
     // This onRegionPressed() function does not need the build context,
     // so it can be defined outside build().
-    void Function(CovidTimeseriesModel, List<String>) onRegionPressed(
+    void onRegionPressed(
         CovidTimeseriesModel timeseriesModel, List<String> path) {
       timeseriesModel.loadEntity(path);
       pageModel.setChartPath(path);
       pageModel.addPathList(path);
-      return null;
     }
 
     return Row(children: [
@@ -119,7 +118,7 @@ class _CovidEntitiesNarrowListBody extends StatelessWidget {
     var pageModel = Provider.of<CovidEntitiesPageModel>(context);
 
     // onRegionPressed() is inside build() so that it has access to the context.
-    void Function(CovidTimeseriesModel, List<String>) onRegionPressed(
+    void onRegionPressed(
         CovidTimeseriesModel timeseriesModel, List<String> path) {
       timeseriesModel.loadEntity(path);
       pageModel.setChartPath(path);
@@ -129,7 +128,6 @@ class _CovidEntitiesNarrowListBody extends StatelessWidget {
         context,
         MaterialPageRoute(builder: (context) => CovidChartGroupPage()),
       );
-      return null;
     }
 
     return CovidEntityList(onRegionPressed);

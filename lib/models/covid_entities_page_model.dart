@@ -21,11 +21,10 @@ class CovidEntitiesPageModel with ChangeNotifier {
   bool _compareRegion = false;
   String _editStarName = '';
 
-  CovidEntitiesPageModel(List<String> path) {
-    _path = List<String>.from(path);
-    _chartPath = List<String>.from(path);
-    appDataCache = AppDataCache('app_state');
-  }
+  CovidEntitiesPageModel(List<String> path)
+      : _path = List<String>.from(path),
+        _chartPath = List<String>.from(path),
+        appDataCache = AppDataCache('app_state');
 
   List<String> path() {
     return List<String>.from(_path);
@@ -153,8 +152,10 @@ class CovidEntitiesPageModel with ChangeNotifier {
 
   void renameStar(String oldName, String newName) {
     var star = appDataCache.getStarred(oldName);
-    appDataCache.deleteStarred(oldName);
-    appDataCache.addStarred(newName, star);
+    if (star != null) {
+      appDataCache.deleteStarred(oldName);
+      appDataCache.addStarred(newName, star);
+    }
   }
 
   void loadStar(String name) {

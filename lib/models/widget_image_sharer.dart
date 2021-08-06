@@ -12,14 +12,17 @@ class WidgetImageSharer {
           widgetKey.currentContext.findRenderObject();
       final image = await boundary.toImage(pixelRatio: 2.0);
       final byteData = await image.toByteData(format: ImageByteFormat.png);
-      final pngBytes = byteData.buffer.asUint8List();
-      final tmpDir = '${(await getTemporaryDirectory()).path}';
-      final filePath = '$tmpDir/${DateTime.now().millisecondsSinceEpoch}.png';
-      final file = File(filePath);
-      await file.writeAsBytes(pngBytes);
-      Share.shareFiles([filePath],
-          text: 'Covid Trends',
-          sharePositionOrigin: Rect.fromLTWH(0, 0, 200, 200));
+      var buffer = byteData?.buffer;
+      if (buffer != null) {
+        final pngBytes = buffer.asUint8List();
+        final tmpDir = '${(await getTemporaryDirectory()).path}';
+        final filePath = '$tmpDir/${DateTime.now().millisecondsSinceEpoch}.png';
+        final file = File(filePath);
+        await file.writeAsBytes(pngBytes);
+        Share.shareFiles([filePath],
+            text: 'Covid Trends',
+            sharePositionOrigin: Rect.fromLTWH(0, 0, 200, 200));
+      }
     } catch (e) {
       print(e);
     }
