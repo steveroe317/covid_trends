@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 
 import '../models/covid_entities_page_model.dart';
 import '../models/covid_timeseries_model.dart';
+import '../theme/palette_colors.dart';
 //import 'debug_popup_menu.dart';
 import 'ui_constants.dart';
 import 'ui_parameters.dart';
@@ -91,20 +92,23 @@ class EntityListHeader extends StatelessWidget {
               child: TextButton(
                 onPressed: () {},
                 style: ButtonStyle(
-                    foregroundColor:
-                        MaterialStateProperty.all<Color>(Colors.black),
+                    foregroundColor: MaterialStateProperty.all<Color>(
+                        PaletteColors.coolGrey.shade900),
                     alignment: AlignmentDirectional(0, 0)),
                 child: Align(
                     alignment: Alignment.centerLeft,
-                    child: Text('Region',
-                        style: Theme.of(context).textTheme.headline6)),
+                    child: Text(
+                      'Region',
+                      style: uiParameters.entityButtonTextStyle,
+                    )),
               ),
             ),
             SizedBox(
               width: uiParameters.entityMetricWidth,
               child: Align(
                 alignment: Alignment.centerRight,
-                child: Text(_sortMetricName()),
+                child: Text(_sortMetricName(),
+                    style: uiParameters.entityMetricTextStyle),
               ),
             ),
           ],
@@ -143,7 +147,9 @@ class EntityListItem extends StatelessWidget {
     var uiParameters = context.read<UiParameters>();
     return Container(
         width: uiParameters.entityRowWidth,
-        color: listEquals(_path, pageModel.chartPath()) ? Colors.black12 : null,
+        color: listEquals(_path, pageModel.chartPath())
+            ? PaletteColors.lightBlueVivid.shade200
+            : null,
         padding: EdgeInsets.only(left: 6, right: 6),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -170,20 +176,23 @@ class EntityListItem extends StatelessWidget {
                 onPressed: onRegionPressed,
                 onLongPress: onRegionLongPress,
                 style: ButtonStyle(
-                    foregroundColor:
-                        MaterialStateProperty.all<Color>(Colors.black),
+                    foregroundColor: MaterialStateProperty.all<Color>(
+                        PaletteColors.coolGrey.shade900),
                     alignment: AlignmentDirectional(0, 0)),
                 child: Align(
                     alignment: Alignment.centerLeft,
-                    child: Text(_path.last,
-                        style: Theme.of(context).textTheme.headline6)),
+                    child: Text(
+                      _path.last,
+                      style: uiParameters.entityButtonTextStyle,
+                    )),
               ),
             ),
             SizedBox(
               width: uiParameters.entityMetricWidth,
               child: Align(
                 alignment: Alignment.centerRight,
-                child: Text(_metricValueString()),
+                child: Text(_metricValueString(),
+                    style: uiParameters.entityMetricTextStyle),
               ),
             ),
           ],

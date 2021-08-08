@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 
 import '../models/covid_entities_page_model.dart';
 import '../models/covid_timeseries_model.dart';
+import '../theme/palette_colors.dart';
 import 'compare_region_popup_menu.dart';
 import 'covid_chart_group.dart';
 import 'covid_chart_group_page.dart';
@@ -100,8 +101,9 @@ class _CovidEntitiesWideListBody extends StatelessWidget {
     }
 
     return Row(children: [
-      SizedBox(
+      Container(
           width: uiParameters.entityRowWidth,
+          color: PaletteColors.coolGrey.shade100,
           child: CovidEntityList(onRegionPressed)),
       Expanded(
         child: RepaintBoundary(key: _chartGroupPage, child: CovidChartGroup()),
