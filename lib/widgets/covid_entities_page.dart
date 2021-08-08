@@ -37,11 +37,11 @@ class _CovidEntitiesPageState extends State<CovidEntitiesPage> {
       } else if (constraints.maxWidth >= 350) {
         return Provider<UiParameters>(
             create: (_) => UiParameters(UiAppShape.Narrow),
-            child: _buildNarrowScaffold(context, false));
+            child: _buildNarrowScaffold(context));
       } else {
         return Provider<UiParameters>(
             create: (_) => UiParameters(UiAppShape.Mini),
-            child: _buildNarrowScaffold(context, true));
+            child: _buildNarrowScaffold(context));
       }
     });
   }
@@ -66,7 +66,7 @@ class _CovidEntitiesPageState extends State<CovidEntitiesPage> {
   }
 }
 
-Scaffold _buildNarrowScaffold(BuildContext context, bool isMini) {
+Scaffold _buildNarrowScaffold(BuildContext context) {
   return Scaffold(
     appBar: AppBar(
       title: null,
