@@ -10,9 +10,9 @@ import 'starred_model.dart';
 class CovidEntitiesPageModel with ChangeNotifier {
   AppDataCache appDataCache;
   static const maxPathListLength = 4;
-  List<String> _path = List<String>.empty();
+  List<String> _entityPagePath = List<String>.empty();
   List<String> _chartPath = List<String>.empty();
-  var _pathList = <List<String>>[
+  var _comparisonPathList = <List<String>>[
     [ModelConstants.rootEntityName]
   ];
   String _sortMetric = UiConstants.noSortMetricName;
@@ -22,17 +22,16 @@ class CovidEntitiesPageModel with ChangeNotifier {
   String _editStarName = '';
 
   CovidEntitiesPageModel(List<String> path)
-      : _path = List<String>.from(path),
+      : _entityPagePath = List<String>.from(path),
         _chartPath = List<String>.from(path),
         appDataCache = AppDataCache('app_state');
 
-  List<String> path() {
-    return List<String>.from(_path);
+  List<String> entityPagePath() {
+    return List<String>.from(_entityPagePath);
   }
 
-  void setPath(List<String> path) {
-    _path = List<String>.from(path);
-    _chartPath = List<String>.from(path);
+  void setEntityPagePath(List<String> path) {
+    _entityPagePath = List<String>.from(path);
     notifyListeners();
   }
 
@@ -42,36 +41,40 @@ class CovidEntitiesPageModel with ChangeNotifier {
 
   void setChartPath(List<String> chartPath) {
     _chartPath = List<String>.from(chartPath);
+    if (!_compareRegion) {
+      _comparisonPathList = <List<String>>[];
+    }
+    _addComparisonPathList(chartPath);
     notifyListeners();
   }
 
-  List<List<String>> get pathList => _pathList;
+  List<List<String>> get comparisonPathList => _comparisonPathList;
 
-  void addPathList(List<String> path) {
-    for (var existingPath in _pathList) {
+  void _addComparisonPathList(List<String> path) {
+    for (var existingPath in _comparisonPathList) {
       if (listEquals(path, existingPath)) {
         return;
       }
     }
-    if (_pathList.length >= maxPathListLength) {
-      _pathList.removeAt(0);
+    if (_comparisonPathList.length >= maxPathListLength) {
+      _comparisonPathList.removeAt(0);
     }
-    _pathList.add(path);
+    _comparisonPathList.add(path);
     notifyListeners();
   }
 
   List<List<String>> getAllModelPaths() {
     List<List<String>> allPaths = [];
-    allPaths.add(_path);
+    allPaths.add(_entityPagePath);
     allPaths.add(_chartPath);
-    for (var path in _pathList) {
+    for (var path in _comparisonPathList) {
       allPaths.add(path);
     }
     return allPaths;
   }
 
-  void clearPathList() {
-    _pathList = <List<String>>[];
+  void clearComparisonPathList() {
+    _comparisonPathList = <List<String>>[];
     notifyListeners();
   }
 
@@ -141,8 +144,8 @@ class CovidEntitiesPageModel with ChangeNotifier {
   }
 
   void addStar(String name) {
-    var star = StarredModel(name, _compareRegion, per100k, seriesLength, _path,
-        _pathList, _chartPath);
+    var star = StarredModel(name, _compareRegion, per100k, seriesLength,
+        _entityPagePath, _comparisonPathList, _chartPath);
     appDataCache.addStarred(name, star);
   }
 
@@ -164,8 +167,8 @@ class CovidEntitiesPageModel with ChangeNotifier {
       _compareRegion = star.compareRegion;
       _per100k = star.per100k;
       _seriesLength = star.seriesLength;
-      _path = star.path.toList();
-      _pathList = StarredModel.copyListListString(star.pathList);
+      _entityPagePath = star.path.toList();
+      _comparisonPathList = StarredModel.copyListListString(star.pathList);
       _chartPath = star.chartPath.toList();
       notifyListeners();
     }

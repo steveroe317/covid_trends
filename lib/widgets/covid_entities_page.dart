@@ -97,7 +97,6 @@ class _CovidEntitiesWideListBody extends StatelessWidget {
         CovidTimeseriesModel timeseriesModel, List<String> path) {
       timeseriesModel.loadEntity(path);
       pageModel.setChartPath(path);
-      pageModel.addPathList(path);
     }
 
     return Row(children: [
@@ -124,7 +123,6 @@ class _CovidEntitiesNarrowListBody extends StatelessWidget {
         CovidTimeseriesModel timeseriesModel, List<String> path) {
       timeseriesModel.loadEntity(path);
       pageModel.setChartPath(path);
-      pageModel.addPathList(path);
 
       Navigator.push(
         context,

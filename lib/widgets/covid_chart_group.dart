@@ -70,7 +70,7 @@ class _LabelledCovidChart extends StatelessWidget {
     final pageModel = Provider.of<CovidEntitiesPageModel>(context);
     final scaleSuffix = (pageModel.per100k) ? ' per 100k' : '';
     var paths = (pageModel.compareRegion)
-        ? pageModel.pathList
+        ? pageModel.comparisonPathList
         : [pageModel.chartPath()];
     var regionName = (paths.length == 1 && paths.first.length > 0)
         ? '${paths.first.last} '

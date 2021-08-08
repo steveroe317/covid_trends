@@ -23,11 +23,12 @@ class CovidEntityList extends StatelessWidget {
     var timeseriesModel = Provider.of<CovidTimeseriesModel>(context);
     var pageModel = Provider.of<CovidEntitiesPageModel>(context);
     var uiParameters = context.read<UiParameters>();
-    final childNames = timeseriesModel.entityChildNames(pageModel.path(),
+    final childNames = timeseriesModel.entityChildNames(
+        pageModel.entityPagePath(),
         sortBy: pageModel.sortMetric,
         sortUp: false,
         per100k: pageModel.per100k);
-    final currentPath = pageModel.path();
+    final currentPath = pageModel.entityPagePath();
     final numberFormatter = NumberFormat('#,###');
 
     List<Widget> entityList = [];
@@ -200,17 +201,17 @@ class EntityListItem extends StatelessWidget {
   }
 
   void onRegionLongPress() {
-    _pageModel.clearPathList();
+    _pageModel.clearComparisonPathList();
     onRegionPressed();
   }
 
   void _openParentPath() {
-    _pageModel.setPath(_path.sublist(0, _path.length - 1));
+    _pageModel.setEntityPagePath(_path.sublist(0, _path.length - 1));
   }
 
   void _openPath() {
     _timeseriesModel.loadEntity(_path);
-    _pageModel.setPath(_path);
+    _pageModel.setEntityPagePath(_path);
   }
 
   String _metricValueString() {

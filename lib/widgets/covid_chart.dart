@@ -20,7 +20,7 @@ class CovidChart extends StatelessWidget {
     var seriesLength = pageModel.seriesLength;
     var per100k = pageModel.per100k;
     var paths = (pageModel.compareRegion)
-        ? pageModel.pathList
+        ? pageModel.comparisonPathList
         : [pageModel.chartPath()];
     var regionName = (paths.length == 1 && paths.first.length > 0)
         ? '${paths.first.last} '
