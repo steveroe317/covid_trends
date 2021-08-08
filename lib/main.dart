@@ -6,6 +6,7 @@ import 'package:firebase_core/firebase_core.dart';
 
 import 'models/covid_timeseries_model.dart';
 import 'models/covid_entities_page_model.dart';
+import 'theme/palette_colors.dart';
 import 'widgets/covid_entities_page.dart';
 import 'widgets/initialization_error_page.dart';
 import 'widgets/loading_page.dart';
@@ -72,7 +73,7 @@ class _CovidAppTimestampWrapperState extends State<CovidAppTimestampWrapper> {
           return MaterialApp(
             title: 'Covid Trends',
             theme: ThemeData(
-              primarySwatch: Colors.blue,
+              primarySwatch: PaletteColors.lightBlueVivid,
             ),
             home: CovidEntitiesPage(title: 'Covid Trends'),
           );
