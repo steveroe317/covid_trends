@@ -12,6 +12,7 @@ import 'covid_chart_group_page.dart';
 import 'covid_entities_list.dart';
 import 'date_range_popup_menu.dart';
 //import 'debug_popup_menu.dart';
+import 'navigation_sidebar.dart';
 import 'per_100k_popup_menu.dart';
 import 'share_button.dart';
 import 'sort_popup_menu.dart';
@@ -31,15 +32,15 @@ class _CovidEntitiesPageState extends State<CovidEntitiesPage> {
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
       if (constraints.maxWidth > 700) {
-        return Provider<UiParameters>(
+        return ChangeNotifierProvider<UiParameters>(
             create: (_) => UiParameters(UiAppShape.Wide),
             child: _buildWideScaffold(context, widget.title));
       } else if (constraints.maxWidth >= 350) {
-        return Provider<UiParameters>(
+        return ChangeNotifierProvider<UiParameters>(
             create: (_) => UiParameters(UiAppShape.Narrow),
             child: _buildNarrowScaffold(context));
       } else {
-        return Provider<UiParameters>(
+        return ChangeNotifierProvider<UiParameters>(
             create: (_) => UiParameters(UiAppShape.Mini),
             child: _buildNarrowScaffold(context));
       }
@@ -62,6 +63,7 @@ class _CovidEntitiesPageState extends State<CovidEntitiesPage> {
         ],
       ),
       body: _CovidEntitiesWideListBody(chartGroupKey),
+      drawer: CovidTrendsNavigationSidebar(),
     );
   }
 }
@@ -79,6 +81,7 @@ Scaffold _buildNarrowScaffold(BuildContext context) {
       ],
     ),
     body: _CovidEntitiesNarrowListBody(),
+    drawer: CovidTrendsNavigationSidebar(),
   );
 }
 

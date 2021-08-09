@@ -7,10 +7,11 @@ import 'ui_constants.dart';
 
 enum UiAppShape { Wide, Narrow, Mini }
 
-class UiParameters {
+class UiParameters with ChangeNotifier {
   UiAppShape _uiShape;
   var _entityButtonWidth = 170.0;
   var _entityMetricWidth = 120.0;
+  var _drawerHeaderHeight = 75.0;
 
   var _entityButtonTextStyle = TextStyle(
       color: PaletteColors.coolGrey.shade900,
@@ -37,6 +38,7 @@ class UiParameters {
 
   double get entityButtonWidth => _entityButtonWidth;
   double get entityMetricWidth => _entityMetricWidth;
+  double get drawerHeaderHeight => _drawerHeaderHeight;
   TextStyle get entityButtonTextStyle => _entityButtonTextStyle;
   TextStyle get entityMetricTextStyle => _entityMetricTextStyle;
 
