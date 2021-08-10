@@ -31,39 +31,36 @@ class CovidEntityList extends StatelessWidget {
     final currentPath = pageModel.entityPagePath();
     final numberFormatter = NumberFormat('#,###');
 
-    List<Widget> entityList = [];
-
+    // Build base of the entity list with the parent entities.
+    List<Widget> stemEntityList = [
+      Container(
+        width: uiParameters.entityRowWidth,
+        color: PaletteColors.coolGrey.shade100,
+        child: EntityListHeader(pageModel),
+      )
+    ];
     for (var index = 0; index < currentPath.length; ++index) {
       final path = currentPath.sublist(0, index + 1);
       var depth = (index == 0)
           ? _CovidEntityListItemDepth.root
           : _CovidEntityListItemDepth.stem;
-      entityList.add(EntityListItem(path, depth, _onRegionPressed, pageModel,
-          timeseriesModel, numberFormatter));
+      stemEntityList.add(EntityListItem(path, depth, _onRegionPressed,
+          pageModel, timeseriesModel, numberFormatter));
     }
+    stemEntityList.add(Container(
+        child:
+            Divider(thickness: 2.0, color: PaletteColors.coolGrey.shade200)));
 
-    if (currentPath.length > 0) {
-      entityList.add(Divider());
-    }
-
-    entityList.addAll(List<Widget>.from(childNames.map((name) => EntityListItem(
-        [...currentPath, name],
-        _CovidEntityListItemDepth.leaf,
-        _onRegionPressed,
-        pageModel,
-        timeseriesModel,
-        numberFormatter))));
+    // Add the children of the last parent entity.
+    List<Widget> childEntityList = [];
+    childEntityList.addAll(List<Widget>.from(childNames.map((name) =>
+        EntityListItem([...currentPath, name], _CovidEntityListItemDepth.leaf,
+            _onRegionPressed, pageModel, timeseriesModel, numberFormatter))));
+    stemEntityList.add(Expanded(child: ListView(children: childEntityList)));
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(
-          width: uiParameters.entityRowWidth,
-          child: EntityListHeader(pageModel),
-        ),
-        Container(child: Divider()),
-        Expanded(child: ListView(children: entityList)),
-      ],
+      children: stemEntityList,
     );
   }
 }
