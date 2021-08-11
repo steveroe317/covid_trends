@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 
 import '../models/covid_entities_page_model.dart';
 import '../models/covid_timeseries_model.dart';
-import '../theme/palette_colors.dart';
 import 'compare_region_popup_menu.dart';
 import 'covid_chart_group.dart';
 import 'covid_chart_group_page.dart';
@@ -17,6 +16,7 @@ import 'per_100k_popup_menu.dart';
 import 'share_button.dart';
 import 'sort_popup_menu.dart';
 import 'star_popup_menu.dart';
+import 'ui_colors.dart';
 import 'ui_parameters.dart';
 
 class CovidEntitiesPage extends StatefulWidget {
@@ -105,7 +105,7 @@ class _CovidEntitiesWideListBody extends StatelessWidget {
     return Row(children: [
       Container(
           width: uiParameters.entityRowWidth,
-          color: PaletteColors.coolGrey.shade100,
+          color: UiColors.entityListLeaf,
           child: CovidEntityList(onRegionPressed)),
       Expanded(
         child: RepaintBoundary(key: _chartGroupPage, child: CovidChartGroup()),
@@ -129,10 +129,13 @@ class _CovidEntitiesNarrowListBody extends StatelessWidget {
 
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => CovidChartGroupPage()),
+        MaterialPageRoute(
+            builder: (context) => Container(child: CovidChartGroupPage())),
       );
     }
 
-    return CovidEntityList(onRegionPressed);
+    return Container(
+        color: UiColors.entityListLeaf,
+        child: CovidEntityList(onRegionPressed));
   }
 }

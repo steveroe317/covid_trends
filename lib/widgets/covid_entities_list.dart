@@ -6,8 +6,8 @@ import 'package:provider/provider.dart';
 
 import '../models/covid_entities_page_model.dart';
 import '../models/covid_timeseries_model.dart';
-import '../theme/palette_colors.dart';
 //import 'debug_popup_menu.dart';
+import 'ui_colors.dart';
 import 'ui_constants.dart';
 import 'ui_parameters.dart';
 
@@ -22,7 +22,7 @@ class CovidEntityList extends StatelessWidget {
   build(BuildContext context) {
     var timeseriesModel = Provider.of<CovidTimeseriesModel>(context);
     var pageModel = Provider.of<CovidEntitiesPageModel>(context);
-    var uiParameters = context.read<UiParameters>();
+    var uiParameters = context.watch<UiParameters>();
     final childNames = timeseriesModel.entityChildNames(
         pageModel.entityPagePath(),
         sortBy: pageModel.sortMetric,
@@ -33,23 +33,28 @@ class CovidEntityList extends StatelessWidget {
 
     // Build base of the entity list with the parent entities.
     List<Widget> stemEntityList = [
-      Container(
-        width: uiParameters.entityRowWidth,
-        color: PaletteColors.coolGrey.shade100,
-        child: EntityListHeader(pageModel),
-      )
+      Row(children: [
+        Expanded(
+            child: Container(
+          width: uiParameters.entityRowWidth,
+          color: UiColors.entityListHeader,
+          child: EntityListHeader(pageModel),
+        ))
+      ])
     ];
     for (var index = 0; index < currentPath.length; ++index) {
       final path = currentPath.sublist(0, index + 1);
       var depth = (index == 0)
           ? _CovidEntityListItemDepth.root
           : _CovidEntityListItemDepth.stem;
-      stemEntityList.add(EntityListItem(path, depth, _onRegionPressed,
-          pageModel, timeseriesModel, numberFormatter));
+      stemEntityList.add(Row(children: [
+        Expanded(
+            child: Container(
+                color: UiColors.entityListStem,
+                child: EntityListItem(path, depth, _onRegionPressed, pageModel,
+                    timeseriesModel, numberFormatter)))
+      ]));
     }
-    stemEntityList.add(Container(
-        child:
-            Divider(thickness: 2.0, color: PaletteColors.coolGrey.shade200)));
 
     // Add the children of the last parent entity.
     List<Widget> childEntityList = [];
@@ -90,8 +95,8 @@ class EntityListHeader extends StatelessWidget {
               child: TextButton(
                 onPressed: () {},
                 style: ButtonStyle(
-                    foregroundColor: MaterialStateProperty.all<Color>(
-                        PaletteColors.coolGrey.shade900),
+                    foregroundColor:
+                        MaterialStateProperty.all<Color>(UiColors.darkGreyText),
                     alignment: AlignmentDirectional(0, 0)),
                 child: Align(
                     alignment: Alignment.centerLeft,
@@ -146,7 +151,7 @@ class EntityListItem extends StatelessWidget {
     return Container(
         width: uiParameters.entityRowWidth,
         color: listEquals(_path, pageModel.chartPath())
-            ? PaletteColors.lightBlueVivid.shade200
+            ? UiColors.entityListSelected
             : null,
         padding: EdgeInsets.only(left: 6, right: 6),
         child: Row(
@@ -174,8 +179,8 @@ class EntityListItem extends StatelessWidget {
                 onPressed: onRegionPressed,
                 onLongPress: onRegionLongPress,
                 style: ButtonStyle(
-                    foregroundColor: MaterialStateProperty.all<Color>(
-                        PaletteColors.coolGrey.shade900),
+                    foregroundColor:
+                        MaterialStateProperty.all<Color>(UiColors.darkGreyText),
                     alignment: AlignmentDirectional(0, 0)),
                 child: Align(
                     alignment: Alignment.centerLeft,
