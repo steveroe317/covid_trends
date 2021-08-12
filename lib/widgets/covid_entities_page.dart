@@ -77,6 +77,7 @@ Scaffold _buildNarrowScaffold(BuildContext context) {
         buildCompareRegionPopupMenuButton(context),
         buildDateRangePopupMenuButton(context),
         buildper100kPopupMenuButton(context),
+        buildStarPopupMenuButton(context, openChartPage: true),
         //buildDebugPopupMenuButton(context),
       ],
     ),
