@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:covid_trends/models/model_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -53,7 +55,7 @@ class CovidAppTimestampWrapper extends StatefulWidget {
 
 class _CovidAppTimestampWrapperState extends State<CovidAppTimestampWrapper> {
   final Stream<DocumentSnapshot> _timestampStream =
-      FirebaseFirestore.instance.doc('time-series/Timestamp').snapshots();
+      FirebaseFirestore.instance.doc('time-series/World_Timestamp').snapshots();
 
   @override
   Widget build(BuildContext context) {
@@ -67,16 +69,61 @@ class _CovidAppTimestampWrapperState extends State<CovidAppTimestampWrapper> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return LoadingPage();
           }
-          var timeseriesModel =
-              Provider.of<CovidTimeseriesModel>(context, listen: false);
-          Future<void>(timeseriesModel.markStale);
-          return MaterialApp(
-            title: 'Covid Trends',
-            theme: ThemeData(
-              primarySwatch: PaletteColors.lightBlueVivid,
-            ),
-            home: CovidEntitiesPage(title: 'Covid Trends'),
-          );
+          return _CovidAppLifeCycleWrapper();
         });
+  }
+}
+
+class _CovidAppLifeCycleWrapper extends StatefulWidget {
+  @override
+  _CovidAppLifeCycleWrapperState createState() =>
+      _CovidAppLifeCycleWrapperState();
+}
+
+class _CovidAppLifeCycleWrapperState extends State<_CovidAppLifeCycleWrapper>
+    with WidgetsBindingObserver {
+  @override
+  void initState() {
+    WidgetsBinding.instance!.addObserver(this);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance!.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused) {
+      var pageModel = Provider.of<CovidEntitiesPageModel>(context);
+      pageModel.addStar(ModelConstants.startupStarName);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _CovidApp();
+  }
+}
+
+class _CovidApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    var timeseriesModel =
+        Provider.of<CovidTimeseriesModel>(context, listen: false);
+    var pageModel = Provider.of<CovidEntitiesPageModel>(context);
+    List<List<String>> starPaths = pageModel.getAllModelPaths();
+    timeseriesModel.loadEntities(starPaths);
+    // TODO: is markStale() needed here?
+    Future<void>(timeseriesModel.markStale);
+    return MaterialApp(
+      title: 'Covid Flows',
+      theme: ThemeData(
+        primarySwatch: PaletteColors.lightBlueVivid,
+      ),
+      home: CovidEntitiesPage(title: 'Covid Flows'),
+    );
   }
 }

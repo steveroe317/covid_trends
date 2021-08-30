@@ -31,11 +31,12 @@ class CovidTrendsNavigationSidebar extends StatelessWidget {
                             fontSize: SizeScale.px24,
                             fontWeight: FontWeight.w500)),
                   )),
+              // TODO: use package_info_plus to get app name and version info.
               AboutListTile(
                 icon: Icon(Icons.info),
                 child: Text('About'),
-                applicationName: 'Covid Trends',
-                applicationVersion: '0.1.0',
+                applicationName: 'Covid Flows',
+                applicationVersion: '0.1.1',
                 applicationLegalese: '© 2021 Roe Designs',
                 aboutBoxChildren: [
                   Text('The Covid Trends app shows confirmed case and death '

@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 
 import '../models/covid_entities_page_model.dart';
 import '../models/covid_timeseries_model.dart';
+import '../models/model_constants.dart';
 import 'covid_chart_group_page.dart';
 import 'ui_constants.dart';
 
@@ -39,7 +40,9 @@ PopupMenuButton<String> buildStarPopupMenuButton(BuildContext context,
             Provider.of<CovidEntitiesPageModel>(context, listen: false);
         // TODO: move itemWidth to UiConstant.
         var itemWidth = 200.0;
-        var starNames = List<String>.from(pageModel.getStarredNames());
+        var starNames = List<String>.from(pageModel
+            .getStarredNames()
+            .where((element) => element != ModelConstants.startupStarName));
         starNames.sort();
         var menuEntries = List<PopupMenuEntry<String>>.from(
             starNames.map((name) => PopupMenuItem(

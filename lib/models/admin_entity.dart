@@ -247,7 +247,7 @@ class AdminEntity {
 
   bool get hasChildren => _childIndex.isNotEmpty;
 
-  bool childrenContains(String name) {
+  bool childIndexContains(String name) {
     return _childIndex.containsKey(name);
   }
 
@@ -343,6 +343,10 @@ class AdminEntity {
       return _children[name];
     }
     return null;
+  }
+
+  bool childrenContains(String name) {
+    return _children.containsKey(name);
   }
 
   void halveTreeHistory() {

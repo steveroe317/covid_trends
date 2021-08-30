@@ -8,7 +8,7 @@ import 'model_constants.dart';
 import 'starred_model.dart';
 
 class CovidEntitiesPageModel with ChangeNotifier {
-  AppDataCache appDataCache;
+  AppDataCache? appDataCache;
   static const maxPathListLength = 4;
   List<String> _entityPagePath = List<String>.empty();
   List<String> _chartPath = List<String>.empty();
@@ -23,8 +23,11 @@ class CovidEntitiesPageModel with ChangeNotifier {
 
   CovidEntitiesPageModel(List<String> path)
       : _entityPagePath = List<String>.from(path),
-        _chartPath = List<String>.from(path),
-        appDataCache = AppDataCache('app_state');
+        _chartPath = List<String>.from(path) {
+    appDataCache = AppDataCache('app_state', onInitFinish: () {
+      loadStar(ModelConstants.startupStarName);
+    });
+  }
 
   List<String> entityPagePath() {
     return List<String>.from(_entityPagePath);
@@ -64,6 +67,7 @@ class CovidEntitiesPageModel with ChangeNotifier {
   }
 
   List<List<String>> getAllModelPaths() {
+    // TODO: filter duplicate paths.
     List<List<String>> allPaths = [];
     allPaths.add(_entityPagePath);
     allPaths.add(_chartPath);
@@ -134,7 +138,7 @@ class CovidEntitiesPageModel with ChangeNotifier {
   }
 
   List<String> getStarredNames() {
-    return appDataCache.getStarredNames();
+    return appDataCache?.getStarredNames() ?? [];
   }
 
   String get editStarName => _editStarName;
@@ -146,23 +150,23 @@ class CovidEntitiesPageModel with ChangeNotifier {
   void addStar(String name) {
     var star = StarredModel(name, _compareRegion, per100k, seriesLength,
         _entityPagePath, _comparisonPathList, _chartPath);
-    appDataCache.addStarred(name, star);
+    appDataCache?.addStarred(name, star);
   }
 
   void deleteStar(String name) {
-    appDataCache.deleteStarred(name);
+    appDataCache?.deleteStarred(name);
   }
 
   void renameStar(String oldName, String newName) {
-    var star = appDataCache.getStarred(oldName);
+    var star = appDataCache?.getStarred(oldName);
     if (star != null) {
-      appDataCache.deleteStarred(oldName);
-      appDataCache.addStarred(newName, star);
+      appDataCache!.deleteStarred(oldName);
+      appDataCache!.addStarred(newName, star);
     }
   }
 
   void loadStar(String name) {
-    var star = appDataCache.getStarred(name);
+    var star = appDataCache?.getStarred(name);
     if (star != null) {
       _compareRegion = star.compareRegion;
       _per100k = star.per100k;
@@ -172,5 +176,9 @@ class CovidEntitiesPageModel with ChangeNotifier {
       _chartPath = star.chartPath.toList();
       notifyListeners();
     }
+  }
+
+  void notify() {
+    notifyListeners();
   }
 }

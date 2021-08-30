@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
 import 'admin_entity.dart';
 import 'model_constants.dart';
@@ -7,7 +8,6 @@ class CovidTimeseriesModel with ChangeNotifier {
   bool _initialized = false;
   AdminEntity _rootEntity = AdminEntity.empty();
 
-  // TODO: Why is initialize() called 3 times on startup?  Can this be reduced?
   void initialize() async {
     if (!_initialized) {
       _initialized = true;
@@ -33,30 +33,35 @@ class CovidTimeseriesModel with ChangeNotifier {
         return null;
       }
     }
-    if (entity.childrenContains(path.first)) {
-      return _findEntity(path.sublist(1), entity.child(path.first));
-    } else {
+    if (!entity.childIndexContains(path.first)) {
       return null;
+    } else if (!entity.childrenContains(path.first)) {
+      return null;
+    } else {
+      return _findEntity(path.sublist(1), entity.child(path.first));
     }
   }
 
   void loadEntities(List<List<String>> paths) async {
     for (var path in paths) {
-      await loadEntityFromRoot(path);
+      await loadEntity(path);
     }
-  }
+    notifyListeners();
 
-  void loadEntity(List<String> path) async {
-    if (_findEntity(path, null) == null && path.length > 1) {
-      var parent = _findEntity(path.sublist(0, path.length - 1), null);
-      if (parent != null) {
-        await AdminEntity.create(path, parent);
-        notifyListeners();
+    // This retry works around an issue where starting up and restoring
+    // a view of a single country results in the country not being findable.
+    // The issue might be a bug in flutter but is hard to analyze because it
+    // only occurred in release builds on physical iOS devices.
+    await Future.delayed(Duration(milliseconds: 200));
+    for (var path in paths) {
+      if (_findEntity(path, null) == null) {
+        await loadEntity(path);
       }
     }
+    notifyListeners();
   }
 
-  Future<void> loadEntityFromRoot(List<String> path) async {
+  Future<void> loadEntity(List<String> path) async {
     AdminEntity? parent;
     bool entityCreated = false;
     for (var depth = 1; depth <= path.length; ++depth) {
@@ -163,6 +168,10 @@ class CovidTimeseriesModel with ChangeNotifier {
 
   void markStale() {
     _rootEntity.markTreeStale();
+    notifyListeners();
+  }
+
+  void notify() {
     notifyListeners();
   }
 }

@@ -9,11 +9,11 @@ class AppDataCache {
   Map<String, StarredModel> _starred = {};
   bool _initialized = false;
 
-  AppDataCache(String name) : _name = name {
-    init();
+  AppDataCache(String name, {void Function()? onInitFinish}) : _name = name {
+    _init(onInitFinish);
   }
 
-  Future<void> init() async {
+  Future<void> _init(void Function()? onInitFinish) async {
     _database = AppDatabase(_name);
     await _database?.open();
 
@@ -30,6 +30,10 @@ class AppDataCache {
     }
 
     _initialized = true;
+
+    if (onInitFinish != null) {
+      Future.microtask(() => onInitFinish());
+    }
   }
 
   List<String> getStarredNames() {
