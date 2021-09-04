@@ -6,7 +6,9 @@ class InitializationErrorPage extends StatelessWidget {
     return Container(
       color: Colors.grey,
       child: Center(
-          child: Text('Error loading Covid Trends',
+          child: Text(
+              'Sorry, there was an error loading the Covid Trends '
+              'database. Please force quit the app and try again.',
               textDirection: TextDirection.ltr,
               textAlign: TextAlign.center,
               textScaleFactor: 2.0,
