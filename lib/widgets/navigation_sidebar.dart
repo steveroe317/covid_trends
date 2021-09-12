@@ -1,6 +1,7 @@
 import 'package:covid_trends/theme/size_scale.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../theme/palette_colors.dart';
 import 'ui_parameters.dart';
@@ -39,11 +40,24 @@ class CovidTrendsNavigationSidebar extends StatelessWidget {
                 applicationVersion: '1.0.2',
                 applicationLegalese: '© 2021 Roe Designs',
                 aboutBoxChildren: [
-                  Text('The Covid Trends app shows confirmed case and death '
-                      'charts for countries and selected US states and counties '
-                      'based on data from Johns Hopkins.'),
+                  Text('Covid Flows shows COVID-19 case and death graphs '
+                      'for countries and selected US states and counties '
+                      'using Johns Hopkins data.'),
                 ],
               ),
+              ListTile(
+                leading: Icon(Icons.help),
+                title: Text('Help'),
+                onTap: () {
+                  _launchURL('https://www.roedesigns.com/covid-flows');
+                },
+              )
             ])));
+  }
+
+  void _launchURL(String urlString) async {
+    if (await canLaunch(urlString)) {
+      await launch(urlString);
+    }
   }
 }
