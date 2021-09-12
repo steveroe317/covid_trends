@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../models/covid_entities_page_model.dart';
@@ -41,6 +44,26 @@ class CovidChart extends StatelessWidget {
     var seriesList =
         createTimeseries(pageModel, paths, timestamps, seriesDataList);
 
+    // Determine maximum chart data value.
+    var dataMaximum = 10.0;
+    if (seriesDataList.length > 0) {
+      var seriesDataMaximums = seriesDataList.map((dataList) {
+        return (dataList.length > 0) ? dataList.reduce(max) : 0.0;
+      });
+      if (seriesDataMaximums.length > 0)
+        dataMaximum = seriesDataMaximums.reduce(max);
+    }
+
+    // Add optional tick formatter based on maximum chart data value.
+    var numberFormatString = (dataMaximum >= 10.0)
+        ? '#0'
+        : (dataMaximum >= 1.0)
+            ? '#0.0'
+            : '#0.00';
+    var dataFormatter =
+        new charts.BasicNumericTickFormatterSpec.fromNumberFormat(
+            new NumberFormat(numberFormatString, 'en_US'));
+
     // Add optional chart legend and title.
     List<charts.ChartBehavior<DateTime>>? chartBehaviors = [];
 
@@ -59,6 +82,13 @@ class CovidChart extends StatelessWidget {
     return new charts.TimeSeriesChart(
       seriesList,
       animate: animate,
+      primaryMeasureAxis: new charts.NumericAxisSpec(
+          tickFormatterSpec: dataFormatter,
+          tickProviderSpec: charts.BasicNumericTickProviderSpec(
+              zeroBound: true,
+              dataIsInWholeNumbers: !per100k,
+              desiredMinTickCount: 3,
+              desiredMaxTickCount: 7)),
       behaviors: chartBehaviors,
       dateTimeFactory: const charts.LocalDateTimeFactory(),
     );
