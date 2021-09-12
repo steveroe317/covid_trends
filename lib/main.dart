@@ -20,23 +20,18 @@ void main() {
       ChangeNotifierProvider(create: (context) => CovidTimeseriesModel()),
       ChangeNotifierProvider(
           create: (context) => CovidEntitiesPageModel(['World'])),
-    ], child: _CovidAppAuthWrapper()),
+    ], child: _CovidAppFirebaseWrapper()),
   );
 }
 
-class _CovidAppAuthWrapper extends StatefulWidget {
+class _CovidAppFirebaseWrapper extends StatefulWidget {
   @override
-  _CovidAppAuthWrapperState createState() => _CovidAppAuthWrapperState();
+  _CovidAppFirebaseWrapperState createState() =>
+      _CovidAppFirebaseWrapperState();
 }
 
-class _CovidAppAuthWrapperState extends State<_CovidAppAuthWrapper> {
+class _CovidAppFirebaseWrapperState extends State<_CovidAppFirebaseWrapper> {
   Future<FirebaseApp> _initialization = Firebase.initializeApp();
-
-  @override
-  void initState() {
-    super.initState();
-    _initialization = Firebase.initializeApp();
-  }
 
   void retryInitialization() {
     setState(() {
@@ -54,8 +49,39 @@ class _CovidAppAuthWrapperState extends State<_CovidAppAuthWrapper> {
               retryInitialization, 'connecting to the Covid Flows database');
         }
         if (snapshot.connectionState == ConnectionState.done) {
-          FirebaseAuth auth = FirebaseAuth.instance;
-          auth.signInAnonymously();
+          return _CovidAppAuthWrapper();
+        }
+        return LoadingPage();
+      },
+    );
+  }
+}
+
+class _CovidAppAuthWrapper extends StatefulWidget {
+  @override
+  _CovidAppAuthWrapperState createState() => _CovidAppAuthWrapperState();
+}
+
+class _CovidAppAuthWrapperState extends State<_CovidAppAuthWrapper> {
+  Future<UserCredential> _credential =
+      FirebaseAuth.instance.signInAnonymously();
+
+  void retryAuthentication() {
+    setState(() {
+      _credential = FirebaseAuth.instance.signInAnonymously();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: _credential,
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return InitializationErrorPage(
+              retryAuthentication, 'authenticating the Covid Flows database');
+        }
+        if (snapshot.connectionState == ConnectionState.done) {
           Provider.of<CovidTimeseriesModel>(context, listen: false)
               .initialize();
           return _CovidAppTimestampWrapper();
@@ -75,13 +101,6 @@ class _CovidAppTimestampWrapper extends StatefulWidget {
 class _CovidAppTimestampWrapperState extends State<_CovidAppTimestampWrapper> {
   final _timestampDocumentPath = 'time-series/World_Timestamp';
   Stream<DocumentSnapshot>? _timestampStream;
-
-  @override
-  void initState() {
-    super.initState();
-    _timestampStream =
-        FirebaseFirestore.instance.doc(_timestampDocumentPath).snapshots();
-  }
 
   void retryLoad() {
     setState(() {
