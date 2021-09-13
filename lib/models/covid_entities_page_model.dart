@@ -1,7 +1,9 @@
 import 'package:covid_trends/models/starred_model.dart';
+import 'package:covid_trends/theme/palette_colors.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import '../theme/palette_colors.dart';
 import '../widgets/ui_constants.dart';
 import 'app_data_cache.dart';
 import 'model_constants.dart';
@@ -9,12 +11,9 @@ import 'starred_model.dart';
 
 class CovidEntitiesPageModel with ChangeNotifier {
   AppDataCache? appDataCache;
-  static const maxPathListLength = 4;
   List<String> _entityPagePath = List<String>.empty();
   List<String> _chartPath = List<String>.empty();
-  var _comparisonPathList = <List<String>>[
-    [ModelConstants.rootEntityName]
-  ];
+  var _comparisonGraphModel = CovidComparisonGraphModel();
   String _sortMetric = UiConstants.noSortMetricName;
   int _seriesLength = 0;
   bool _per100k = false;
@@ -45,40 +44,28 @@ class CovidEntitiesPageModel with ChangeNotifier {
   void setChartPath(List<String> chartPath) {
     _chartPath = List<String>.from(chartPath);
     if (!_compareRegion) {
-      _comparisonPathList = <List<String>>[];
+      _comparisonGraphModel.clear();
     }
-    _addComparisonPathList(chartPath);
+    _comparisonGraphModel.addPath(chartPath);
     notifyListeners();
   }
 
-  List<List<String>> get comparisonPathList => _comparisonPathList;
-
-  void _addComparisonPathList(List<String> path) {
-    for (var existingPath in _comparisonPathList) {
-      if (listEquals(path, existingPath)) {
-        return;
-      }
-    }
-    if (_comparisonPathList.length >= maxPathListLength) {
-      _comparisonPathList.removeAt(0);
-    }
-    _comparisonPathList.add(path);
-    notifyListeners();
-  }
+  List<List<String>> get comparisonPathList => _comparisonGraphModel.pathList;
+  List<Color> get comparisonPathColors => _comparisonGraphModel.pathColors;
 
   List<List<String>> getAllModelPaths() {
     // TODO: filter duplicate paths.
     List<List<String>> allPaths = [];
     allPaths.add(_entityPagePath);
     allPaths.add(_chartPath);
-    for (var path in _comparisonPathList) {
+    for (var path in _comparisonGraphModel.pathList) {
       allPaths.add(path);
     }
     return allPaths;
   }
 
   void clearComparisonPathList() {
-    _comparisonPathList = <List<String>>[];
+    _comparisonGraphModel.clear();
     notifyListeners();
   }
 
@@ -128,7 +115,7 @@ class CovidEntitiesPageModel with ChangeNotifier {
   List<Color> chartColors(List<List<String>> paths, String seriesName) {
     List<Color> colors;
     if (compareRegion == true) {
-      colors = generateColors(paths.length);
+      colors = _comparisonGraphModel.pathColors;
     } else if (seriesName.contains('Death')) {
       colors = [Colors.red];
     } else {
@@ -149,7 +136,7 @@ class CovidEntitiesPageModel with ChangeNotifier {
 
   void addStar(String name) {
     var star = StarredModel(name, _compareRegion, per100k, seriesLength,
-        _entityPagePath, _comparisonPathList, _chartPath);
+        _entityPagePath, _comparisonGraphModel.pathList, _chartPath);
     appDataCache?.addStarred(name, star);
   }
 
@@ -172,7 +159,10 @@ class CovidEntitiesPageModel with ChangeNotifier {
       _per100k = star.per100k;
       _seriesLength = star.seriesLength;
       _entityPagePath = star.path.toList();
-      _comparisonPathList = StarredModel.copyListListString(star.pathList);
+      _comparisonGraphModel.clear();
+      for (var path in star.pathList) {
+        _comparisonGraphModel.addPath(path);
+      }
       _chartPath = star.chartPath.toList();
       notifyListeners();
     }
@@ -180,5 +170,56 @@ class CovidEntitiesPageModel with ChangeNotifier {
 
   void notify() {
     notifyListeners();
+  }
+}
+
+class CovidComparisonGraphModel {
+  static const maxPathListLength = 6;
+  var _comparisonPathList = <List<String>>[
+    [ModelConstants.rootEntityName]
+  ];
+  var _comparisonPathColors = <Color>[PaletteColors.coolGrey.shade900];
+  var _comparisonNextColorIndex = 1;
+
+  // Colors from the quantitative palette example in
+  // https://chartio.com/learn/charts/how-to-choose-colors-data-visualization/
+  final comparisonColors = <Color>[
+    Color(0xFF0483A6),
+    Color(0xFFF6CA58),
+    Color(0xFF704C7D),
+    Color(0xFF9BDA60),
+    Color(0xFFCB482B),
+    Color(0xFFFFA250),
+    Color(0xFF8BDDD0),
+  ];
+
+  List<List<String>> get pathList => _comparisonPathList;
+  List<Color> get pathColors => _comparisonPathColors;
+
+  void clear() {
+    _comparisonPathList = <List<String>>[];
+    _comparisonPathColors = <Color>[];
+    _comparisonNextColorIndex = 0;
+  }
+
+  bool addPath(List<String> path) {
+    for (var existingPath in _comparisonPathList) {
+      if (listEquals(path, existingPath)) {
+        return false;
+      }
+    }
+    if (_comparisonPathList.length >= maxPathListLength) {
+      _comparisonPathList.removeAt(0);
+      _comparisonPathColors.removeAt(0);
+    }
+    _comparisonPathList.add(path);
+    _comparisonPathColors.add(comparisonColors[_comparisonNextColorIndex]);
+
+    _comparisonNextColorIndex++;
+    if (_comparisonNextColorIndex >= comparisonColors.length) {
+      _comparisonNextColorIndex = 0;
+    }
+
+    return true;
   }
 }
