@@ -55,11 +55,16 @@ class CovidChart extends StatelessWidget {
     }
 
     // Add optional tick formatter based on maximum chart data value.
-    var numberFormatString = (dataMaximum >= 10.0)
-        ? '#0'
-        : (dataMaximum >= 1.0)
-            ? '#0.0'
-            : '#0.00';
+    var numberFormatString = '';
+    if (dataMaximum >= 10.0 || dataMaximum == 0.0) {
+      numberFormatString = '#0';
+    } else if (dataMaximum >= 1.0) {
+      numberFormatString = '#0.0';
+    } else if (dataMaximum >= 0.1) {
+      numberFormatString = '#0.00';
+    } else if (dataMaximum >= 0.01) {
+      numberFormatString = '#0.000';
+    }
     var dataFormatter =
         new charts.BasicNumericTickFormatterSpec.fromNumberFormat(
             new NumberFormat(numberFormatString, 'en_US'));
