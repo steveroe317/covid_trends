@@ -26,7 +26,7 @@ class CovidTrendsNavigationSidebar extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: PaletteColors.lightBlueVivid.shade700,
                     ),
-                    child: Text('Covid Trends',
+                    child: Text('Covid Flows',
                         style: TextStyle(
                             color: PaletteColors.coolGrey.shade50,
                             fontSize: SizeScale.px24,

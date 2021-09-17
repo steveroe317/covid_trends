@@ -20,7 +20,7 @@ class WidgetImageSharer {
         final file = File(filePath);
         await file.writeAsBytes(pngBytes);
         Share.shareFiles([filePath],
-            text: 'Covid Trends',
+            text: 'Covid Flows',
             sharePositionOrigin: Rect.fromLTWH(0, 0, 200, 200));
       }
     } catch (e) {

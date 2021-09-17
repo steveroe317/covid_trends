@@ -9,7 +9,7 @@ class LoadingPage extends StatelessWidget {
             child: Column(mainAxisSize: MainAxisSize.min, children: [
           Padding(
               padding: EdgeInsets.all(16.0),
-              child: Text('Loading Covid Trends',
+              child: Text('Loading Covid Flows',
                   textDirection: TextDirection.ltr, textScaleFactor: 2.0)),
           Padding(
               padding: EdgeInsets.all(16.0),
