@@ -37,7 +37,7 @@ class CovidTrendsNavigationSidebar extends StatelessWidget {
                 icon: Icon(Icons.info),
                 child: Text('About'),
                 applicationName: 'Covid Flows',
-                applicationVersion: '1.0.2',
+                applicationVersion: '1.0.4',
                 applicationLegalese: '© 2021 Roe Designs',
                 aboutBoxChildren: [
                   Text('Covid Flows shows COVID-19 case and death graphs '
