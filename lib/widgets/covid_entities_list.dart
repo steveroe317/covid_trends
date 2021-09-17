@@ -1,3 +1,4 @@
+import 'package:covid_trends/widgets/metric_formatter.dart';
 import 'package:covid_trends/widgets/ui_parameters.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -225,6 +226,9 @@ class EntityListItem extends StatelessWidget {
     }
     var metricValue = _timeseriesModel.entitySortMetric(
         _path, displayMetric, _pageModel.per100k);
+    var numberFormatter = (_pageModel.per100k)
+        ? MetricFormatter.doubleFormatter(metricValue.abs(), graphScale: false)
+        : MetricFormatter.integerFormatter;
     return numberFormatter.format(metricValue);
   }
 }

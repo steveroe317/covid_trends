@@ -2,11 +2,11 @@ import 'dart:math';
 
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../models/covid_entities_page_model.dart';
 import '../models/covid_timeseries_model.dart';
+import 'metric_formatter.dart';
 
 class CovidChart extends StatelessWidget {
   final String seriesName;
@@ -55,19 +55,9 @@ class CovidChart extends StatelessWidget {
     }
 
     // Add optional tick formatter based on maximum chart data value.
-    var numberFormatString = '';
-    if (dataMaximum >= 10.0 || dataMaximum == 0.0) {
-      numberFormatString = '#0';
-    } else if (dataMaximum >= 1.0) {
-      numberFormatString = '#0.0';
-    } else if (dataMaximum >= 0.1) {
-      numberFormatString = '#0.00';
-    } else if (dataMaximum >= 0.01) {
-      numberFormatString = '#0.000';
-    }
     var dataFormatter =
         new charts.BasicNumericTickFormatterSpec.fromNumberFormat(
-            new NumberFormat(numberFormatString, 'en_US'));
+            MetricFormatter.doubleFormatter(dataMaximum / 10.0));
 
     // Add optional chart legend and title.
     List<charts.ChartBehavior<DateTime>>? chartBehaviors = [];

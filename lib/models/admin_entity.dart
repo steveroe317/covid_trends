@@ -20,6 +20,8 @@ class AdminEntity {
     'Deaths 7-Day'
   ];
 
+  List<String> get populationMetrics => _populationMetrics;
+
   AdminEntity.empty() : _path = <String>[];
 
   AdminEntity._(this._path, this._parent);
@@ -246,8 +248,6 @@ class AdminEntity {
   }
 
   bool get hasChildren => _childIndex.isNotEmpty;
-
-  List<String> get populationMetrics => _populationMetrics;
 
   bool childIndexContains(String name) {
     return _childIndex.containsKey(name);
