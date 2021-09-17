@@ -247,6 +247,8 @@ class AdminEntity {
 
   bool get hasChildren => _childIndex.isNotEmpty;
 
+  List<String> get populationMetrics => _populationMetrics;
+
   bool childIndexContains(String name) {
     return _childIndex.containsKey(name);
   }

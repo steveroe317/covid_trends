@@ -38,7 +38,7 @@ class CovidEntityList extends StatelessWidget {
             child: Container(
           width: uiParameters.entityRowWidth,
           color: UiColors.entityListHeader,
-          child: EntityListHeader(pageModel),
+          child: EntityListHeader(pageModel, timeseriesModel),
         ))
       ])
     ];
@@ -72,8 +72,9 @@ class CovidEntityList extends StatelessWidget {
 
 class EntityListHeader extends StatelessWidget {
   final CovidEntitiesPageModel _pageModel;
+  final CovidTimeseriesModel _timeseriesModel;
 
-  EntityListHeader(this._pageModel);
+  EntityListHeader(this._pageModel, this._timeseriesModel);
 
   @override
   build(BuildContext context) {
@@ -122,7 +123,8 @@ class EntityListHeader extends StatelessWidget {
     var name = (_pageModel.sortMetric != UiConstants.noSortMetricName)
         ? _pageModel.sortMetric
         : UiConstants.defaultDisplayMetric;
-    if (_pageModel.per100k) {
+    if (_pageModel.per100k &&
+        _timeseriesModel.populationMetrics.contains(name)) {
       name = '$name\nper 100,000';
     }
     return name;

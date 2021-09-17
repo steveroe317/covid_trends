@@ -17,6 +17,8 @@ class CovidTimeseriesModel with ChangeNotifier {
     }
   }
 
+  List<String> get populationMetrics => _rootEntity.populationMetrics;
+
   bool get initialized => _initialized;
 
   AdminEntity? _findEntity(List<String> path, AdminEntity? entity) {
