@@ -8,7 +8,7 @@ import '../models/covid_timeseries_model.dart';
 import 'compare_region_popup_menu.dart';
 import 'covid_chart_group.dart';
 import 'covid_chart_group_page.dart';
-import 'covid_entities_list.dart';
+import 'covid_entity_list.dart';
 import 'date_range_popup_menu.dart';
 //import 'debug_popup_menu.dart';
 import 'navigation_sidebar.dart';
