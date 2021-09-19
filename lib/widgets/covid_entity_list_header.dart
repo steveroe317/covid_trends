@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../models/covid_entities_page_model.dart';
 import '../models/covid_timeseries_model.dart';
+import '../theme/size_scale.dart';
 import 'ui_colors.dart';
 import 'ui_constants.dart';
 import 'ui_parameters.dart';
@@ -16,11 +17,14 @@ class CovidEntityListHeader extends StatelessWidget {
   @override
   build(BuildContext context) {
     var uiParameters = context.read<UiParameters>();
-    return SizedBox(
+    return Container(
         width: uiParameters.entityRowWidth,
+        padding: EdgeInsets.only(left: 0, right: SizeScale.px12),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
+            // This icon is not yet used, but is included to match alignment
+            // with CovidEntityListItem.
             Opacity(
               opacity: 0.0,
               child: IconButton(
@@ -31,7 +35,7 @@ class CovidEntityListHeader extends StatelessWidget {
             SizedBox(
               width: uiParameters.entityButtonWidth,
               child: TextButton(
-                onPressed: () {},
+                onPressed: null,
                 style: ButtonStyle(
                     foregroundColor:
                         MaterialStateProperty.all<Color>(UiColors.darkGreyText),
@@ -44,7 +48,7 @@ class CovidEntityListHeader extends StatelessWidget {
                     )),
               ),
             ),
-            SizedBox(
+            Container(
               width: uiParameters.entityMetricWidth,
               child: Align(
                 alignment: Alignment.centerRight,

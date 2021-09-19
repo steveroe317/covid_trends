@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../models/covid_entities_page_model.dart';
 import '../models/covid_timeseries_model.dart';
+import '../theme/size_scale.dart';
 import 'metric_formatter.dart';
 import 'ui_colors.dart';
 import 'ui_constants.dart';
@@ -35,7 +36,7 @@ class CovidEntityListItem extends StatelessWidget {
         color: listEquals(_path, pageModel.chartPath())
             ? UiColors.entityListSelected
             : null,
-        padding: EdgeInsets.only(left: 6, right: 6),
+        padding: EdgeInsets.only(left: 0, right: SizeScale.px12),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
@@ -72,7 +73,7 @@ class CovidEntityListItem extends StatelessWidget {
                     )),
               ),
             ),
-            SizedBox(
+            Container(
               width: uiParameters.entityMetricWidth,
               child: Align(
                 alignment: Alignment.centerRight,
