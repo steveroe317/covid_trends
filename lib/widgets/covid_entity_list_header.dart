@@ -52,8 +52,11 @@ class CovidEntityListHeader extends StatelessWidget {
               width: uiParameters.entityMetricWidth,
               child: Align(
                 alignment: Alignment.centerRight,
-                child: Text(_sortMetricName(),
-                    style: uiParameters.entityMetricTextStyle),
+                child: Text(
+                  _sortMetricName(),
+                  style: uiParameters.entityMetricTextStyle,
+                  textAlign: TextAlign.right,
+                ),
               ),
             ),
           ],
