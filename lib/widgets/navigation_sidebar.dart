@@ -47,6 +47,13 @@ class CovidTrendsNavigationSidebar extends StatelessWidget {
                             fontWeight: FontWeight.w500)),
                   )),
               // TODO: use package_info_plus to get app name and version info.
+              ListTile(
+                leading: Icon(Icons.help),
+                title: Text('Help'),
+                onTap: () {
+                  _launchURL('https://www.roedesigns.com/covid-flows');
+                },
+              ),
               AboutListTile(
                 icon: Icon(Icons.info),
                 child: Text('About'),
@@ -59,13 +66,6 @@ class CovidTrendsNavigationSidebar extends StatelessWidget {
                       'using Johns Hopkins data.'),
                 ],
               ),
-              ListTile(
-                leading: Icon(Icons.help),
-                title: Text('Help'),
-                onTap: () {
-                  _launchURL('https://www.roedesigns.com/covid-flows');
-                },
-              )
             ])));
   }
 
