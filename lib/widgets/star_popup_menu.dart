@@ -52,8 +52,6 @@ PopupMenuButton<String> buildStarPopupMenuButton(BuildContext context,
       itemBuilder: (BuildContext context) {
         var pageModel =
             Provider.of<CovidEntitiesPageModel>(context, listen: false);
-        // TODO: move itemWidth to UiConstant.
-        var itemWidth = 200.0;
         var starNames = List<String>.from(pageModel
             .getStarredNames()
             .where((element) => element != ModelConstants.startupStarName));
@@ -61,20 +59,19 @@ PopupMenuButton<String> buildStarPopupMenuButton(BuildContext context,
         var menuEntries = List<PopupMenuEntry<String>>.from(
             starNames.map((name) => PopupMenuItem(
                 value: name,
-                child: Container(
-                    width: itemWidth,
-                    child: ListTile(
-                        title: Text(name),
-                        trailing: IconButton(
-                          icon: Icon(Icons.edit),
-                          onPressed: () {
-                            pageModel.editStarName = name;
-                            showDialog(
-                                context: context, builder: buildEditStarDialog);
-                            //Navigator.pop<String>(context, null);
-                          },
-                        ))))));
-        menuEntries.insert(0, PopupMenuDivider());
+                child: ListTile(
+                    title: Text(name),
+                    trailing: IconButton(
+                      icon: Icon(Icons.edit),
+                      onPressed: () {
+                        pageModel.editStarName = name;
+                        showDialog(
+                            context: context, builder: buildEditStarDialog);
+                      },
+                    )))));
+        if (menuEntries.length > 0) {
+          menuEntries.insert(0, PopupMenuDivider());
+        }
         TextStyle? saveStyle =
             (openChartPage) ? TextStyle(color: UiColors.disabledText) : null;
         menuEntries.insert(
@@ -82,15 +79,13 @@ PopupMenuButton<String> buildStarPopupMenuButton(BuildContext context,
             PopupMenuItem(
                 value: UiConstants.saveStar,
                 enabled: !openChartPage,
-                child: Container(
-                    width: itemWidth,
-                    child: ListTile(
-                      title: Text(
-                        UiConstants.saveStar,
-                        style: saveStyle,
-                      ),
-                      trailing: Opacity(opacity: 0.0, child: Icon(Icons.edit)),
-                    ))));
+                child: ListTile(
+                  title: Text(
+                    UiConstants.saveStar,
+                    style: saveStyle,
+                  ),
+                  trailing: Opacity(opacity: 0.0, child: Icon(Icons.edit)),
+                )));
         return menuEntries;
       });
 }
