@@ -28,8 +28,11 @@ class CovidAboutListTile extends AboutListTile {
       applicationVersion: '1.0.5',
       applicationLegalese: '© 2021 Roe Designs',
       aboutBoxChildren: [
-        Text('\nCovid Flows shows COVID-19 trend graphs for countries and US '
-            'states and counties.'),
+        Text(
+          '\nCovid Flows shows COVID-19 trend graphs for countries and US '
+          'states and counties.',
+          style: TextStyle(color: Colors.black),
+        ),
         RichText(
             text: TextSpan(
                 style: TextStyle(fontSize: SizeScale.px16),
