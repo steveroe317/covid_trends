@@ -18,6 +18,7 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../theme/palette_colors.dart';
+import 'covid_about_list_tile.dart';
 import 'ui_parameters.dart';
 
 class CovidTrendsNavigationSidebar extends StatelessWidget {
@@ -46,7 +47,6 @@ class CovidTrendsNavigationSidebar extends StatelessWidget {
                             fontSize: SizeScale.px24,
                             fontWeight: FontWeight.w500)),
                   )),
-              // TODO: use package_info_plus to get app name and version info.
               ListTile(
                 leading: Icon(Icons.help),
                 title: Text('Help'),
@@ -54,18 +54,7 @@ class CovidTrendsNavigationSidebar extends StatelessWidget {
                   _launchURL('https://www.roedesigns.com/covid-flows');
                 },
               ),
-              AboutListTile(
-                icon: Icon(Icons.info),
-                child: Text('About'),
-                applicationName: 'Covid Flows',
-                applicationVersion: '1.0.5',
-                applicationLegalese: '© 2021 Roe Designs',
-                aboutBoxChildren: [
-                  Text('Covid Flows shows COVID-19 case and death graphs '
-                      'for countries and selected US states and counties '
-                      'using Johns Hopkins data.'),
-                ],
-              ),
+              CovidAboutListTile(),
             ])));
   }
 
