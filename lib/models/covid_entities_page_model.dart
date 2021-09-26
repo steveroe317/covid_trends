@@ -23,6 +23,7 @@ import 'app_data_cache.dart';
 import 'model_constants.dart';
 import 'starred_model.dart';
 
+/// Holds main application display state in a model outside the widget tree.
 class CovidEntitiesPageModel with ChangeNotifier {
   AppDataCache? appDataCache;
   List<String> _entityPagePath = List<String>.empty();
@@ -33,6 +34,8 @@ class CovidEntitiesPageModel with ChangeNotifier {
   bool _per100k = false;
   bool _compareRegion = false;
   String _editStarName = '';
+  bool _entitySearchActive = false;
+  String _entitySearchString = '';
 
   CovidEntitiesPageModel(List<String> path)
       : _entityPagePath = List<String>.from(path),
@@ -182,11 +185,30 @@ class CovidEntitiesPageModel with ChangeNotifier {
     }
   }
 
+  bool get entitySearchActive => _entitySearchActive;
+
+  set entitySearchActive(bool value) {
+    if (_entitySearchActive != value) {
+      _entitySearchActive = value;
+      notifyListeners();
+    }
+  }
+
+  String get entitySearchString => _entitySearchString;
+
+  set entitySearchString(String value) {
+    if (entitySearchString != value) {
+      _entitySearchString = value;
+      notifyListeners();
+    }
+  }
+
   void notify() {
     notifyListeners();
   }
 }
 
+/// Holds application graph comparison display state.
 class CovidComparisonGraphModel {
   static const maxPathListLength = 6;
   var _comparisonPathList = <List<String>>[

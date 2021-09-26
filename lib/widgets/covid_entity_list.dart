@@ -21,6 +21,7 @@ import '../models/covid_entities_page_model.dart';
 import '../models/covid_timeseries_model.dart';
 import 'covid_entity_list_header.dart';
 import 'covid_entity_list_item.dart';
+import 'covid_entity_list_search.dart';
 //import 'debug_popup_menu.dart';
 import 'ui_colors.dart';
 import 'ui_parameters.dart';
@@ -43,7 +44,7 @@ class CovidEntityList extends StatelessWidget {
     final currentPath = pageModel.entityPagePath();
     final numberFormatter = NumberFormat('#,###');
 
-    // Build base of the entity list with the parent entities.
+    // Add the entity list header.
     List<Widget> stemEntityList = [
       Row(children: [
         Expanded(
@@ -54,6 +55,8 @@ class CovidEntityList extends StatelessWidget {
         ))
       ])
     ];
+
+    // Add the parent entities to the list.
     for (var index = 0; index < currentPath.length; ++index) {
       final path = currentPath.sublist(0, index + 1);
       var depth = (index == 0)
@@ -68,16 +71,32 @@ class CovidEntityList extends StatelessWidget {
       ]));
     }
 
+    if (pageModel.entitySearchActive) {
+      stemEntityList.add(Row(children: [
+        Expanded(
+            child: Container(
+          width: uiParameters.entityRowWidth,
+          color: UiColors.entityListHeader,
+          child: CovidEntityListSearch(pageModel),
+        ))
+      ]));
+    }
+
     // Add the children of the last parent entity.
     List<Widget> childEntityList = [];
-    childEntityList.addAll(List<Widget>.from(childNames.map((name) =>
-        CovidEntityListItem(
+    for (var name in childNames) {
+      if (name
+          .toLowerCase()
+          .contains(pageModel.entitySearchString.toLowerCase())) {
+        childEntityList.add(CovidEntityListItem(
             [...currentPath, name],
             CovidEntityListItemDepth.leaf,
             _onRegionPressed,
             pageModel,
             timeseriesModel,
-            numberFormatter))));
+            numberFormatter));
+      }
+    }
     stemEntityList.add(Expanded(child: ListView(children: childEntityList)));
 
     return Column(

@@ -16,55 +16,53 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../models/covid_entities_page_model.dart';
-import '../models/covid_timeseries_model.dart';
 import '../theme/size_scale.dart';
 import 'ui_colors.dart';
-import 'ui_constants.dart';
 import 'ui_parameters.dart';
 
-class CovidEntityListHeader extends StatelessWidget {
+class CovidEntityListSearch extends StatelessWidget {
   final CovidEntitiesPageModel _pageModel;
-  final CovidTimeseriesModel _timeseriesModel;
 
-  CovidEntityListHeader(this._pageModel, this._timeseriesModel);
+  CovidEntityListSearch(this._pageModel);
 
   @override
   build(BuildContext context) {
     var uiParameters = context.read<UiParameters>();
     return Container(
+        color: UiColors.entityListStem,
         width: uiParameters.entityRowWidth,
-        padding: EdgeInsets.only(left: 0, right: SizeScale.px12),
+        padding: EdgeInsets.fromLTRB(
+            0, SizeScale.px8, SizeScale.px12, SizeScale.px12),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             IconButton(
-              icon: Icon(Icons.search),
+              icon: Icon(Icons.close),
               onPressed: () {
-                _pageModel.entitySearchActive = true;
+                _pageModel.entitySearchActive = false;
+                _pageModel.entitySearchString = '';
               },
             ),
             SizedBox(
               width: uiParameters.entityButtonWidth,
-              child: TextButton(
-                onPressed: null,
-                style: ButtonStyle(
-                    foregroundColor:
-                        MaterialStateProperty.all<Color>(UiColors.darkGreyText),
-                    alignment: AlignmentDirectional(0, 0)),
-                child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'Region',
-                      style: uiParameters.entityButtonTextStyle,
-                    )),
-              ),
+              child: TextField(
+                  autofocus: true,
+                  onChanged: (value) {
+                    _pageModel.entitySearchString = value;
+                  },
+                  decoration: InputDecoration(
+                    labelText: 'Search',
+                    hintText: _pageModel.entitySearchString,
+                    border: OutlineInputBorder(),
+                    contentPadding: EdgeInsets.all(SizeScale.px4),
+                  )),
             ),
             Container(
               width: uiParameters.entityMetricWidth,
               child: Align(
                 alignment: Alignment.centerRight,
                 child: Text(
-                  _sortMetricName(),
+                  '',
                   style: uiParameters.entityMetricTextStyle,
                   textAlign: TextAlign.right,
                 ),
@@ -72,16 +70,5 @@ class CovidEntityListHeader extends StatelessWidget {
             ),
           ],
         ));
-  }
-
-  String _sortMetricName() {
-    var name = (_pageModel.sortMetric != UiConstants.noSortMetricName)
-        ? _pageModel.sortMetric
-        : UiConstants.defaultDisplayMetric;
-    if (_pageModel.per100k &&
-        _timeseriesModel.populationMetrics.contains(name)) {
-      name = '$name\nper 100,000';
-    }
-    return name;
   }
 }
