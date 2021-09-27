@@ -25,7 +25,7 @@ class CovidAboutListTile extends AboutListTile {
       icon: Icon(Icons.info),
       child: Text('About'),
       applicationName: 'Covid Flows',
-      applicationVersion: '1.0.6',
+      applicationVersion: '1.0.7',
       applicationLegalese: '© 2021 Roe Designs',
       aboutBoxChildren: [
         Text(
