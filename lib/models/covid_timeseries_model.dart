@@ -16,6 +16,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'admin_entity.dart';
+import 'covid_series_id.dart';
 import 'model_constants.dart';
 
 class CovidTimeseriesModel with ChangeNotifier {
@@ -111,11 +112,11 @@ class CovidTimeseriesModel with ChangeNotifier {
     }
   }
 
-  List<double> entitySeriesData(List<String> path, String key,
+  List<double> entitySeriesData(List<String> path, CovidSeriesId seriesId,
       {seriesLength = 0, per100k = false}) {
     var entity = _findEntity(path, null);
     if (entity != null) {
-      return entity.seriesData(key,
+      return entity.seriesData(seriesId,
           seriesLength: seriesLength, per100k: per100k);
     } else {
       return List<double>.empty();

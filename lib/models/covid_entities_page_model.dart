@@ -20,6 +20,7 @@ import 'package:flutter/material.dart';
 import '../theme/palette_colors.dart';
 import '../widgets/ui_constants.dart';
 import 'app_data_cache.dart';
+import 'covid_series_id.dart';
 import 'model_constants.dart';
 import 'starred_model.dart';
 
@@ -129,11 +130,12 @@ class CovidEntitiesPageModel with ChangeNotifier {
     return colors;
   }
 
-  List<Color> chartColors(List<List<String>> paths, String seriesName) {
+  List<Color> chartColors(List<List<String>> paths, CovidSeriesId seriesId) {
     List<Color> colors;
     if (compareRegion == true) {
       colors = _comparisonGraphModel.pathColors;
-    } else if (seriesName.contains('Death')) {
+    } else if (seriesId == CovidSeriesId.Deaths ||
+        seriesId == CovidSeriesId.DeathsDaily) {
       colors = [Colors.red];
     } else {
       colors = [Colors.black];

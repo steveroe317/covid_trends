@@ -17,10 +17,12 @@ import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import 'covid_series_id.dart';
+
 class AdminEntity {
   final List<String> _path;
   List<int> _timestamps = <int>[];
-  Map<String, List<double>> _timeseries = <String, List<double>>{};
+  var _timeseries = <CovidSeriesId, List<double>>{};
   Map<String, int> _sortKeys = {};
   Map<String, AdminEntity> _children = {};
   Map<String, AdminChildIndexData> _childIndex = {};
@@ -79,10 +81,12 @@ class AdminEntity {
     _timeseries = _extractDocTimeseries(docData);
     _sortKeys = _extractDocSortKeys(docData);
     _childIndex = _extractDocChildIndex(docData);
-    createRollingAverageDiff('Confirmed', 'Confirmed 7-Day', 7);
-    createRollingAverageDiff('Deaths', 'Deaths 7-Day', 7);
+    createRollingAverageDiff(
+        CovidSeriesId.Confirmed, CovidSeriesId.ConfirmedDaily, 7);
+    createRollingAverageDiff(
+        CovidSeriesId.Deaths, CovidSeriesId.DeathsDaily, 7);
     // TODO: Why do we need to filter outliers?  Check source data.
-    filterOutliers('Population', 5);
+    filterOutliers(CovidSeriesId.Population, 5);
   }
 
   static String _docPath(path) {
@@ -101,13 +105,18 @@ class AdminEntity {
     return timestamps;
   }
 
-  static Map<String, List<double>> _extractDocTimeseries(
+  static Map<CovidSeriesId, List<double>> _extractDocTimeseries(
       Map<String, dynamic> docData) {
-    var timeseries = Map<String, List<double>>();
+    var timeseries = <CovidSeriesId, List<double>>{};
     for (var key in docData.keys) {
-      // TODO: Move timeseries into their own "Timeseries" field.
-      if (key != "Date" && key != "Children" && key != "SortKeys") {
-        timeseries[key] =
+      if (key == 'Confirmed') {
+        timeseries[CovidSeriesId.Confirmed] =
+            List<double>.from(docData[key].map((x) => x.toDouble()));
+      } else if (key == 'Deaths') {
+        timeseries[CovidSeriesId.Deaths] =
+            List<double>.from(docData[key].map((x) => x.toDouble()));
+      } else if (key == 'Population') {
+        timeseries[CovidSeriesId.Population] =
             List<double>.from(docData[key].map((x) => x.toDouble()));
       }
     }
@@ -140,14 +149,15 @@ class AdminEntity {
     return childIndex;
   }
 
-  List<double>? _lookupTimeseries(String name) {
-    if (!_timeseries.containsKey(name)) {
+  List<double>? _lookupTimeseries(CovidSeriesId seriesId) {
+    if (!_timeseries.containsKey(seriesId)) {
       return null;
     }
-    return _timeseries[name];
+    return _timeseries[seriesId];
   }
 
-  void createRollingAverageDiff(String source, String target, windowSize) {
+  void createRollingAverageDiff(
+      CovidSeriesId source, CovidSeriesId target, windowSize) {
     var sourceTimeseries = _timeseries[source];
     if (sourceTimeseries == null) {
       return;
@@ -181,11 +191,11 @@ class AdminEntity {
     _timeseries[target] = rollingAverage;
   }
 
-  void filterOutliers(String seriesName, int historyLength) {
+  void filterOutliers(CovidSeriesId seriesId, int historyLength) {
     if (historyLength < 5) {
       return;
     }
-    var series = _lookupTimeseries(seriesName);
+    var series = _lookupTimeseries(seriesId);
     if (series == null) {
       return;
     }
@@ -217,7 +227,7 @@ class AdminEntity {
       }
     }
 
-    _timeseries[seriesName] = filtered;
+    _timeseries[seriesId] = filtered;
   }
 
   List<String> get path => _path;
@@ -240,10 +250,11 @@ class AdminEntity {
     return _timestamps.sublist(displayStart);
   }
 
-  List<double> seriesData(String name, {seriesLength = 0, per100k = false}) {
+  List<double> seriesData(CovidSeriesId seriesId,
+      {seriesLength = 0, per100k = false}) {
     var displayStart = _displayStart(seriesLength);
 
-    var series = _lookupTimeseries(name);
+    var series = _lookupTimeseries(seriesId);
     if (series != null) {
       var populationTimeseries = _timeseries['Population'];
       if (per100k && populationTimeseries != null) {

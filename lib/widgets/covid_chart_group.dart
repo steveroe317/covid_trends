@@ -18,6 +18,7 @@ import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 
 import '../models/covid_entities_page_model.dart';
+import '../models/covid_series_id.dart';
 import '../theme/size_scale.dart';
 import 'covid_chart.dart';
 import 'covid_chart_page.dart';
@@ -52,10 +53,10 @@ class CovidChartList extends StatelessWidget {
         max(UiConstants.minCovidChartHeight, constraintsHeight / 4);
     return ListView(
       children: <Widget>[
-        _LabelledCovidChart("Confirmed 7-Day", labelledChartHeight),
-        _LabelledCovidChart("Deaths 7-Day", labelledChartHeight),
-        _LabelledCovidChart("Confirmed", labelledChartHeight),
-        _LabelledCovidChart("Deaths", labelledChartHeight),
+        _LabelledCovidChart(CovidSeriesId.ConfirmedDaily, labelledChartHeight),
+        _LabelledCovidChart(CovidSeriesId.DeathsDaily, labelledChartHeight),
+        _LabelledCovidChart(CovidSeriesId.Confirmed, labelledChartHeight),
+        _LabelledCovidChart(CovidSeriesId.Deaths, labelledChartHeight),
       ],
     );
   }
@@ -76,15 +77,17 @@ class CovidChartTable extends StatelessWidget {
             child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-              _LabelledCovidChart("Confirmed 7-Day", labelledChartHeight),
-              _LabelledCovidChart("Deaths 7-Day", labelledChartHeight),
+              _LabelledCovidChart(
+                  CovidSeriesId.ConfirmedDaily, labelledChartHeight),
+              _LabelledCovidChart(
+                  CovidSeriesId.DeathsDaily, labelledChartHeight),
             ])),
         Expanded(
             child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            _LabelledCovidChart("Confirmed", labelledChartHeight),
-            _LabelledCovidChart("Deaths", labelledChartHeight),
+            _LabelledCovidChart(CovidSeriesId.Confirmed, labelledChartHeight),
+            _LabelledCovidChart(CovidSeriesId.Deaths, labelledChartHeight),
           ],
         )),
       ],
@@ -93,10 +96,10 @@ class CovidChartTable extends StatelessWidget {
 }
 
 class _LabelledCovidChart extends StatelessWidget {
-  final String seriesName;
+  final CovidSeriesId seriesId;
   final double labelledChartHeight;
 
-  _LabelledCovidChart(this.seriesName, this.labelledChartHeight);
+  _LabelledCovidChart(this.seriesId, this.labelledChartHeight);
 
   @override
   build(BuildContext context) {
@@ -111,6 +114,7 @@ class _LabelledCovidChart extends StatelessWidget {
 
     // This code to get the size of a text widget is from
     // https://stackoverflow.com/questions/52659759
+    var seriesName = CovidChart.covidSeriesName(seriesId);
     var label = '$regionName$seriesName$scaleSuffix';
     var labelTextStyle = TextStyle(fontWeight: FontWeight.w600);
     final Size size = (TextPainter(
@@ -129,7 +133,7 @@ class _LabelledCovidChart extends StatelessWidget {
             SizeScale.px24, SizeScale.px24, SizeScale.px24, SizeScale.px8),
         child: SizedBox(
           height: chartHeight,
-          child: new CovidChart(seriesName, false),
+          child: new CovidChart(seriesId, false),
         ),
       ),
       Padding(
@@ -139,8 +143,7 @@ class _LabelledCovidChart extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) =>
-                        CovidChartPage(seriesName: seriesName)),
+                    builder: (context) => CovidChartPage(seriesId: seriesId)),
               );
             },
             child: Center(child: Text(label, style: labelTextStyle)),

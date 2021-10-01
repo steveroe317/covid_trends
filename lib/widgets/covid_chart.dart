@@ -15,6 +15,7 @@
 import 'dart:math';
 
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:covid_trends/models/covid_series_id.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -23,17 +24,18 @@ import '../models/covid_timeseries_model.dart';
 import 'metric_formatter.dart';
 
 class CovidChart extends StatelessWidget {
-  final String seriesName;
+  final CovidSeriesId seriesId;
   // TODO: Use enum to control title rather than bool.
   final bool showTitle;
   final bool animate = true;
 
-  CovidChart(this.seriesName, this.showTitle);
+  CovidChart(this.seriesId, this.showTitle);
 
   @override
   Widget build(BuildContext context) {
     var timeseriesModel = Provider.of<CovidTimeseriesModel>(context);
     var pageModel = Provider.of<CovidEntitiesPageModel>(context);
+    var seriesName = covidSeriesName(seriesId);
     var seriesLength = pageModel.seriesLength;
     var per100k = pageModel.per100k;
     var paths = (pageModel.compareRegion)
@@ -52,7 +54,7 @@ class CovidChart extends StatelessWidget {
 
     // Build data series for chart.
     var seriesDataList = paths
-        .map((path) => timeseriesModel.entitySeriesData(path, seriesName,
+        .map((path) => timeseriesModel.entitySeriesData(path, seriesId,
             seriesLength: seriesLength, per100k: per100k))
         .toList();
     var seriesList =
@@ -124,7 +126,7 @@ class CovidChart extends StatelessWidget {
     }
 
     // Get colors for chart data series.
-    List<Color> seriesColors = pageModel.chartColors(paths, seriesName);
+    List<Color> seriesColors = pageModel.chartColors(paths, seriesId);
 
     // Build the data series.
     var chartSeriesList;
@@ -145,6 +147,21 @@ class CovidChart extends StatelessWidget {
     }
 
     return chartSeriesList;
+  }
+
+  static String covidSeriesName(CovidSeriesId seriesId) {
+    switch (seriesId) {
+      case CovidSeriesId.Confirmed:
+        return 'Confirmed';
+      case CovidSeriesId.ConfirmedDaily:
+        return 'Confirmed 7-Day';
+      case CovidSeriesId.Deaths:
+        return 'Deaths';
+      case CovidSeriesId.DeathsDaily:
+        return 'Deaths 7-Day';
+      case CovidSeriesId.Population:
+        return 'Population';
+    }
   }
 }
 

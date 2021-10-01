@@ -17,6 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../models/covid_entities_page_model.dart';
+import '../models/covid_series_id.dart';
 import 'covid_chart.dart';
 import 'compare_region_popup_menu.dart';
 import 'date_range_popup_menu.dart';
@@ -25,9 +26,9 @@ import 'share_button.dart';
 import 'star_popup_menu.dart';
 
 class CovidChartPage extends StatelessWidget {
-  final String seriesName;
+  final CovidSeriesId seriesId;
 
-  CovidChartPage({Key? key, required this.seriesName}) : super(key: key);
+  CovidChartPage({Key? key, required this.seriesId}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +50,7 @@ class CovidChartPage extends StatelessWidget {
                     padding: EdgeInsets.fromLTRB(32.0, 32.0, 32.0, 8.0),
                     child: ConstrainedBox(
                       constraints: BoxConstraints.expand(),
-                      child: CovidChart(seriesName, true),
+                      child: CovidChart(seriesId, true),
                     ),
                   ))));
     });
