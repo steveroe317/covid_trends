@@ -15,7 +15,7 @@
 import 'package:intl/intl.dart';
 
 class MetricFormatter {
-  static final integerFormatter = NumberFormat('#,###');
+  static final integerFormatter = NumberFormat('#,##0');
   static final doubleFormatter0 = NumberFormat('#0', 'en_US');
   static final doubleFormatter1 = NumberFormat('#0.0', 'en_US');
   static final doubleFormatter2 = NumberFormat('#0.00', 'en_US');
@@ -31,6 +31,8 @@ class MetricFormatter {
       } else {
         return doubleFormatter0;
       }
+    } else if (scale >= 10.0) {
+      return integerFormatter;
     } else if (scale >= 1.0) {
       return doubleFormatter0;
     } else if (scale >= 0.1) {
