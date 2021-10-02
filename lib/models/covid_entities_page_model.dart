@@ -18,9 +18,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../theme/palette_colors.dart';
-import '../widgets/ui_constants.dart';
 import 'app_data_cache.dart';
 import 'covid_series_id.dart';
+import 'region_metric_id.dart';
 import 'model_constants.dart';
 import 'starred_model.dart';
 
@@ -30,7 +30,7 @@ class CovidEntitiesPageModel with ChangeNotifier {
   List<String> _entityPagePath = List<String>.empty();
   List<String> _chartPath = List<String>.empty();
   var _comparisonGraphModel = CovidComparisonGraphModel();
-  String _sortMetric = UiConstants.noSortMetricName;
+  RegionMetricId _sortMetric = RegionMetricId.None;
   int _seriesLength = 0;
   bool _per100k = false;
   bool _compareRegion = false;
@@ -87,7 +87,15 @@ class CovidEntitiesPageModel with ChangeNotifier {
     notifyListeners();
   }
 
-  String get sortMetric => _sortMetric;
+  /// Sort metric for entity list leaf regions.
+  ///
+  /// A sort metric of "None" sorts by region name.
+  RegionMetricId get sortMetric => _sortMetric;
+
+  /// Display metric for entity list regions.
+  RegionMetricId get itemListMetric => (_sortMetric != RegionMetricId.None)
+      ? _sortMetric
+      : RegionMetricId.ConfirmedDaily;
 
   set sortMetric(value) {
     _sortMetric = value;

@@ -75,11 +75,10 @@ class CovidEntityListHeader extends StatelessWidget {
   }
 
   String _sortMetricName() {
-    var name = (_pageModel.sortMetric != UiConstants.noSortMetricName)
-        ? _pageModel.sortMetric
-        : UiConstants.defaultDisplayMetric;
+    var name = UiConstants.metricIdLabel(_pageModel.itemListMetric);
     if (_pageModel.per100k &&
-        _timeseriesModel.populationMetrics.contains(name)) {
+        _timeseriesModel.populationMetrics
+            .contains(_pageModel.itemListMetric)) {
       name = '$name\nper 100,000';
     }
     return name;

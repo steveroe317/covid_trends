@@ -17,26 +17,38 @@ import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import 'region_metric_id.dart';
 import 'covid_series_id.dart';
 
 class AdminEntity {
   final List<String> _path;
   List<int> _timestamps = <int>[];
   var _timeseries = <CovidSeriesId, List<double>>{};
-  Map<String, int> _sortKeys = {};
+  var _sortKeys = <RegionMetricId, int>{};
   Map<String, AdminEntity> _children = {};
   Map<String, AdminChildIndexData> _childIndex = {};
   AdminEntity? _parent;
   bool _isStale = false;
 
+  // Mapping from Firestore document metric names to metric ids.
+  static var _metricNameToId = <String, RegionMetricId>{
+    'Confirmed': RegionMetricId.Confirmed,
+    'Confirmed 7-Day': RegionMetricId.ConfirmedDaily,
+    'Deaths': RegionMetricId.Deaths,
+    'Deaths 7-Day': RegionMetricId.DeathsDaily,
+    'Rise': RegionMetricId.Rise,
+    'Spike': RegionMetricId.Spike,
+    'Population': RegionMetricId.Population,
+  };
+
   final _populationMetrics = [
-    'Confirmed',
-    'Confirmed 7-Day',
-    'Deaths',
-    'Deaths 7-Day'
+    RegionMetricId.Confirmed,
+    RegionMetricId.ConfirmedDaily,
+    RegionMetricId.Deaths,
+    RegionMetricId.DeathsDaily,
   ];
 
-  List<String> get populationMetrics => _populationMetrics;
+  List<RegionMetricId> get populationMetrics => _populationMetrics;
 
   AdminEntity.empty() : _path = <String>[];
 
@@ -123,11 +135,18 @@ class AdminEntity {
     return timeseries;
   }
 
-  static Map<String, int> _extractDocSortKeys(Map<String, dynamic> docData) {
+  static Map<RegionMetricId, int> _extractDocSortKeys(
+      Map<String, dynamic> docData) {
     Map<String, dynamic> docMetrics = docData['SortKeys'];
-    Map<String, int> sortKeys = {};
-    for (var metric in docMetrics.keys) {
-      sortKeys[metric] = docMetrics[metric];
+
+    Map<RegionMetricId, int> sortKeys = {};
+    for (var metricName in docMetrics.keys) {
+      if (_metricNameToId.containsKey(metricName)) {
+        var metricId = _metricNameToId[metricName];
+        if (metricId != null) {
+          sortKeys[metricId] = docMetrics[metricName];
+        }
+      }
     }
     return sortKeys;
   }
@@ -137,12 +156,8 @@ class AdminEntity {
     Map<String, AdminChildIndexData> childIndex = {};
     Map<String, dynamic> docChildren = docData['Children'];
     for (var child in docChildren.keys) {
-      Map<String, int> sortKeys = {};
       Map<String, dynamic> childData = docData['Children'][child];
-      Map<String, dynamic> docChildMetrics = childData['SortKeys'];
-      for (var metric in docChildMetrics.keys) {
-        sortKeys[metric] = docChildMetrics[metric];
-      }
+      var sortKeys = _extractDocSortKeys(childData);
       bool hasChildren = childData['HasChildren'];
       childIndex[child] = AdminChildIndexData(sortKeys, hasChildren);
     }
@@ -256,7 +271,7 @@ class AdminEntity {
 
     var series = _lookupTimeseries(seriesId);
     if (series != null) {
-      var populationTimeseries = _timeseries['Population'];
+      var populationTimeseries = _timeseries[CovidSeriesId.Population];
       if (per100k && populationTimeseries != null) {
         List<double> per100kSeries = [];
         for (int index = displayStart; index < _timestamps.length; ++index) {
@@ -278,17 +293,10 @@ class AdminEntity {
     return _childIndex.containsKey(name);
   }
 
-  List<String> childMetricNames() {
-    if (_childIndex.isNotEmpty) {
-      var names = List<String>.from(_childIndex.values.first._sortKeys.keys);
-      names.remove('Population');
-      return names;
-    }
-    return List<String>.empty();
-  }
-
   List<String> childNames(
-      {String sortBy = '', bool sortUp = true, bool per100k = false}) {
+      {RegionMetricId sortBy = RegionMetricId.None,
+      bool sortUp = true,
+      bool per100k = false}) {
     var names = List<String>.from(_childIndex.keys);
 
     names.sort((String a, String b) {
@@ -313,8 +321,8 @@ class AdminEntity {
     return names;
   }
 
-  double normalizedMetric(
-      int? metricValue, String metricName, int? population, bool per100k) {
+  double normalizedMetric(int? metricValue, RegionMetricId metricId,
+      int? population, bool per100k) {
     var value = 0.0;
     if (metricValue != null) {
       value = metricValue.toDouble();
@@ -324,20 +332,20 @@ class AdminEntity {
       population = 1;
     }
     if (per100k) {
-      if (_populationMetrics.contains(metricName)) {
+      if (_populationMetrics.contains(metricId)) {
         value = (100000.0 * value) / population;
       }
     }
     return value;
   }
 
-  double sortMetricValue(String sortMetric, bool per100k) {
-    return normalizedMetric(
-        _sortKeys[sortMetric], sortMetric, _sortKeys['Population'], per100k);
+  double sortMetricValue(RegionMetricId metricId, bool per100k) {
+    return normalizedMetric(_sortKeys[metricId], metricId,
+        _sortKeys[RegionMetricId.Population], per100k);
   }
 
   double childSortMetricValue(
-      String childName, String sortMetric, bool per100k) {
+      String childName, RegionMetricId sortMetric, bool per100k) {
     if (!_childIndex.containsKey(childName)) {
       return 0.0;
     }
@@ -349,7 +357,7 @@ class AdminEntity {
       return 0.0;
     }
     return normalizedMetric(childIndexData.sortKeys[sortMetric], sortMetric,
-        childIndexData.sortKeys['Population'], per100k);
+        childIndexData.sortKeys[RegionMetricId.Population], per100k);
   }
 
   bool childHasChildren(String name) {
@@ -400,11 +408,11 @@ class AdminEntity {
 }
 
 class AdminChildIndexData {
-  final Map<String, int> _sortKeys;
+  final Map<RegionMetricId, int> _sortKeys;
   final bool _hasChildren;
   AdminChildIndexData(this._sortKeys, this._hasChildren);
 
-  Map<String, int> get sortKeys => _sortKeys;
+  Map<RegionMetricId, int> get sortKeys => _sortKeys;
 
   bool get hasChildren => _hasChildren;
 }

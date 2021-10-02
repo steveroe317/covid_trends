@@ -12,11 +12,51 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.import 'dart:collection';
 
+import '../models/region_metric_id.dart';
+
 class UiConstants {
   // UI strings.
-  static const defaultDisplayMetric = 'Confirmed 7-Day';
   static const noSortMetricName = 'Sort By Name';
   static const saveStar = 'Save Chart';
+
+  // UI string functions.
+  static String metricIdLabel(RegionMetricId metricId) {
+    switch (metricId) {
+      case RegionMetricId.None:
+        return 'Confirmed Daily';
+      case RegionMetricId.Confirmed:
+        return 'Confirmed';
+      case RegionMetricId.ConfirmedDaily:
+        return 'Confirmed Daily';
+      case RegionMetricId.Deaths:
+        return 'Deaths';
+      case RegionMetricId.DeathsDaily:
+        return 'Deaths Daily';
+      case RegionMetricId.Rise:
+        return 'Rise';
+      case RegionMetricId.Spike:
+        return 'Spike';
+      case RegionMetricId.Population:
+        return 'Population';
+    }
+  }
+
+  static String metricIdSortLabel(RegionMetricId metricId) {
+    return (metricId == RegionMetricId.None)
+        ? noSortMetricName
+        : metricIdLabel(metricId);
+  }
+
+  // UI region popu menu sort metrics.
+  static const regionSortMetrics = [
+    RegionMetricId.None,
+    RegionMetricId.Confirmed,
+    RegionMetricId.ConfirmedDaily,
+    RegionMetricId.Deaths,
+    RegionMetricId.DeathsDaily,
+    RegionMetricId.Rise,
+    RegionMetricId.Spike,
+  ];
 
   // UI layout constants.
   static const iconWidth = 24.0;

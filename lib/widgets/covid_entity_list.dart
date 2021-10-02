@@ -38,7 +38,7 @@ class CovidEntityList extends StatelessWidget {
     var uiParameters = context.watch<UiParameters>();
     final childNames = timeseriesModel.entityChildNames(
         pageModel.entityPagePath(),
-        sortBy: pageModel.sortMetric,
+        sortMetricId: pageModel.sortMetric,
         sortUp: false,
         per100k: pageModel.per100k);
     final currentPath = pageModel.entityPagePath();

@@ -21,7 +21,6 @@ import '../models/covid_timeseries_model.dart';
 import '../theme/size_scale.dart';
 import 'metric_formatter.dart';
 import 'ui_colors.dart';
-import 'ui_constants.dart';
 import 'ui_parameters.dart';
 
 enum CovidEntityListItemDepth { root, stem, leaf }
@@ -114,12 +113,8 @@ class CovidEntityListItem extends StatelessWidget {
   }
 
   String _metricValueString() {
-    String displayMetric = _pageModel.sortMetric;
-    if (displayMetric == UiConstants.noSortMetricName) {
-      displayMetric = UiConstants.defaultDisplayMetric;
-    }
     var metricValue = _timeseriesModel.entitySortMetric(
-        _path, displayMetric, _pageModel.per100k);
+        _path, _pageModel.itemListMetric, _pageModel.per100k);
     var numberFormatter = (_pageModel.per100k)
         ? MetricFormatter.doubleFormatter(metricValue.abs(), graphScale: false)
         : MetricFormatter.integerFormatter;

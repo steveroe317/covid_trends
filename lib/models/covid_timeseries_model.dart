@@ -16,6 +16,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'admin_entity.dart';
+import 'region_metric_id.dart';
 import 'covid_series_id.dart';
 import 'model_constants.dart';
 
@@ -32,7 +33,7 @@ class CovidTimeseriesModel with ChangeNotifier {
     }
   }
 
-  List<String> get populationMetrics => _rootEntity.populationMetrics;
+  List<RegionMetricId> get populationMetrics => _rootEntity.populationMetrics;
 
   bool get initialized => _initialized;
 
@@ -142,17 +143,20 @@ class CovidTimeseriesModel with ChangeNotifier {
   }
 
   List<String> entityChildNames(List<String> path,
-      {String sortBy = '', bool sortUp = true, bool per100k = false}) {
+      {RegionMetricId sortMetricId = RegionMetricId.None,
+      bool sortUp = true,
+      bool per100k = false}) {
     var entity = _findEntity(path, null);
     if (entity != null) {
       return entity.childNames(
-          sortBy: sortBy, sortUp: sortUp, per100k: per100k);
+          sortBy: sortMetricId, sortUp: sortUp, per100k: per100k);
     } else {
       return List<String>.empty();
     }
   }
 
-  double entitySortMetric(List<String> path, String sortMetric, bool per100k) {
+  double entitySortMetric(
+      List<String> path, RegionMetricId sortMetricId, bool per100k) {
     if (path.isEmpty) {
       return 0.0;
     }
@@ -162,7 +166,7 @@ class CovidTimeseriesModel with ChangeNotifier {
       if (root == null) {
         return 0.0;
       }
-      return root.sortMetricValue(sortMetric, per100k);
+      return root.sortMetricValue(sortMetricId, per100k);
     }
 
     var parentPath = path.sublist(0, path.length - 1);
@@ -170,11 +174,7 @@ class CovidTimeseriesModel with ChangeNotifier {
     if (entity == null) {
       return 0.0;
     }
-    return entity.childSortMetricValue(path.last, sortMetric, per100k);
-  }
-
-  List<String> sortMetrics() {
-    return _rootEntity.childMetricNames();
+    return entity.childSortMetricValue(path.last, sortMetricId, per100k);
   }
 
   void halveHistory() {

@@ -16,30 +16,26 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../models/covid_entities_page_model.dart';
-import '../models/covid_timeseries_model.dart';
+import '../models/region_metric_id.dart';
 import 'ui_constants.dart';
 
-PopupMenuButton<String> buildSortPopupMenuButton(BuildContext context) {
-  return PopupMenuButton<String>(
+PopupMenuButton<RegionMetricId> buildSortPopupMenuButton(BuildContext context) {
+  return PopupMenuButton<RegionMetricId>(
       icon: const Icon(Icons.sort),
-      tooltip: 'Sort By Name',
-      onSelected: (String sortMetric) {
+      tooltip: UiConstants.noSortMetricName,
+      onSelected: (RegionMetricId metricId) {
         var pageModel =
             Provider.of<CovidEntitiesPageModel>(context, listen: false);
-        pageModel.sortMetric = sortMetric;
+        pageModel.sortMetric = metricId;
       },
       itemBuilder: (BuildContext context) {
-        var timeseriesModel =
-            Provider.of<CovidTimeseriesModel>(context, listen: false);
         var pageModel =
             Provider.of<CovidEntitiesPageModel>(context, listen: false);
-        var metricNames = timeseriesModel.sortMetrics();
-        metricNames.sort();
-        metricNames.insert(0, UiConstants.noSortMetricName);
-        return List<PopupMenuEntry<String>>.from(metricNames.map((name) =>
-            CheckedPopupMenuItem(
-                value: name,
-                child: Text(name),
-                checked: name == pageModel.sortMetric)));
+        return List<PopupMenuEntry<RegionMetricId>>.from(UiConstants
+            .regionSortMetrics
+            .map((metricId) => CheckedPopupMenuItem(
+                value: metricId,
+                child: Text(UiConstants.metricIdSortLabel(metricId)),
+                checked: metricId == pageModel.sortMetric)));
       });
 }
