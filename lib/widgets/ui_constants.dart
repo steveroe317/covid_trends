@@ -23,15 +23,15 @@ class UiConstants {
   static String metricIdLabel(RegionMetricId metricId) {
     switch (metricId) {
       case RegionMetricId.None:
-        return 'Confirmed Daily';
+        return 'Daily Confirmed';
       case RegionMetricId.Confirmed:
         return 'Confirmed';
       case RegionMetricId.ConfirmedDaily:
-        return 'Confirmed Daily';
+        return 'Daily Confirmed';
       case RegionMetricId.Deaths:
         return 'Deaths';
       case RegionMetricId.DeathsDaily:
-        return 'Deaths Daily';
+        return 'Daily Deaths';
       case RegionMetricId.Rise:
         return 'Rise';
       case RegionMetricId.Spike:
