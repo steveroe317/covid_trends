@@ -154,11 +154,11 @@ class CovidChart extends StatelessWidget {
       case CovidSeriesId.Confirmed:
         return 'Confirmed';
       case CovidSeriesId.ConfirmedDaily:
-        return 'Confirmed 7-Day';
+        return 'Average Daily Confirmed';
       case CovidSeriesId.Deaths:
         return 'Deaths';
       case CovidSeriesId.DeathsDaily:
-        return 'Deaths 7-Day';
+        return 'Average Daily Deaths';
       case CovidSeriesId.Population:
         return 'Population';
     }
