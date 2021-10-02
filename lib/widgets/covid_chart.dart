@@ -21,7 +21,9 @@ import 'package:provider/provider.dart';
 
 import '../models/covid_entities_page_model.dart';
 import '../models/covid_timeseries_model.dart';
+import '../theme/size_scale.dart';
 import 'metric_formatter.dart';
+import 'ui_constants.dart';
 
 class CovidChart extends StatelessWidget {
   final CovidSeriesId seriesId;
@@ -46,6 +48,9 @@ class CovidChart extends StatelessWidget {
         : '';
     var scaleSuffix = (pageModel.per100k) ? ' per 100k' : '';
     var title = '$regionName$seriesName$scaleSuffix';
+    var subtitle = (UiConstants.averagedSeries.contains(seriesId))
+        ? UiConstants.averagedSubtitle
+        : null;
 
     // Get timestamps from the root of the admin entity tree, as it is most
     // likely to have been loaded already.
@@ -84,6 +89,8 @@ class CovidChart extends StatelessWidget {
     }
     if (showTitle) {
       chartBehaviors.add(charts.ChartTitle(title,
+          titlePadding: SizeScale.px4.round(),
+          subTitle: subtitle,
           behaviorPosition: charts.BehaviorPosition.bottom,
           titleOutsideJustification:
               charts.OutsideJustification.middleDrawArea));
@@ -154,11 +161,11 @@ class CovidChart extends StatelessWidget {
       case CovidSeriesId.Confirmed:
         return 'Confirmed';
       case CovidSeriesId.ConfirmedDaily:
-        return 'Average Daily Confirmed';
+        return 'Daily Confirmed';
       case CovidSeriesId.Deaths:
         return 'Deaths';
       case CovidSeriesId.DeathsDaily:
-        return 'Average Daily Deaths';
+        return 'Daily Deaths';
       case CovidSeriesId.Population:
         return 'Population';
     }

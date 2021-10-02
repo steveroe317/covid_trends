@@ -112,20 +112,22 @@ class _LabelledCovidChart extends StatelessWidget {
         ? '${paths.first.last} '
         : '';
 
-    // This code to get the size of a text widget is from
-    // https://stackoverflow.com/questions/52659759
     var seriesName = CovidChart.covidSeriesName(seriesId);
-    var label = '$regionName$seriesName$scaleSuffix';
-    var labelTextStyle = TextStyle(fontWeight: FontWeight.w600);
-    final Size size = (TextPainter(
-            text: TextSpan(text: label, style: labelTextStyle),
-            maxLines: 1,
-            textScaleFactor: MediaQuery.of(context).textScaleFactor,
-            textDirection: TextDirection.ltr)
-          ..layout())
-        .size;
+    var title = '$regionName$seriesName$scaleSuffix';
+    var titleTextStyle = TextStyle(fontWeight: FontWeight.w600);
+    var subtitle = (UiConstants.averagedSeries.contains(seriesId))
+        ? UiConstants.averagedSubtitle
+        : '';
+    var subtitleTextStyle = TextStyle(fontWeight: FontWeight.normal);
+    Size titleSize = paintedTextSize(title, titleTextStyle, context);
+    Size subtitleSize = paintedTextSize(
+        UiConstants.averagedSubtitle, subtitleTextStyle, context);
     var chartHeight = labelledChartHeight -
-        (SizeScale.px24 + SizeScale.px8 + size.height + SizeScale.px24);
+        (SizeScale.px24 +
+            SizeScale.px8 +
+            titleSize.height +
+            subtitleSize.height +
+            SizeScale.px24);
 
     return Column(children: [
       Padding(
@@ -137,7 +139,7 @@ class _LabelledCovidChart extends StatelessWidget {
         ),
       ),
       Padding(
-          padding: EdgeInsets.fromLTRB(0, 0, 0, SizeScale.px24),
+          padding: EdgeInsets.zero,
           child: InkWell(
             onTap: () {
               Navigator.push(
@@ -146,8 +148,25 @@ class _LabelledCovidChart extends StatelessWidget {
                     builder: (context) => CovidChartPage(seriesId: seriesId)),
               );
             },
-            child: Center(child: Text(label, style: labelTextStyle)),
-          ))
+            child: Center(child: Text(title, style: titleTextStyle)),
+          )),
+      Padding(
+          padding: EdgeInsets.fromLTRB(0, 0, 0, SizeScale.px24),
+          child: Center(child: Text(subtitle, style: subtitleTextStyle))),
     ]);
+  }
+
+  // This code to get the size of a text widget is from
+  // https://stackoverflow.com/questions/52659759
+  Size paintedTextSize(
+      String label, TextStyle labelTextStyle, BuildContext context) {
+    final Size titleSize = (TextPainter(
+            text: TextSpan(text: label, style: labelTextStyle),
+            maxLines: 1,
+            textScaleFactor: MediaQuery.of(context).textScaleFactor,
+            textDirection: TextDirection.ltr)
+          ..layout())
+        .size;
+    return titleSize;
   }
 }

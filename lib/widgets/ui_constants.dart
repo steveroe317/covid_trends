@@ -12,12 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.import 'dart:collection';
 
+import '../models/covid_series_id.dart';
 import '../models/region_metric_id.dart';
 
 class UiConstants {
   // UI strings.
   static const noSortMetricName = 'Sort By Name';
   static const saveStar = 'Save Chart';
+  static const averagedSubtitle = 'Averaged over 7 days';
 
   // UI string functions.
   static String metricIdLabel(RegionMetricId metricId) {
@@ -56,6 +58,12 @@ class UiConstants {
     RegionMetricId.DeathsDaily,
     RegionMetricId.Rise,
     RegionMetricId.Spike,
+  ];
+
+  // UI series averaged data series.
+  static const averagedSeries = [
+    CovidSeriesId.ConfirmedDaily,
+    CovidSeriesId.DeathsDaily,
   ];
 
   // UI layout constants.
