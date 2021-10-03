@@ -15,17 +15,20 @@
 import 'package:covid_trends/theme/size_scale.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../models/covid_entities_page_model.dart';
+
 class CovidAboutListTile extends AboutListTile {
-  // TODO: use package_info_plus to get app name and version info.
   @override
   Widget build(BuildContext context) {
+    var pageModel = Provider.of<CovidEntitiesPageModel>(context, listen: false);
     return AboutListTile(
       icon: Icon(Icons.info),
       child: Text('About'),
-      applicationName: 'Covid Flows',
-      applicationVersion: '1.0.7',
+      applicationName: pageModel.appName,
+      applicationVersion: pageModel.appVersion,
       applicationLegalese: '© 2021 Roe Designs',
       aboutBoxChildren: [
         Text(

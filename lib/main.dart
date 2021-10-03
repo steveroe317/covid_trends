@@ -181,6 +181,7 @@ class _CovidApp extends StatelessWidget {
     var timeseriesModel =
         Provider.of<CovidTimeseriesModel>(context, listen: false);
     var pageModel = Provider.of<CovidEntitiesPageModel>(context);
+    pageModel.loadAppInfo();
     List<List<String>> starPaths = pageModel.getAllModelPaths();
     timeseriesModel.loadEntities(starPaths);
     // TODO: is markStale() needed here?

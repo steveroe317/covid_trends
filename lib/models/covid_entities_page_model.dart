@@ -16,6 +16,7 @@ import 'package:covid_trends/models/starred_model.dart';
 import 'package:covid_trends/theme/palette_colors.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 import '../theme/palette_colors.dart';
 import 'app_data_cache.dart';
@@ -26,6 +27,7 @@ import 'starred_model.dart';
 
 /// Holds main application display state in a model outside the widget tree.
 class CovidEntitiesPageModel with ChangeNotifier {
+  var _appInfo = CovidAppInfo();
   AppDataCache? appDataCache;
   List<String> _entityPagePath = List<String>.empty();
   List<String> _chartPath = List<String>.empty();
@@ -45,6 +47,14 @@ class CovidEntitiesPageModel with ChangeNotifier {
       loadStar(ModelConstants.startupStarName);
     });
   }
+
+  void loadAppInfo() {
+    _appInfo.load();
+  }
+
+  String get appName => _appInfo.appName;
+  String get appVersion => _appInfo.version;
+  String get appBuild => _appInfo.buildNumber;
 
   List<String> entityPagePath() {
     return List<String>.from(_entityPagePath);
@@ -215,6 +225,21 @@ class CovidEntitiesPageModel with ChangeNotifier {
 
   void notify() {
     notifyListeners();
+  }
+}
+
+/// Holds app version and build info.
+class CovidAppInfo {
+  String appName = 'Covid Flows';
+  String version = '1.0';
+  String buildNumber = '';
+
+  void load() async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+
+    appName = packageInfo.appName;
+    version = packageInfo.version;
+    buildNumber = packageInfo.buildNumber;
   }
 }
 
