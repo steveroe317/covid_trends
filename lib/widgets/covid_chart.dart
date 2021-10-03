@@ -27,7 +27,6 @@ import 'ui_constants.dart';
 
 class CovidChart extends StatelessWidget {
   final CovidSeriesId seriesId;
-  // TODO: Use enum to control title rather than bool.
   final bool showTitle;
   final bool animate = true;
 
