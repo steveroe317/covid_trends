@@ -28,9 +28,10 @@ import 'ui_constants.dart';
 class CovidChart extends StatelessWidget {
   final CovidSeriesId seriesId;
   final bool showTitle;
+  final double strokeWidth;
   final bool animate = true;
 
-  CovidChart(this.seriesId, this.showTitle);
+  CovidChart(this.seriesId, this.showTitle, this.strokeWidth);
 
   @override
   Widget build(BuildContext context) {
@@ -107,6 +108,7 @@ class CovidChart extends StatelessWidget {
               desiredMinTickCount: 3,
               desiredMaxTickCount: 7)),
       behaviors: chartBehaviors,
+      defaultRenderer: charts.LineRendererConfig(strokeWidthPx: strokeWidth),
       dateTimeFactory: const charts.LocalDateTimeFactory(),
     );
   }

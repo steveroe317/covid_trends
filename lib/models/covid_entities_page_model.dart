@@ -39,6 +39,8 @@ class CovidEntitiesPageModel with ChangeNotifier {
   String _editStarName = '';
   bool _entitySearchActive = false;
   String _entitySearchString = '';
+  double _tiledChartStrokeWidth = 2.0;
+  double _singleChartStrokeWidth = 2.0;
 
   CovidEntitiesPageModel(List<String> path)
       : _entityPagePath = List<String>.from(path),
@@ -221,6 +223,20 @@ class CovidEntitiesPageModel with ChangeNotifier {
       _entitySearchString = value;
       notifyListeners();
     }
+  }
+
+  double get tiledChartStrokeWidth => _tiledChartStrokeWidth;
+
+  set tiledChartStrokeWidth(double value) {
+    _tiledChartStrokeWidth = value;
+    notifyListeners();
+  }
+
+  double get singleChartStrokeWidth => _singleChartStrokeWidth;
+
+  set singleChartStrokeWidth(double value) {
+    _singleChartStrokeWidth = value;
+    notifyListeners();
   }
 
   void notify() {

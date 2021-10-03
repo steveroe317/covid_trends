@@ -135,7 +135,8 @@ class _LabelledCovidChart extends StatelessWidget {
             SizeScale.px24, SizeScale.px24, SizeScale.px24, SizeScale.px8),
         child: SizedBox(
           height: chartHeight,
-          child: new CovidChart(seriesId, false),
+          child:
+              new CovidChart(seriesId, false, pageModel.tiledChartStrokeWidth),
         ),
       ),
       Padding(

@@ -50,7 +50,8 @@ class CovidChartPage extends StatelessWidget {
                     padding: EdgeInsets.fromLTRB(32.0, 32.0, 32.0, 8.0),
                     child: ConstrainedBox(
                       constraints: BoxConstraints.expand(),
-                      child: CovidChart(seriesId, true),
+                      child: CovidChart(
+                          seriesId, true, pageModel.singleChartStrokeWidth),
                     ),
                   ))));
     });

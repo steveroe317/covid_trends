@@ -19,6 +19,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../theme/palette_colors.dart';
 import 'covid_about_list_tile.dart';
+import 'settings_page.dart';
 import 'ui_parameters.dart';
 
 class CovidTrendsNavigationSidebar extends StatelessWidget {
@@ -54,6 +55,16 @@ class CovidTrendsNavigationSidebar extends StatelessWidget {
                   _launchURL('https://www.roedesigns.com/covid-flows');
                 },
               ),
+              ListTile(
+                  leading: Icon(Icons.settings),
+                  title: Text('Settings'),
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                Container(child: SettingsPage())));
+                  }),
               CovidAboutListTile(),
             ])));
   }
