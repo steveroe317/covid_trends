@@ -74,70 +74,12 @@ extension SingleChartLineWidthDoubles on SingleChartLineWidth {
   }
 }
 
-enum TiledChartLineWidth {
-  width_0_5,
-  width_1_0,
-  width_1_5,
-  width_2_0,
-  width_2_5,
-  width_3_0,
-  width_3_5,
-  width_4_0
-}
-
-extension TiledChartLineWidthDoubles on TiledChartLineWidth {
-  double toDouble() {
-    switch (this) {
-      case TiledChartLineWidth.width_0_5:
-        return 0.5;
-      case TiledChartLineWidth.width_1_0:
-        return 1.0;
-      case TiledChartLineWidth.width_1_5:
-        return 1.5;
-      case TiledChartLineWidth.width_2_0:
-        return 2.0;
-      case TiledChartLineWidth.width_2_5:
-        return 2.5;
-      case TiledChartLineWidth.width_3_0:
-        return 3.0;
-      case TiledChartLineWidth.width_3_5:
-        return 3.5;
-      case TiledChartLineWidth.width_4_0:
-        return 4.0;
-    }
-  }
-
-  static TiledChartLineWidth fromDouble(double value) {
-    if (value == 0.5) {
-      return TiledChartLineWidth.width_0_5;
-    } else if (value == 1.0) {
-      return TiledChartLineWidth.width_1_0;
-    } else if (value == 1.5) {
-      return TiledChartLineWidth.width_1_5;
-    } else if (value == 2.0) {
-      return TiledChartLineWidth.width_2_0;
-    } else if (value == 2.5) {
-      return TiledChartLineWidth.width_2_5;
-    } else if (value == 3.0) {
-      return TiledChartLineWidth.width_3_0;
-    } else if (value == 3.5) {
-      return TiledChartLineWidth.width_3_5;
-    } else if (value == 4.0) {
-      return TiledChartLineWidth.width_4_0;
-    } else {
-      return TiledChartLineWidth.width_2_0;
-    }
-  }
-}
-
 class SettingsPage extends StatelessWidget {
   @override
   build(BuildContext context) {
     var pageModel = Provider.of<CovidEntitiesPageModel>(context);
     var singleStrokeWidth = SingleChartLineWidthDoubles.fromDouble(
         pageModel.singleChartStrokeWidth);
-    var tiledStrokeWidth =
-        TiledChartLineWidthDoubles.fromDouble(pageModel.tiledChartStrokeWidth);
     var settingsItems = <Widget>[];
     settingsItems.add(ListTile(
       title: Text('Single chart line width (experiment)'),
@@ -150,21 +92,6 @@ class SettingsPage extends StatelessWidget {
         onChanged: (SingleChartLineWidth? value) {
           if (value != null) {
             pageModel.singleChartStrokeWidth = value.toDouble();
-          }
-        },
-      ));
-    });
-    settingsItems.add(ListTile(
-      title: Text('Tiled chart line width (experiment)'),
-    ));
-    TiledChartLineWidth.values.forEach((value) {
-      settingsItems.add(RadioListTile<TiledChartLineWidth>(
-        title: Text(value.toDouble().toString()),
-        value: value,
-        groupValue: tiledStrokeWidth,
-        onChanged: (TiledChartLineWidth? value) {
-          if (value != null) {
-            pageModel.tiledChartStrokeWidth = value.toDouble();
           }
         },
       ));

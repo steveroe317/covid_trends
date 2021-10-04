@@ -17,6 +17,7 @@ import 'package:covid_trends/theme/palette_colors.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../theme/palette_colors.dart';
 import 'app_data_cache.dart';
@@ -28,6 +29,7 @@ import 'starred_model.dart';
 /// Holds main application display state in a model outside the widget tree.
 class CovidEntitiesPageModel with ChangeNotifier {
   var _appInfo = CovidAppInfo();
+  var _appPreferences = CovidAppSharedPreferences();
   AppDataCache? appDataCache;
   List<String> _entityPagePath = List<String>.empty();
   List<String> _chartPath = List<String>.empty();
@@ -39,8 +41,6 @@ class CovidEntitiesPageModel with ChangeNotifier {
   String _editStarName = '';
   bool _entitySearchActive = false;
   String _entitySearchString = '';
-  double _tiledChartStrokeWidth = 2.0;
-  double _singleChartStrokeWidth = 2.0;
 
   CovidEntitiesPageModel(List<String> path)
       : _entityPagePath = List<String>.from(path),
@@ -48,10 +48,8 @@ class CovidEntitiesPageModel with ChangeNotifier {
     appDataCache = AppDataCache('app_state', onInitFinish: () {
       loadStar(ModelConstants.startupStarName);
     });
-  }
-
-  void loadAppInfo() {
     _appInfo.load();
+    _appPreferences.load(notify);
   }
 
   String get appName => _appInfo.appName;
@@ -225,22 +223,43 @@ class CovidEntitiesPageModel with ChangeNotifier {
     }
   }
 
-  double get tiledChartStrokeWidth => _tiledChartStrokeWidth;
+  double get singleChartStrokeWidth => _appPreferences.singleChartStrokeWidth;
 
-  set tiledChartStrokeWidth(double value) {
-    _tiledChartStrokeWidth = value;
+  set singleChartStrokeWidth(double value) {
+    _appPreferences.singleChartStrokeWidth = value;
     notifyListeners();
+  }
+
+  void notify() {
+    notifyListeners();
+  }
+}
+
+/// Covid app shared preferences settings.
+class CovidAppSharedPreferences {
+  final String _singleChartStrokeWidthKey = 'SingleChartStrokeWidth';
+  double _singleChartStrokeWidth = 2.0;
+
+  SharedPreferences? _preferences;
+
+  void load(void Function() callback) async {
+    _preferences = await SharedPreferences.getInstance();
+
+    double? value = _preferences?.getDouble(_singleChartStrokeWidthKey);
+    if (value != null) {
+      _singleChartStrokeWidth = value;
+    }
+
+    callback();
   }
 
   double get singleChartStrokeWidth => _singleChartStrokeWidth;
 
   set singleChartStrokeWidth(double value) {
     _singleChartStrokeWidth = value;
-    notifyListeners();
-  }
-
-  void notify() {
-    notifyListeners();
+    if (_preferences != null) {
+      _preferences?.setDouble(_singleChartStrokeWidthKey, value);
+    }
   }
 }
 
