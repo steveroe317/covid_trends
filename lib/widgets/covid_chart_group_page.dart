@@ -48,9 +48,15 @@ class _CovidChartGroupPageState extends State<CovidChartGroupPage> {
             buildStarPopupMenuButton(context),
             buildShareButton(context, chartGroupKey),
           ]),
-          body: Center(
-            child:
-                RepaintBoundary(key: chartGroupKey, child: CovidChartGroup()),
+          body: SafeArea(
+            left: true,
+            right: true,
+            top: true,
+            bottom: true,
+            minimum: EdgeInsets.zero,
+            child: Center(
+                child: RepaintBoundary(
+                    key: chartGroupKey, child: CovidChartGroup())),
           ));
     });
   }

@@ -79,8 +79,8 @@ class CovidChartTable extends StatelessWidget {
       crossAxisCount: 2,
       children: [
         _LabelledCovidChart(CovidSeriesId.ConfirmedDaily, labelledChartHeight),
-        _LabelledCovidChart(CovidSeriesId.DeathsDaily, labelledChartHeight),
         _LabelledCovidChart(CovidSeriesId.Confirmed, labelledChartHeight),
+        _LabelledCovidChart(CovidSeriesId.DeathsDaily, labelledChartHeight),
         _LabelledCovidChart(CovidSeriesId.Deaths, labelledChartHeight),
       ],
     );
@@ -123,8 +123,8 @@ class _LabelledCovidChart extends StatelessWidget {
             subtitleSize.height +
             SizeScale.px12);
     var approxLegendHeight = (paths.length / 2).ceil() * subtitleSize.height;
-    if (chartHeight - approxLegendHeight < 200) {
-      chartHeight = approxLegendHeight + 200;
+    if (chartHeight - approxLegendHeight < UiConstants.minCovidGraphHeight) {
+      chartHeight = approxLegendHeight + UiConstants.minCovidGraphHeight;
     }
 
     return Column(children: [

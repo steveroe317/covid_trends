@@ -76,7 +76,13 @@ class _CovidEntitiesPageState extends State<CovidEntitiesPage> {
           //buildDebugPopupMenuButton(context),
         ],
       ),
-      body: _CovidEntitiesWideListBody(chartGroupKey),
+      body: SafeArea(
+          left: true,
+          right: true,
+          top: true,
+          bottom: true,
+          minimum: EdgeInsets.zero,
+          child: _CovidEntitiesWideListBody(chartGroupKey)),
       drawer: CovidTrendsNavigationSidebar(),
     );
   }

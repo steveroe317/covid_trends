@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.import 'dart:collection';
 
+import 'package:covid_trends/widgets/ui_constants.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -44,25 +45,33 @@ class CovidChartPage extends StatelessWidget {
             buildStarPopupMenuButton(context),
             buildShareButton(context, chartGroupKey),
           ]),
-          body: Center(
-              child: RepaintBoundary(
-                  key: chartGroupKey,
-                  child: LayoutBuilder(
-                    builder:
-                        (BuildContext context, BoxConstraints constraints) {
-                      return Padding(
-                          padding: EdgeInsets.all(SizeScale.px24),
-                          child: (constraints.maxHeight < constraints.maxWidth)
-                              ? ConstrainedBox(
-                                  constraints: BoxConstraints.expand(),
-                                  child: CovidChart(seriesId, true,
-                                      pageModel.singleChartStrokeWidth))
-                              : AspectRatio(
-                                  aspectRatio: 1.0,
-                                  child: CovidChart(seriesId, true,
-                                      pageModel.singleChartStrokeWidth)));
-                    },
-                  ))));
+          body: SafeArea(
+              left: true,
+              right: true,
+              top: true,
+              bottom: true,
+              minimum: EdgeInsets.zero,
+              child: Center(
+                  child: RepaintBoundary(
+                      key: chartGroupKey,
+                      child: LayoutBuilder(
+                        builder:
+                            (BuildContext context, BoxConstraints constraints) {
+                          return Padding(
+                              padding: EdgeInsets.all(SizeScale.px24),
+                              child: (constraints.maxHeight <
+                                      constraints.maxWidth)
+                                  ? ConstrainedBox(
+                                      constraints: BoxConstraints.expand(),
+                                      child: CovidChart(seriesId, true,
+                                          pageModel.singleChartStrokeWidth))
+                                  : AspectRatio(
+                                      aspectRatio: UiConstants
+                                          .desiredCovidChartAspectRatio,
+                                      child: CovidChart(seriesId, true,
+                                          pageModel.singleChartStrokeWidth)));
+                        },
+                      )))));
     });
   }
 }
