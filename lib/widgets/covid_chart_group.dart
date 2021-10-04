@@ -71,25 +71,17 @@ class CovidChartTable extends StatelessWidget {
   Widget build(BuildContext context) {
     var labelledChartHeight =
         max(UiConstants.minCovidChartHeight, constraintsHeight / 2);
-    return Row(
+    return GridView.count(
+      primary: false,
+      padding: const EdgeInsets.all(0),
+      crossAxisSpacing: SizeScale.px8,
+      mainAxisSpacing: 0,
+      crossAxisCount: 2,
       children: [
-        Expanded(
-            child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-              _LabelledCovidChart(
-                  CovidSeriesId.ConfirmedDaily, labelledChartHeight),
-              _LabelledCovidChart(
-                  CovidSeriesId.DeathsDaily, labelledChartHeight),
-            ])),
-        Expanded(
-            child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            _LabelledCovidChart(CovidSeriesId.Confirmed, labelledChartHeight),
-            _LabelledCovidChart(CovidSeriesId.Deaths, labelledChartHeight),
-          ],
-        )),
+        _LabelledCovidChart(CovidSeriesId.ConfirmedDaily, labelledChartHeight),
+        _LabelledCovidChart(CovidSeriesId.DeathsDaily, labelledChartHeight),
+        _LabelledCovidChart(CovidSeriesId.Confirmed, labelledChartHeight),
+        _LabelledCovidChart(CovidSeriesId.Deaths, labelledChartHeight),
       ],
     );
   }
@@ -122,17 +114,23 @@ class _LabelledCovidChart extends StatelessWidget {
     Size titleSize = paintedTextSize(title, titleTextStyle, context);
     Size subtitleSize = paintedTextSize(
         UiConstants.averagedSubtitle, subtitleTextStyle, context);
+
+    // The SizeScale pixel amounts must match the column children paddings.
     var chartHeight = labelledChartHeight -
-        (SizeScale.px24 +
+        (SizeScale.px16 +
             SizeScale.px8 +
             titleSize.height +
             subtitleSize.height +
-            SizeScale.px24);
+            SizeScale.px12);
+    var approxLegendHeight = (paths.length / 2).ceil() * subtitleSize.height;
+    if (chartHeight - approxLegendHeight < 200) {
+      chartHeight = approxLegendHeight + 200;
+    }
 
     return Column(children: [
       Padding(
         padding: EdgeInsets.fromLTRB(
-            SizeScale.px24, SizeScale.px24, SizeScale.px24, SizeScale.px8),
+            SizeScale.px24, SizeScale.px16, SizeScale.px24, SizeScale.px8),
         child: SizedBox(
           height: chartHeight,
           child: new CovidChart(seriesId, false, null),
@@ -151,7 +149,7 @@ class _LabelledCovidChart extends StatelessWidget {
             child: Center(child: Text(title, style: titleTextStyle)),
           )),
       Padding(
-          padding: EdgeInsets.fromLTRB(0, 0, 0, SizeScale.px24),
+          padding: EdgeInsets.fromLTRB(0, 0, 0, SizeScale.px12),
           child: Center(child: Text(subtitle, style: subtitleTextStyle))),
     ]);
   }
