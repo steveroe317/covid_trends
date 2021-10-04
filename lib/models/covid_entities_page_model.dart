@@ -238,7 +238,7 @@ class CovidEntitiesPageModel with ChangeNotifier {
 /// Covid app shared preferences settings.
 class CovidAppSharedPreferences {
   final String _singleChartStrokeWidthKey = 'SingleChartStrokeWidth';
-  double _singleChartStrokeWidth = 2.0;
+  double _singleChartStrokeWidth = 3.0;
 
   SharedPreferences? _preferences;
 
