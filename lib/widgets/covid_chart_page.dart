@@ -18,6 +18,7 @@ import 'package:provider/provider.dart';
 
 import '../models/covid_entities_page_model.dart';
 import '../models/covid_series_id.dart';
+import '../theme/size_scale.dart';
 import 'covid_chart.dart';
 import 'compare_region_popup_menu.dart';
 import 'date_range_popup_menu.dart';
@@ -46,13 +47,21 @@ class CovidChartPage extends StatelessWidget {
           body: Center(
               child: RepaintBoundary(
                   key: chartGroupKey,
-                  child: Padding(
-                    padding: EdgeInsets.fromLTRB(32.0, 32.0, 32.0, 8.0),
-                    child: ConstrainedBox(
-                      constraints: BoxConstraints.expand(),
-                      child: CovidChart(
-                          seriesId, true, pageModel.singleChartStrokeWidth),
-                    ),
+                  child: LayoutBuilder(
+                    builder:
+                        (BuildContext context, BoxConstraints constraints) {
+                      return Padding(
+                          padding: EdgeInsets.all(SizeScale.px24),
+                          child: (constraints.maxHeight < constraints.maxWidth)
+                              ? ConstrainedBox(
+                                  constraints: BoxConstraints.expand(),
+                                  child: CovidChart(seriesId, true,
+                                      pageModel.singleChartStrokeWidth))
+                              : AspectRatio(
+                                  aspectRatio: 1.0,
+                                  child: CovidChart(seriesId, true,
+                                      pageModel.singleChartStrokeWidth)));
+                    },
                   ))));
     });
   }
