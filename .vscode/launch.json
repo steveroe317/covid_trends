@@ -5,13 +5,6 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "covid_trends_profile",
-            "type": "dart",
-            "request": "launch",
-            "program": "lib/main.dart",
-            "flutterMode": "profile"
-        },
-        {
             "name": "Flutter: Attach to Device",
             "type": "dart",
             "request": "attach"
@@ -21,6 +14,13 @@
             "request": "launch",
             "type": "dart",
             "flutterMode": "debug"
+        },
+        {
+            "name": "covid_trends_profile",
+            "type": "dart",
+            "request": "launch",
+            "program": "lib/main.dart",
+            "flutterMode": "profile"
         },
         {
             "name": "covid_trends release",

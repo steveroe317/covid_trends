@@ -16,31 +16,51 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../models/covid_entities_page_model.dart';
+import 'highlight_colors_dialog.dart';
+import 'highlight_region_dialog.dart';
 
 PopupMenuButton<String> buildCompareRegionPopupMenuButton(
     BuildContext context) {
   final singleRegionLabel = 'Show One Region';
   final multipleRegionLabel = 'Compare Regions';
-  var pageModel = Provider.of<CovidEntitiesPageModel>(context, listen: false);
+  final highlightRegionsLabel = 'Highlight Regions';
+  final highlightAdvancedLabel = 'Highlight Options';
+  var pageModel = Provider.of<CovidEntitiesPageModel>(context);
+  var compareActions = <String>[singleRegionLabel, multipleRegionLabel];
+
+  var menuItems = List<PopupMenuEntry<String>>.from(compareActions.map((name) =>
+      CheckedPopupMenuItem(
+          value: name,
+          child: Text(name),
+          checked: pageModel.compareRegion ^ (name == singleRegionLabel))));
+
+  if (pageModel.compareRegion && pageModel.comparisonPathList.length > 1) {
+    menuItems.add(PopupMenuDivider());
+    menuItems.add(CheckedPopupMenuItem(
+        value: highlightRegionsLabel,
+        child: Text(highlightRegionsLabel),
+        checked: false));
+    menuItems.add(CheckedPopupMenuItem(
+        value: highlightAdvancedLabel,
+        child: Text(highlightAdvancedLabel),
+        checked: false));
+  }
 
   return PopupMenuButton<String>(
       icon: const Icon(Icons.stacked_line_chart),
       tooltip: 'Single or Comparison Region Charts',
-      onSelected: (String debugAction) {
-        if (debugAction == singleRegionLabel) {
+      onSelected: (String menuAction) {
+        if (menuAction == singleRegionLabel) {
           pageModel.setCompareRegion(false);
-        } else if (debugAction == multipleRegionLabel) {
+        } else if (menuAction == multipleRegionLabel) {
           pageModel.setCompareRegion(true);
+        } else if (menuAction == highlightRegionsLabel) {
+          showDialog(context: context, builder: buildHighlightRegionDialog);
+        } else if (menuAction == highlightAdvancedLabel) {
+          showDialog(context: context, builder: buildHighlightColorsDialog);
         }
       },
       itemBuilder: (BuildContext context) {
-        var debugActions =
-            List<String>.from([singleRegionLabel, multipleRegionLabel]);
-        return List<PopupMenuEntry<String>>.from(debugActions.map((name) =>
-            CheckedPopupMenuItem(
-                value: name,
-                child: Text(name),
-                checked:
-                    pageModel.compareRegion ^ (name == singleRegionLabel))));
+        return menuItems;
       });
 }

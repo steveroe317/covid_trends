@@ -13,27 +13,27 @@
 // limitations under the License.
 
 import 'package:covid_trends/models/starred_model.dart';
-import 'package:covid_trends/theme/palette_colors.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../theme/palette_colors.dart';
+import '../theme/graph_colors.dart';
 import 'app_data_cache.dart';
+import 'comparison_graph_model.dart';
 import 'covid_series_id.dart';
 import 'region_metric_id.dart';
 import 'model_constants.dart';
 import 'starred_model.dart';
 
-/// Holds main application display state in a model outside the widget tree.
+/// Holds the main application display state in a model outside the widget tree.
 class CovidEntitiesPageModel with ChangeNotifier {
   var _appInfo = CovidAppInfo();
   var _appPreferences = CovidAppSharedPreferences();
   AppDataCache? appDataCache;
   List<String> _entityPagePath = List<String>.empty();
   List<String> _chartPath = List<String>.empty();
-  var _comparisonGraphModel = CovidComparisonGraphModel();
+  var _comparisonGraphModel = ComparisonGraphModel();
   RegionMetricId _sortMetric = RegionMetricId.None;
   int _seriesLength = 0;
   bool _per100k = false;
@@ -79,7 +79,58 @@ class CovidEntitiesPageModel with ChangeNotifier {
   }
 
   List<List<String>> get comparisonPathList => _comparisonGraphModel.pathList;
+
   List<Color> get comparisonPathColors => _comparisonGraphModel.pathColors;
+
+  bool isComparisonPathHighlighted(List<String> path) {
+    return _comparisonGraphModel.isPathHighlighted(path);
+  }
+
+  void setComparisonPathHighlight(List<String> path, bool isHighlighted) {
+    _comparisonGraphModel.setPathHighlight(path, isHighlighted);
+    notifyListeners();
+  }
+
+  void restoreHighlightFadeDefaults() {
+    _comparisonGraphModel.restoreHighlightFadeDefaults();
+    notifyListeners();
+  }
+
+  GraphLineFadeTypes get fadeType => _comparisonGraphModel.fadeType;
+
+  set fadeType(GraphLineFadeTypes value) {
+    _comparisonGraphModel.fadeType = value;
+    notifyListeners();
+  }
+
+  double get fadeFactor => _comparisonGraphModel.fadeFactor;
+
+  set fadeFactor(double value) {
+    _comparisonGraphModel.fadeFactor = value;
+    notifyListeners();
+  }
+
+  int get fadeAlpha => _comparisonGraphModel.fadeAlpha;
+
+  set fadeAlpha(int value) {
+    _comparisonGraphModel.fadeAlpha = value;
+    notifyListeners();
+  }
+
+  GraphLineHighlightTypes get highlightType =>
+      _comparisonGraphModel.highlightType;
+
+  set highlightType(GraphLineHighlightTypes value) {
+    _comparisonGraphModel.highlightType = value;
+    notifyListeners();
+  }
+
+  double get highlightFactor => _comparisonGraphModel.highlightFactor;
+
+  set highlightFactor(double value) {
+    _comparisonGraphModel.highlightFactor = value;
+    notifyListeners();
+  }
 
   List<List<String>> getAllModelPaths() {
     // TODO: filter duplicate paths.
@@ -154,9 +205,12 @@ class CovidEntitiesPageModel with ChangeNotifier {
       colors = _comparisonGraphModel.pathColors;
     } else if (seriesId == CovidSeriesId.Deaths ||
         seriesId == CovidSeriesId.DeathsDaily) {
-      colors = [Colors.red];
+      colors = [GraphColors.deaths];
+    } else if (seriesId == CovidSeriesId.Confirmed ||
+        seriesId == CovidSeriesId.ConfirmedDaily) {
+      colors = [GraphColors.confirmed];
     } else {
-      colors = [Colors.black];
+      colors = [GraphColors.singleDefault];
     }
     return colors;
   }
@@ -172,8 +226,22 @@ class CovidEntitiesPageModel with ChangeNotifier {
   }
 
   void addStar(String name) {
-    var star = StarredModel(name, _compareRegion, per100k, seriesLength,
-        _entityPagePath, _comparisonGraphModel.pathList, _chartPath);
+    var star = StarredModel(
+      name,
+      _compareRegion,
+      per100k,
+      seriesLength,
+      _entityPagePath,
+      _chartPath,
+      _comparisonGraphModel.pathList,
+      _comparisonGraphModel.pathColorIndexes,
+      _comparisonGraphModel.pathHighlights,
+      _comparisonGraphModel.fadeType,
+      _comparisonGraphModel.fadeFactor,
+      _comparisonGraphModel.fadeAlpha,
+      _comparisonGraphModel.highlightType,
+      _comparisonGraphModel.highlightFactor,
+    );
     appDataCache?.addStarred(name, star);
   }
 
@@ -197,10 +265,44 @@ class CovidEntitiesPageModel with ChangeNotifier {
       _seriesLength = star.seriesLength;
       _entityPagePath = star.path.toList();
       _comparisonGraphModel.clear();
-      for (var path in star.pathList) {
-        _comparisonGraphModel.addPath(path);
-      }
       _chartPath = star.chartPath.toList();
+
+      for (var pathIndex = 0;
+          pathIndex < star.comparisonPathList.length;
+          pathIndex++) {
+        var colorIndexes = star.comparisonPathColorIndexes;
+        var highlights = star.comparisonPathHighlights;
+        var path = star.comparisonPathList[pathIndex];
+
+        // If highlight information is available for this path use it,
+        // else create path entry without highlighting.
+        if (colorIndexes != null &&
+            highlights != null &&
+            pathIndex < colorIndexes.length &&
+            pathIndex < highlights.length) {
+          _comparisonGraphModel.addPathWithAttributes(
+              path, colorIndexes[pathIndex], highlights[pathIndex]);
+        } else {
+          _comparisonGraphModel.addPath(path);
+        }
+      }
+
+      // Load highlight color information if available.
+      _comparisonGraphModel.fadeType = (star.fadeType != null)
+          ? star.fadeType!
+          : ComparisonGraphModel.defaultFadeType;
+      _comparisonGraphModel.fadeFactor = (star.fadeFactor != null)
+          ? star.fadeFactor!
+          : ComparisonGraphModel.defaultFadeFactor;
+      _comparisonGraphModel.fadeAlpha = (star.fadeAlpha != null)
+          ? star.fadeAlpha!
+          : ComparisonGraphModel.defaultFadeAlpha;
+      _comparisonGraphModel.highlightType = (star.highlightType != null)
+          ? star.highlightType!
+          : ComparisonGraphModel.defaultHighlightType;
+      _comparisonGraphModel.highlightFactor = (star.highlightFactor != null)
+          ? star.highlightFactor!
+          : ComparisonGraphModel.defaultHightlightFactor;
       notifyListeners();
     }
   }
@@ -278,54 +380,12 @@ class CovidAppInfo {
   }
 }
 
-/// Holds application graph comparison display state.
-class CovidComparisonGraphModel {
-  static const maxPathListLength = 6;
-  var _comparisonPathList = <List<String>>[
-    [ModelConstants.rootEntityName]
-  ];
-  var _comparisonPathColors = <Color>[PaletteColors.coolGrey.shade900];
-  var _comparisonNextColorIndex = 1;
-
-  // Colors from the quantitative palette example in
-  // https://chartio.com/learn/charts/how-to-choose-colors-data-visualization/
-  final comparisonColors = <Color>[
-    Color(0xFF0483A6),
-    Color(0xFFF6CA58),
-    Color(0xFF704C7D),
-    Color(0xFF9BDA60),
-    Color(0xFFCB482B),
-    Color(0xFFFFA250),
-    Color(0xFF8BDDD0),
-  ];
-
-  List<List<String>> get pathList => _comparisonPathList;
-  List<Color> get pathColors => _comparisonPathColors;
-
-  void clear() {
-    _comparisonPathList = <List<String>>[];
-    _comparisonPathColors = <Color>[];
-    _comparisonNextColorIndex = 0;
+class RegionPath {
+  static String name(List<String> path) {
+    return path.join('/');
   }
 
-  bool addPath(List<String> path) {
-    for (var existingPath in _comparisonPathList) {
-      if (listEquals(path, existingPath)) {
-        return false;
-      }
-    }
-    if (_comparisonPathList.length >= maxPathListLength) {
-      _comparisonPathList.removeAt(0);
-      _comparisonPathColors.removeAt(0);
-    }
-    _comparisonPathList.add(path);
-    _comparisonPathColors.add(comparisonColors[_comparisonNextColorIndex]);
-
-    _comparisonNextColorIndex++;
-    if (_comparisonNextColorIndex >= comparisonColors.length) {
-      _comparisonNextColorIndex = 0;
-    }
-
-    return true;
+  static List<String> pathFromName(String name) {
+    return name.split('/');
   }
 }
