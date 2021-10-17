@@ -27,7 +27,7 @@ import 'model_constants.dart';
 import 'starred_model.dart';
 
 /// Holds the main application display state in a model outside the widget tree.
-class CovidEntitiesPageModel with ChangeNotifier {
+class AppDisplayStateModel with ChangeNotifier {
   var _appInfo = CovidAppInfo();
   var _appPreferences = CovidAppSharedPreferences();
   AppDataCache? appDataCache;
@@ -42,7 +42,7 @@ class CovidEntitiesPageModel with ChangeNotifier {
   bool _entitySearchActive = false;
   String _entitySearchString = '';
 
-  CovidEntitiesPageModel(List<String> path)
+  AppDisplayStateModel(List<String> path)
       : _entityPagePath = List<String>.from(path),
         _chartPath = List<String>.from(path) {
     appDataCache = AppDataCache('app_state', onInitFinish: () {

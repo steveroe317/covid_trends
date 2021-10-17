@@ -15,12 +15,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../models/covid_entities_page_model.dart';
+import '../models/app_display_state_model.dart';
 
 PopupMenuButton<String> buildper100kPopupMenuButton(BuildContext context) {
   final chartTotalsLabel = 'Show Totals';
   final chartPer100kLabel = 'Per 100,000';
-  var pageModel = Provider.of<CovidEntitiesPageModel>(context, listen: false);
+  var pageModel = Provider.of<AppDisplayStateModel>(context, listen: false);
 
   return PopupMenuButton<String>(
       icon: const Icon(Icons.group),

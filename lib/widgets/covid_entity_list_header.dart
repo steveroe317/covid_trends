@@ -15,7 +15,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../models/covid_entities_page_model.dart';
+import '../models/app_display_state_model.dart';
 import '../models/covid_timeseries_model.dart';
 import '../theme/size_scale.dart';
 import 'ui_colors.dart';
@@ -23,7 +23,7 @@ import 'ui_constants.dart';
 import 'ui_parameters.dart';
 
 class CovidEntityListHeader extends StatelessWidget {
-  final CovidEntitiesPageModel _pageModel;
+  final AppDisplayStateModel _pageModel;
   final CovidTimeseriesModel _timeseriesModel;
 
   CovidEntityListHeader(this._pageModel, this._timeseriesModel);

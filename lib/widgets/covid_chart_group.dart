@@ -17,7 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 
-import '../models/covid_entities_page_model.dart';
+import '../models/app_display_state_model.dart';
 import '../models/covid_series_id.dart';
 import '../theme/size_scale.dart';
 import 'covid_chart.dart';
@@ -95,7 +95,7 @@ class _LabelledCovidChart extends StatelessWidget {
 
   @override
   build(BuildContext context) {
-    final pageModel = Provider.of<CovidEntitiesPageModel>(context);
+    final pageModel = Provider.of<AppDisplayStateModel>(context);
     final scaleSuffix = (pageModel.per100k) ? ' per 100k' : '';
     var paths = (pageModel.compareRegion)
         ? pageModel.comparisonPathList

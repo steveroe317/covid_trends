@@ -16,7 +16,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../models/covid_entities_page_model.dart';
+import '../models/app_display_state_model.dart';
 import '../models/covid_timeseries_model.dart';
 import '../theme/size_scale.dart';
 import 'metric_formatter.dart';
@@ -30,7 +30,7 @@ class CovidEntityListItem extends StatelessWidget {
   final CovidEntityListItemDepth _depth;
   final void Function(CovidTimeseriesModel, List<String>) _onRegionPressed;
   final CovidTimeseriesModel _timeseriesModel;
-  final CovidEntitiesPageModel _pageModel;
+  final AppDisplayStateModel _pageModel;
   final numberFormatter;
 
   CovidEntityListItem(this._path, this._depth, this._onRegionPressed,
@@ -42,7 +42,7 @@ class CovidEntityListItem extends StatelessWidget {
 
   @override
   build(BuildContext context) {
-    var pageModel = Provider.of<CovidEntitiesPageModel>(context);
+    var pageModel = Provider.of<AppDisplayStateModel>(context);
     var uiParameters = context.read<UiParameters>();
     return Container(
         width: uiParameters.entityRowWidth,

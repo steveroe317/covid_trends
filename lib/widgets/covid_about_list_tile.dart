@@ -18,12 +18,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../models/covid_entities_page_model.dart';
+import '../models/app_display_state_model.dart';
 
 class CovidAboutListTile extends AboutListTile {
   @override
   Widget build(BuildContext context) {
-    var pageModel = Provider.of<CovidEntitiesPageModel>(context, listen: false);
+    var pageModel = Provider.of<AppDisplayStateModel>(context, listen: false);
     return AboutListTile(
       icon: Icon(Icons.info),
       child: Text('About'),

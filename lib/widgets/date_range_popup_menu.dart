@@ -15,7 +15,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../models/covid_entities_page_model.dart';
+import '../models/app_display_state_model.dart';
 
 PopupMenuButton<int> buildDateRangePopupMenuButton(BuildContext context) {
   return PopupMenuButton<int>(
@@ -23,12 +23,12 @@ PopupMenuButton<int> buildDateRangePopupMenuButton(BuildContext context) {
       tooltip: 'Date Range',
       onSelected: (int seriesLength) {
         var pageModel =
-            Provider.of<CovidEntitiesPageModel>(context, listen: false);
+            Provider.of<AppDisplayStateModel>(context, listen: false);
         pageModel.setSeriesLength(seriesLength);
       },
       itemBuilder: (BuildContext context) {
         var pageModel =
-            Provider.of<CovidEntitiesPageModel>(context, listen: false);
+            Provider.of<AppDisplayStateModel>(context, listen: false);
         return List<PopupMenuEntry<int>>.from([0, 365, 240, 120, 60].map(
           (days) => CheckedPopupMenuItem(
               child: Text(days == 0

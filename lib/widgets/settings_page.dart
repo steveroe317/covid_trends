@@ -15,7 +15,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../models/covid_entities_page_model.dart';
+import '../models/app_display_state_model.dart';
 import '../theme/size_scale.dart';
 
 enum SingleChartLineWidth {
@@ -77,7 +77,7 @@ extension SingleChartLineWidthDoubles on SingleChartLineWidth {
 class SettingsPage extends StatelessWidget {
   @override
   build(BuildContext context) {
-    var pageModel = Provider.of<CovidEntitiesPageModel>(context);
+    var pageModel = Provider.of<AppDisplayStateModel>(context);
     var singleStrokeWidth = SingleChartLineWidthDoubles.fromDouble(
         pageModel.singleChartStrokeWidth);
     var settingsItems = <Widget>[];

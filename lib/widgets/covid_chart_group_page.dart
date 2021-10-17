@@ -16,7 +16,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../models/covid_entities_page_model.dart';
+import '../models/app_display_state_model.dart';
 import 'covid_chart_group.dart';
 import 'compare_region_popup_menu.dart';
 import 'date_range_popup_menu.dart';
@@ -38,8 +38,7 @@ class _CovidChartGroupPageState extends State<CovidChartGroupPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<CovidEntitiesPageModel>(
-        builder: (context, pageModel, child) {
+    return Consumer<AppDisplayStateModel>(builder: (context, pageModel, child) {
       return Scaffold(
           appBar: AppBar(actions: [
             buildCompareRegionPopupMenuButton(context),

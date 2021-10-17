@@ -15,7 +15,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../models/covid_entities_page_model.dart';
+import '../models/app_display_state_model.dart';
 import '../models/region_metric_id.dart';
 import 'ui_constants.dart';
 
@@ -25,12 +25,12 @@ PopupMenuButton<RegionMetricId> buildSortPopupMenuButton(BuildContext context) {
       tooltip: UiConstants.noSortMetricName,
       onSelected: (RegionMetricId metricId) {
         var pageModel =
-            Provider.of<CovidEntitiesPageModel>(context, listen: false);
+            Provider.of<AppDisplayStateModel>(context, listen: false);
         pageModel.sortMetric = metricId;
       },
       itemBuilder: (BuildContext context) {
         var pageModel =
-            Provider.of<CovidEntitiesPageModel>(context, listen: false);
+            Provider.of<AppDisplayStateModel>(context, listen: false);
         return List<PopupMenuEntry<RegionMetricId>>.from(UiConstants
             .regionSortMetrics
             .map((metricId) => CheckedPopupMenuItem(

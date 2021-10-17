@@ -19,7 +19,7 @@ import 'package:covid_trends/models/covid_series_id.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../models/covid_entities_page_model.dart';
+import '../models/app_display_state_model.dart';
 import '../models/covid_timeseries_model.dart';
 import '../theme/size_scale.dart';
 import 'metric_formatter.dart';
@@ -36,7 +36,7 @@ class CovidChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var timeseriesModel = Provider.of<CovidTimeseriesModel>(context);
-    var pageModel = Provider.of<CovidEntitiesPageModel>(context);
+    var pageModel = Provider.of<AppDisplayStateModel>(context);
     var seriesName = covidSeriesName(seriesId);
     var seriesLength = pageModel.seriesLength;
     var per100k = pageModel.per100k;
@@ -117,7 +117,7 @@ class CovidChart extends StatelessWidget {
 
   /// Create one or more series.
   List<charts.Series<TimeSeriesCovid, DateTime>> createTimeseries(
-      CovidEntitiesPageModel pageModel,
+      AppDisplayStateModel pageModel,
       List<List<String>> paths,
       List<int> timestamps,
       List<List<double>> seriesDataList) {

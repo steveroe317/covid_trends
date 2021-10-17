@@ -16,7 +16,7 @@ import 'package:covid_trends/models/covid_series_id.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../models/covid_entities_page_model.dart';
+import '../models/app_display_state_model.dart';
 import '../theme/graph_colors.dart';
 import '../theme/size_scale.dart';
 import 'covid_chart.dart';
@@ -31,7 +31,7 @@ Widget buildHighlightColorsDialog(BuildContext context) {
 }
 
 Widget buildTallHighlightColorDialog(BuildContext context, bool isTall) {
-  var pageModel = Provider.of<CovidEntitiesPageModel>(context);
+  var pageModel = Provider.of<AppDisplayStateModel>(context);
 
   var listDensity = VisualDensity(
       horizontal: VisualDensity.minimumDensity,

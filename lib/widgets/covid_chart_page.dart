@@ -17,7 +17,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../models/covid_entities_page_model.dart';
+import '../models/app_display_state_model.dart';
 import '../models/covid_series_id.dart';
 import '../theme/size_scale.dart';
 import 'covid_chart.dart';
@@ -35,8 +35,7 @@ class CovidChartPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final chartGroupKey = GlobalKey();
-    return Consumer<CovidEntitiesPageModel>(
-        builder: (context, pageModel, child) {
+    return Consumer<AppDisplayStateModel>(builder: (context, pageModel, child) {
       return Scaffold(
           appBar: AppBar(actions: [
             buildCompareRegionPopupMenuButton(context),

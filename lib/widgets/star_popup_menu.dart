@@ -17,7 +17,7 @@ import 'package:covid_trends/widgets/ui_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../models/covid_entities_page_model.dart';
+import '../models/app_display_state_model.dart';
 import '../models/covid_timeseries_model.dart';
 import '../models/model_constants.dart';
 import 'covid_chart_group_page.dart';
@@ -31,7 +31,7 @@ PopupMenuButton<String> buildStarPopupMenuButton(BuildContext context,
       tooltip: 'Starred Charts',
       onSelected: (String starName) {
         var pageModel =
-            Provider.of<CovidEntitiesPageModel>(context, listen: false);
+            Provider.of<AppDisplayStateModel>(context, listen: false);
         var timeseriesModel =
             Provider.of<CovidTimeseriesModel>(context, listen: false);
         if (starName == UiConstants.saveStar) {
@@ -52,7 +52,7 @@ PopupMenuButton<String> buildStarPopupMenuButton(BuildContext context,
       },
       itemBuilder: (BuildContext context) {
         var pageModel =
-            Provider.of<CovidEntitiesPageModel>(context, listen: false);
+            Provider.of<AppDisplayStateModel>(context, listen: false);
         var starNames = List<String>.from(pageModel
             .getStarredNames()
             .where((element) => element != ModelConstants.startupStarName));
@@ -87,7 +87,7 @@ PopupMenuButton<String> buildStarPopupMenuButton(BuildContext context,
 
 PopupMenuButton<String> buildStarActionsPopupMenuButton(
     BuildContext context, String name) {
-  var pageModel = Provider.of<CovidEntitiesPageModel>(context, listen: false);
+  var pageModel = Provider.of<AppDisplayStateModel>(context, listen: false);
 
   return PopupMenuButton<String>(
       icon: const Icon(Icons.more_vert),
@@ -111,7 +111,7 @@ PopupMenuButton<String> buildStarActionsPopupMenuButton(
 }
 
 Widget buildSaveStarDialog(BuildContext context) {
-  var pageModel = Provider.of<CovidEntitiesPageModel>(context, listen: false);
+  var pageModel = Provider.of<AppDisplayStateModel>(context, listen: false);
   var saveName = 'Starred Chart';
   return Dialog(
       child: Column(
@@ -161,7 +161,7 @@ Widget buildSaveStarDialog(BuildContext context) {
 }
 
 Widget buildRenameStarDialog(BuildContext context) {
-  var pageModel = Provider.of<CovidEntitiesPageModel>(context, listen: false);
+  var pageModel = Provider.of<AppDisplayStateModel>(context, listen: false);
   var oldName = pageModel.editStarName;
   var newName = oldName;
   return Dialog(
@@ -216,7 +216,7 @@ Widget buildRenameStarDialog(BuildContext context) {
 }
 
 Widget buildReplaceStarDialog(BuildContext context) {
-  var pageModel = Provider.of<CovidEntitiesPageModel>(context, listen: false);
+  var pageModel = Provider.of<AppDisplayStateModel>(context, listen: false);
   var chartName = pageModel.editStarName;
   return Dialog(
       child: Column(
@@ -254,7 +254,7 @@ Widget buildReplaceStarDialog(BuildContext context) {
 }
 
 Widget buildDeleteStarDialog(BuildContext context) {
-  var pageModel = Provider.of<CovidEntitiesPageModel>(context, listen: false);
+  var pageModel = Provider.of<AppDisplayStateModel>(context, listen: false);
   var chartName = pageModel.editStarName;
   return Dialog(
       child: Column(

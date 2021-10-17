@@ -15,7 +15,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../models/covid_entities_page_model.dart';
+import '../models/app_display_state_model.dart';
 import 'highlight_colors_dialog.dart';
 import 'highlight_region_dialog.dart';
 
@@ -25,7 +25,7 @@ PopupMenuButton<String> buildCompareRegionPopupMenuButton(
   final multipleRegionLabel = 'Compare Regions';
   final highlightRegionsLabel = 'Highlight Regions';
   final highlightAdvancedLabel = 'Highlight Options';
-  var pageModel = Provider.of<CovidEntitiesPageModel>(context);
+  var pageModel = Provider.of<AppDisplayStateModel>(context);
   var compareActions = <String>[singleRegionLabel, multipleRegionLabel];
 
   var menuItems = List<PopupMenuEntry<String>>.from(compareActions.map((name) =>

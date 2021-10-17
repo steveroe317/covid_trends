@@ -21,7 +21,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 import 'models/covid_timeseries_model.dart';
-import 'models/covid_entities_page_model.dart';
+import 'models/app_display_state_model.dart';
 import 'theme/palette_colors.dart';
 import 'widgets/covid_entities_page.dart';
 import 'widgets/initialization_error_page.dart';
@@ -33,7 +33,7 @@ void main() {
     MultiProvider(providers: [
       ChangeNotifierProvider(create: (context) => CovidTimeseriesModel()),
       ChangeNotifierProvider(
-          create: (context) => CovidEntitiesPageModel(['World'])),
+          create: (context) => AppDisplayStateModel(['World'])),
     ], child: _CovidAppFirebaseWrapper()),
   );
 }
@@ -164,7 +164,7 @@ class _CovidAppLifeCycleWrapperState extends State<_CovidAppLifeCycleWrapper>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.paused) {
-      var pageModel = Provider.of<CovidEntitiesPageModel>(context);
+      var pageModel = Provider.of<AppDisplayStateModel>(context);
       pageModel.addStar(ModelConstants.startupStarName);
     }
   }
@@ -180,7 +180,7 @@ class _CovidApp extends StatelessWidget {
   Widget build(BuildContext context) {
     var timeseriesModel =
         Provider.of<CovidTimeseriesModel>(context, listen: false);
-    var pageModel = Provider.of<CovidEntitiesPageModel>(context);
+    var pageModel = Provider.of<AppDisplayStateModel>(context);
     List<List<String>> starPaths = pageModel.getAllModelPaths();
     timeseriesModel.loadEntities(starPaths);
     // TODO: is markStale() needed here?

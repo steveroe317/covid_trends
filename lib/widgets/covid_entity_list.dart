@@ -17,7 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import '../models/covid_entities_page_model.dart';
+import '../models/app_display_state_model.dart';
 import '../models/covid_timeseries_model.dart';
 import 'covid_entity_list_header.dart';
 import 'covid_entity_list_item.dart';
@@ -34,7 +34,7 @@ class CovidEntityList extends StatelessWidget {
   @override
   build(BuildContext context) {
     var timeseriesModel = Provider.of<CovidTimeseriesModel>(context);
-    var pageModel = Provider.of<CovidEntitiesPageModel>(context);
+    var pageModel = Provider.of<AppDisplayStateModel>(context);
     var uiParameters = context.watch<UiParameters>();
     final childNames = timeseriesModel.entityChildNames(
         pageModel.entityPagePath(),

@@ -17,7 +17,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../models/covid_entities_page_model.dart';
+import '../models/app_display_state_model.dart';
 import '../models/covid_timeseries_model.dart';
 import 'compare_region_popup_menu.dart';
 import 'covid_chart_group.dart';
@@ -112,7 +112,7 @@ class _CovidEntitiesWideListBody extends StatelessWidget {
   _CovidEntitiesWideListBody(this._chartGroupPage);
   @override
   Widget build(BuildContext context) {
-    var pageModel = Provider.of<CovidEntitiesPageModel>(context);
+    var pageModel = Provider.of<AppDisplayStateModel>(context);
     var uiParameters = context.read<UiParameters>();
 
     // This onRegionPressed() function does not need the build context,
@@ -140,7 +140,7 @@ class _CovidEntitiesNarrowListBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var pageModel = Provider.of<CovidEntitiesPageModel>(context);
+    var pageModel = Provider.of<AppDisplayStateModel>(context);
 
     // onRegionPressed() is inside build() so that it has access to the context.
     void onRegionPressed(

@@ -15,13 +15,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../models/covid_entities_page_model.dart';
+import '../models/app_display_state_model.dart';
 import '../theme/size_scale.dart';
 import 'ui_colors.dart';
 import 'ui_parameters.dart';
 
 class CovidEntityListSearch extends StatelessWidget {
-  final CovidEntitiesPageModel _pageModel;
+  final AppDisplayStateModel _pageModel;
 
   CovidEntityListSearch(this._pageModel);
 
