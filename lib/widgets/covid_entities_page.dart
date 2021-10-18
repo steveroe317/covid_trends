@@ -110,13 +110,14 @@ class _CovidEntitiesWideListBody extends StatelessWidget {
   final Key _chartGroupPage;
 
   _CovidEntitiesWideListBody(this._chartGroupPage);
+
   @override
   Widget build(BuildContext context) {
     var pageModel = Provider.of<AppDisplayStateModel>(context);
     var uiParameters = context.read<UiParameters>();
 
     // This onRegionPressed() function does not need the build context,
-    // so it can be defined outside build().
+    // so it could be defined outside build().
     void onRegionPressed(
         CovidTimeseriesModel timeseriesModel, List<String> path) {
       timeseriesModel.loadEntity(path);
@@ -142,7 +143,7 @@ class _CovidEntitiesNarrowListBody extends StatelessWidget {
   Widget build(BuildContext context) {
     var pageModel = Provider.of<AppDisplayStateModel>(context);
 
-    // onRegionPressed() is inside build() so that it has access to the context.
+    // onRegionPressed is inside build so that it has access to the context.
     void onRegionPressed(
         CovidTimeseriesModel timeseriesModel, List<String> path) {
       timeseriesModel.loadEntity(path);
