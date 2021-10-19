@@ -223,6 +223,7 @@ class AppDisplayStateModel with ChangeNotifier {
 
   set editStarName(value) {
     _editStarName = value;
+    notifyListeners();
   }
 
   void addStar(String name) {
@@ -243,10 +244,12 @@ class AppDisplayStateModel with ChangeNotifier {
       _comparisonGraphModel.highlightFactor,
     );
     appDataCache?.addStarred(name, star);
+    notifyListeners();
   }
 
   void deleteStar(String name) {
     appDataCache?.deleteStarred(name);
+    notifyListeners();
   }
 
   void renameStar(String oldName, String newName) {
@@ -255,6 +258,7 @@ class AppDisplayStateModel with ChangeNotifier {
       appDataCache!.deleteStarred(oldName);
       appDataCache!.addStarred(newName, star);
     }
+    notifyListeners();
   }
 
   void loadStar(String name) {

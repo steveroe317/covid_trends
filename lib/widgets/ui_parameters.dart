@@ -25,6 +25,7 @@ class UiParameters with ChangeNotifier {
   UiAppShape _uiShape;
   var _entityButtonWidth = 170.0;
   var _entityMetricWidth = 120.0;
+  var _starredButtonWidth = 290.0;
   var _drawerHeaderHeight = 75.0;
 
   var _entityButtonTextStyle = TextStyle(
@@ -41,6 +42,7 @@ class UiParameters with ChangeNotifier {
     if (uiShape == UiAppShape.Mini) {
       _entityButtonWidth = 140.0;
       _entityMetricWidth = 120.0;
+      _starredButtonWidth = 260.0;
       _entityButtonTextStyle = TextStyle(
           color: PaletteColors.coolGrey.shade900,
           fontSize: SizeScale.px16,
@@ -52,6 +54,7 @@ class UiParameters with ChangeNotifier {
 
   double get entityButtonWidth => _entityButtonWidth;
   double get entityMetricWidth => _entityMetricWidth;
+  double get starredButtonWidth => _starredButtonWidth;
   double get drawerHeaderHeight => _drawerHeaderHeight;
   TextStyle get entityButtonTextStyle => _entityButtonTextStyle;
   TextStyle get entityMetricTextStyle => _entityMetricTextStyle;

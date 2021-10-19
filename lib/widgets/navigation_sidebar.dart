@@ -20,6 +20,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../theme/palette_colors.dart';
 import 'covid_about_list_tile.dart';
 import 'settings_page.dart';
+import 'starred_chart_page.dart';
 import 'ui_parameters.dart';
 
 class CovidTrendsNavigationSidebar extends StatelessWidget {
@@ -49,22 +50,36 @@ class CovidTrendsNavigationSidebar extends StatelessWidget {
                             fontWeight: FontWeight.w500)),
                   )),
               ListTile(
-                leading: Icon(Icons.help),
-                title: Text('Help'),
-                onTap: () {
-                  _launchURL('https://www.roedesigns.com/covid-flows');
-                },
-              ),
+                  leading: Icon(Icons.star),
+                  title: Text('Saved Charts'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => Container(
+                                child: StarredChartPage(
+                                    title: 'Starred Charts'))));
+                  }),
               ListTile(
                   leading: Icon(Icons.settings),
                   title: Text('Settings'),
                   onTap: () {
+                    Navigator.pop(context);
                     Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) =>
                                 Container(child: SettingsPage())));
                   }),
+              ListTile(
+                leading: Icon(Icons.help),
+                title: Text('Help'),
+                onTap: () {
+                  Navigator.pop(context);
+                  _launchURL('https://www.roedesigns.com/covid-flows');
+                },
+              ),
               CovidAboutListTile(),
             ])));
   }
