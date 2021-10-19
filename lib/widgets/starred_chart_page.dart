@@ -21,6 +21,7 @@ import 'compare_region_popup_menu.dart';
 import 'covid_chart_group.dart';
 import 'covid_chart_group_page.dart';
 import 'date_range_popup_menu.dart';
+import 'highlight_region_popup_menu.dart';
 import 'per_100k_popup_menu.dart';
 import 'share_button.dart';
 import 'starred_chart_list.dart';
@@ -58,15 +59,22 @@ class _StarredChartPageState extends State<StarredChartPage> {
 
   Scaffold _buildWideScaffold(BuildContext context, String title) {
     final chartGroupKey = GlobalKey();
+    var pageModel = Provider.of<AppDisplayStateModel>(context);
+
+    var actions = [
+      buildCompareRegionPopupMenuButton(context),
+      buildDateRangePopupMenuButton(context),
+      buildper100kPopupMenuButton(context),
+      buildShareButton(context, chartGroupKey),
+    ];
+    if (pageModel.compareRegion && pageModel.comparisonPathList.length > 1) {
+      actions.insert(
+          actions.length - 1, buildHighlightRegionPopupMenuButton(context));
+    }
     return Scaffold(
       appBar: AppBar(
         title: Text(title),
-        actions: [
-          buildCompareRegionPopupMenuButton(context),
-          buildDateRangePopupMenuButton(context),
-          buildper100kPopupMenuButton(context),
-          buildShareButton(context, chartGroupKey),
-        ],
+        actions: actions,
       ),
       body: SafeArea(
           left: true,

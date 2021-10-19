@@ -24,6 +24,7 @@ import 'covid_chart_group.dart';
 import 'covid_chart_group_page.dart';
 import 'covid_entity_list.dart';
 import 'date_range_popup_menu.dart';
+import 'highlight_region_popup_menu.dart';
 //import 'debug_popup_menu.dart';
 import 'navigation_sidebar.dart';
 import 'per_100k_popup_menu.dart';
@@ -63,18 +64,25 @@ class _CovidEntitiesPageState extends State<CovidEntitiesPage> {
 
   Scaffold _buildWideScaffold(BuildContext context, String title) {
     final chartGroupKey = GlobalKey();
+    var pageModel = Provider.of<AppDisplayStateModel>(context);
+
+    var actions = [
+      buildSortPopupMenuButton(context),
+      buildCompareRegionPopupMenuButton(context),
+      buildDateRangePopupMenuButton(context),
+      buildper100kPopupMenuButton(context),
+      buildStarPopupMenuButton(context),
+      buildShareButton(context, chartGroupKey),
+    ];
+    if (pageModel.compareRegion && pageModel.comparisonPathList.length > 1) {
+      actions.insert(
+          actions.length - 2, buildHighlightRegionPopupMenuButton(context));
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text(title),
-        actions: [
-          buildSortPopupMenuButton(context),
-          buildCompareRegionPopupMenuButton(context),
-          buildDateRangePopupMenuButton(context),
-          buildper100kPopupMenuButton(context),
-          buildStarPopupMenuButton(context),
-          buildShareButton(context, chartGroupKey),
-          //buildDebugPopupMenuButton(context),
-        ],
+        actions: actions,
       ),
       body: SafeArea(
           left: true,
@@ -89,17 +97,24 @@ class _CovidEntitiesPageState extends State<CovidEntitiesPage> {
 }
 
 Scaffold _buildNarrowScaffold(BuildContext context) {
+  var pageModel = Provider.of<AppDisplayStateModel>(context);
+
+  var actions = [
+    buildSortPopupMenuButton(context),
+    buildCompareRegionPopupMenuButton(context),
+    buildDateRangePopupMenuButton(context),
+    buildper100kPopupMenuButton(context),
+    buildStarPopupMenuButton(context, openChartPage: true),
+  ];
+  if (pageModel.compareRegion && pageModel.comparisonPathList.length > 1) {
+    actions.insert(
+        actions.length - 1, buildHighlightRegionPopupMenuButton(context));
+  }
+
   return Scaffold(
     appBar: AppBar(
       title: null,
-      actions: [
-        buildSortPopupMenuButton(context),
-        buildCompareRegionPopupMenuButton(context),
-        buildDateRangePopupMenuButton(context),
-        buildper100kPopupMenuButton(context),
-        buildStarPopupMenuButton(context, openChartPage: true),
-        //buildDebugPopupMenuButton(context),
-      ],
+      actions: actions,
     ),
     body: _CovidEntitiesNarrowListBody(),
     drawer: CovidTrendsNavigationSidebar(),

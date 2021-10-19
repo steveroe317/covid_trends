@@ -20,6 +20,7 @@ import '../models/app_display_state_model.dart';
 import 'covid_chart_group.dart';
 import 'compare_region_popup_menu.dart';
 import 'date_range_popup_menu.dart';
+import 'highlight_region_popup_menu.dart';
 import 'per_100k_popup_menu.dart';
 import 'share_button.dart';
 import 'star_popup_menu.dart';
@@ -39,14 +40,20 @@ class _CovidChartGroupPageState extends State<CovidChartGroupPage> {
   @override
   Widget build(BuildContext context) {
     return Consumer<AppDisplayStateModel>(builder: (context, pageModel, child) {
+      var actions = [
+        buildCompareRegionPopupMenuButton(context),
+        buildDateRangePopupMenuButton(context),
+        buildper100kPopupMenuButton(context),
+        buildStarPopupMenuButton(context),
+        buildShareButton(context, chartGroupKey),
+      ];
+      if (pageModel.compareRegion && pageModel.comparisonPathList.length > 1) {
+        actions.insert(
+            actions.length - 1, buildHighlightRegionPopupMenuButton(context));
+      }
+
       return Scaffold(
-          appBar: AppBar(actions: [
-            buildCompareRegionPopupMenuButton(context),
-            buildDateRangePopupMenuButton(context),
-            buildper100kPopupMenuButton(context),
-            buildStarPopupMenuButton(context),
-            buildShareButton(context, chartGroupKey),
-          ]),
+          appBar: AppBar(actions: actions),
           body: SafeArea(
             left: true,
             right: true,
