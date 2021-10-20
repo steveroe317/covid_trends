@@ -49,7 +49,7 @@ class _CovidChartGroupPageState extends State<CovidChartGroupPage> {
       ];
       if (pageModel.compareRegion && pageModel.comparisonPathList.length > 1) {
         actions.insert(
-            actions.length - 1, buildHighlightRegionPopupMenuButton(context));
+            actions.length - 2, buildHighlightRegionPopupMenuButton(context));
       }
 
       return Scaffold(
