@@ -38,7 +38,7 @@ class AppDisplayStateModel with ChangeNotifier {
   int _seriesLength = 0;
   bool _per100k = false;
   bool _compareRegion = false;
-  String _editStarName = '';
+  String _selectedStarName = '';
   bool _entitySearchActive = false;
   String _entitySearchString = '';
 
@@ -219,10 +219,10 @@ class AppDisplayStateModel with ChangeNotifier {
     return appDataCache?.getStarredNames() ?? [];
   }
 
-  String get editStarName => _editStarName;
+  String get selectedStarName => _selectedStarName;
 
-  set editStarName(value) {
-    _editStarName = value;
+  set selectedStarName(value) {
+    _selectedStarName = value;
     notifyListeners();
   }
 

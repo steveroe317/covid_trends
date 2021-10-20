@@ -26,6 +26,7 @@ import 'theme/palette_colors.dart';
 import 'widgets/covid_entities_page.dart';
 import 'widgets/initialization_error_page.dart';
 import 'widgets/loading_page.dart';
+import 'widgets/starred_chart_page.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -186,11 +187,16 @@ class _CovidApp extends StatelessWidget {
     // TODO: is markStale() needed here?
     Future<void>(timeseriesModel.markStale);
     return MaterialApp(
-      title: 'Covid Flows',
-      theme: ThemeData(
-        primarySwatch: PaletteColors.lightBlueVivid,
-      ),
-      home: CovidEntitiesPage(title: 'Covid Flows'),
-    );
+        title: 'Covid Flows',
+        theme: ThemeData(
+          primarySwatch: PaletteColors.lightBlueVivid,
+        ),
+        //home: CovidEntitiesPage(title: 'Covid Flows'),
+        initialRoute: '/',
+        routes: {
+          '/': (context) => const CovidEntitiesPage(title: 'Covid Flows'),
+          '/starred_charts': (context) =>
+              const StarredChartPage(title: 'Saved Charts'),
+        });
   }
 }

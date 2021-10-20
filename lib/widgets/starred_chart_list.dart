@@ -33,10 +33,15 @@ class StarredChartList extends StatelessWidget {
     var uiParameters = context.watch<UiParameters>();
     var pageModel = Provider.of<AppDisplayStateModel>(context);
 
-    var starredChartsHeader = Container(
-        width: uiParameters.entityRowWidth,
-        color: UiColors.entityListHeader,
-        child: _StarredChartListHeader());
+    List<Widget> starList = [
+      Row(children: [
+        Expanded(
+            child: Container(
+                width: uiParameters.entityRowWidth,
+                color: UiColors.entityListHeader,
+                child: _StarredChartListHeader())),
+      ])
+    ];
 
     // TODO: This code is also in star_popup_menu.dart.  Refactor it.
     var starNames = List<String>.from(pageModel
@@ -48,13 +53,11 @@ class StarredChartList extends StatelessWidget {
     for (var starName in starNames) {
       starredCharts.add(_StarredChartListItem(starName, _onSavedChartPressed));
     }
+    starList.add(Expanded(child: ListView(children: starredCharts)));
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        starredChartsHeader,
-        Expanded(child: ListView(children: starredCharts)),
-      ],
+      children: starList,
     );
   }
 }
@@ -78,7 +81,7 @@ class _StarredChartListHeader extends StatelessWidget {
             child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'Saved Chart',
+                  'Saved Charts',
                   style: uiParameters.entityButtonTextStyle,
                 )),
           ),
@@ -106,7 +109,7 @@ class _StarredChartListItem extends StatelessWidget {
     var pageModel = Provider.of<AppDisplayStateModel>(context, listen: false);
     return Container(
       width: uiParameters.entityRowWidth,
-      color: (savedChartName == pageModel.editStarName)
+      color: (savedChartName == pageModel.selectedStarName)
           ? UiColors.entityListSelected
           : null,
       padding: EdgeInsets.only(left: 0, right: SizeScale.px12),
@@ -129,7 +132,7 @@ class _StarredChartListItem extends StatelessWidget {
                 )),
           ),
         ),
-        buildStarActionsPopupMenuButton(context, savedChartName, false),
+        buildStarActionsPopupMenuButton(context, savedChartName),
       ]),
     );
   }

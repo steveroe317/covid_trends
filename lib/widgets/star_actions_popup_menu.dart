@@ -18,14 +18,14 @@ import 'package:provider/provider.dart';
 import '../models/app_display_state_model.dart';
 
 PopupMenuButton<String> buildStarActionsPopupMenuButton(
-    BuildContext context, String name, bool popTwice) {
+    BuildContext context, String name) {
   var pageModel = Provider.of<AppDisplayStateModel>(context, listen: false);
-  var dialogBuilder = StarActionDialogBuilder(popTwice);
+  var dialogBuilder = StarActionDialogBuilder();
 
   return PopupMenuButton<String>(
       icon: const Icon(Icons.more_vert),
       onSelected: (String action) {
-        pageModel.editStarName = name;
+        pageModel.selectedStarName = name;
         if (action == 'Rename') {
           showDialog(
               context: context, builder: dialogBuilder.buildRenameStarDialog);
@@ -47,13 +47,9 @@ PopupMenuButton<String> buildStarActionsPopupMenuButton(
 }
 
 class StarActionDialogBuilder {
-  bool popTwice = false;
-
-  StarActionDialogBuilder(this.popTwice);
-
   Widget buildRenameStarDialog(BuildContext context) {
     var pageModel = Provider.of<AppDisplayStateModel>(context, listen: false);
-    var oldName = pageModel.editStarName;
+    var oldName = pageModel.selectedStarName;
     var newName = oldName;
     return Dialog(
         child: Column(
@@ -89,10 +85,6 @@ class StarActionDialogBuilder {
                   pageModel.renameStar(oldName, newName);
                 }
                 Navigator.of(context).pop();
-                if (popTwice) {
-                  // Pop twice to exit both the dialog and the invoking menu.
-                  Navigator.of(context).pop();
-                }
               },
               child: Text('Rename'),
             ),
@@ -110,7 +102,7 @@ class StarActionDialogBuilder {
 
   Widget buildReplaceStarDialog(BuildContext context) {
     var pageModel = Provider.of<AppDisplayStateModel>(context, listen: false);
-    var chartName = pageModel.editStarName;
+    var chartName = pageModel.selectedStarName;
     return Dialog(
         child: Column(
       mainAxisSize: MainAxisSize.min,
@@ -129,10 +121,6 @@ class StarActionDialogBuilder {
                 pageModel.deleteStar(chartName);
                 pageModel.addStar(chartName);
                 Navigator.of(context).pop();
-                if (popTwice) {
-                  // Pop twice to exit both the dialog and the invoking menu.
-                  Navigator.of(context).pop();
-                }
               },
               child: Text('Replace'),
             ),
@@ -150,7 +138,7 @@ class StarActionDialogBuilder {
 
   Widget buildDeleteStarDialog(BuildContext context) {
     var pageModel = Provider.of<AppDisplayStateModel>(context, listen: false);
-    var chartName = pageModel.editStarName;
+    var chartName = pageModel.selectedStarName;
     return Dialog(
         child: Column(
       mainAxisSize: MainAxisSize.min,
@@ -168,10 +156,6 @@ class StarActionDialogBuilder {
               onPressed: () {
                 pageModel.deleteStar(chartName);
                 Navigator.of(context).pop();
-                if (popTwice) {
-                  // Pop twice to exit both the dialog and the invoking menu.
-                  Navigator.of(context).pop();
-                }
               },
               child: Text('Delete'),
             ),

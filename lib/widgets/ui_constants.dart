@@ -19,6 +19,7 @@ class UiConstants {
   // UI strings.
   static const noSortMetricName = 'Sort By Name';
   static const saveStar = 'Save Chart';
+  static const viewStar = 'View Saved Charts';
   static const averagedSubtitle = 'Averaged over 7 days';
 
   // UI string functions.

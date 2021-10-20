@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.import 'dart:collection';
 
+import 'package:covid_trends/models/app_display_state_model.dart';
 import 'package:covid_trends/theme/size_scale.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -20,13 +21,13 @@ import 'package:url_launcher/url_launcher.dart';
 import '../theme/palette_colors.dart';
 import 'covid_about_list_tile.dart';
 import 'settings_page.dart';
-import 'starred_chart_page.dart';
 import 'ui_parameters.dart';
 
 class CovidTrendsNavigationSidebar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var uiParameters = context.read<UiParameters>();
+    var pageModel = context.watch<AppDisplayStateModel>();
     return SafeArea(
         left: true,
         right: true,
@@ -53,13 +54,12 @@ class CovidTrendsNavigationSidebar extends StatelessWidget {
                   leading: Icon(Icons.star),
                   title: Text('Saved Charts'),
                   onTap: () {
+                    pageModel.selectedStarName = '';
+                    // Explictly popping and pushing here because using
+                    // Navigator.pushNamedAndRemoveUntil here does not add
+                    // a back arrow to the scaffold.
                     Navigator.pop(context);
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => Container(
-                                child: StarredChartPage(
-                                    title: 'Starred Charts'))));
+                    Navigator.pushNamed(context, '/starred_charts');
                   }),
               ListTile(
                   leading: Icon(Icons.settings),

@@ -31,7 +31,7 @@ import 'ui_parameters.dart';
 class StarredChartPage extends StatefulWidget {
   final String title;
 
-  StarredChartPage({Key? key, required this.title}) : super(key: key);
+  const StarredChartPage({Key? key, required this.title}) : super(key: key);
 
   @override
   _StarredChartPageState createState() => _StarredChartPageState();
@@ -105,7 +105,7 @@ class _StarredChartWideListBody extends StatelessWidget {
   void onSavedChartPressed(
       AppDisplayStateModel pageModel, String savedChartName) {
     pageModel.loadStar(savedChartName);
-    pageModel.editStarName = savedChartName;
+    pageModel.selectedStarName = savedChartName;
   }
 
   @override
@@ -133,7 +133,8 @@ class _StarredChartNarrowListBody extends StatelessWidget {
     void onSavedChartPressed(
         AppDisplayStateModel pageModel, String savedChartName) {
       pageModel.loadStar(savedChartName);
-      pageModel.editStarName = savedChartName;
+      pageModel.selectedStarName = savedChartName;
+
       Navigator.push(
         context,
         MaterialPageRoute(

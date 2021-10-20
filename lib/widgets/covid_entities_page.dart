@@ -35,7 +35,7 @@ import 'ui_colors.dart';
 import 'ui_parameters.dart';
 
 class CovidEntitiesPage extends StatefulWidget {
-  CovidEntitiesPage({Key? key, required this.title}) : super(key: key);
+  const CovidEntitiesPage({Key? key, required this.title}) : super(key: key);
   final String title;
 
   @override

@@ -17,10 +17,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../models/app_display_state_model.dart';
-import '../models/covid_timeseries_model.dart';
-import '../models/model_constants.dart';
-import 'covid_chart_group_page.dart';
-import 'star_actions_popup_menu.dart';
 import 'ui_constants.dart';
 
 PopupMenuButton<String> buildStarPopupMenuButton(BuildContext context,
@@ -31,56 +27,36 @@ PopupMenuButton<String> buildStarPopupMenuButton(BuildContext context,
       onSelected: (String starName) {
         var pageModel =
             Provider.of<AppDisplayStateModel>(context, listen: false);
-        var timeseriesModel =
-            Provider.of<CovidTimeseriesModel>(context, listen: false);
         if (starName == UiConstants.saveStar) {
           showDialog(context: context, builder: buildSaveStarDialog);
-        } else {
-          pageModel.loadStar(starName);
-          List<List<String>> starPaths = pageModel.getAllModelPaths();
-          timeseriesModel.loadEntities(starPaths);
-          if (openChartPage) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                      Container(child: CovidChartGroupPage())),
-            );
-          }
+        } else if (starName == UiConstants.viewStar) {
+          pageModel.selectedStarName = '';
+          Navigator.pushNamedAndRemoveUntil(
+              context, '/starred_charts', ModalRoute.withName('/'));
         }
       },
       itemBuilder: (BuildContext context) {
-        var pageModel =
-            Provider.of<AppDisplayStateModel>(context, listen: false);
-        var starNames = List<String>.from(pageModel
-            .getStarredNames()
-            .where((element) => element != ModelConstants.startupStarName));
-        starNames.sort();
-        var menuEntries = List<PopupMenuEntry<String>>.from(
-            starNames.map((name) => PopupMenuItem(
-                value: name,
-                child: ListTile(
-                  title: Text(name),
-                  trailing:
-                      buildStarActionsPopupMenuButton(context, name, true),
-                ))));
-        if (menuEntries.length > 0) {
-          menuEntries.insert(0, PopupMenuDivider());
-        }
+        var menuEntries = <PopupMenuEntry<String>>[];
         TextStyle? saveStyle =
             (openChartPage) ? TextStyle(color: UiColors.disabledText) : null;
-        menuEntries.insert(
-            0,
-            PopupMenuItem(
-                value: UiConstants.saveStar,
-                enabled: !openChartPage,
-                child: ListTile(
-                  title: Text(
-                    UiConstants.saveStar,
-                    style: saveStyle,
-                  ),
-                  trailing: Opacity(opacity: 0.0, child: Icon(Icons.edit)),
-                )));
+        menuEntries = <PopupMenuEntry<String>>[
+          PopupMenuItem(
+              value: UiConstants.saveStar,
+              enabled: !openChartPage,
+              child: ListTile(
+                title: Text(
+                  UiConstants.saveStar,
+                  style: saveStyle,
+                ),
+              )),
+          PopupMenuItem(
+              value: UiConstants.viewStar,
+              child: ListTile(
+                title: Text(
+                  UiConstants.viewStar,
+                ),
+              )),
+        ];
         return menuEntries;
       });
 }
