@@ -56,12 +56,25 @@ class AppDatabase {
 
     var rawList = await _database.query('starred', columns: ['name', 'spec']);
 
+    final hexRegExp = RegExp(r'^[0-9a-fA-F]*$');
+
     List<Map<String, String>> starred = [];
     for (var item in rawList) {
-      String nameHex = item['name'].toString();
-      String specHex = item['spec'].toString();
-      var name = decodeUtf8Hex(nameHex);
-      var spec = decodeUtf8Hex(specHex);
+      String name = item['name'].toString();
+      String spec = item['spec'].toString();
+
+      // If fields are stored as hex strings decode them,
+      // then update the database to contain the decoded versions.
+      // TODO: remove hex decode after all test installations are updated.
+      if (hexRegExp.hasMatch(name)) {
+        var nameHex = name;
+        name = decodeUtf8Hex(name);
+        spec = decodeUtf8Hex(spec);
+        addStarred(name, spec);
+        await _database
+            .delete('starred', where: 'name = ?', whereArgs: [nameHex]);
+      }
+
       starred.add({'name': name, 'spec': spec});
     }
 
@@ -73,28 +86,12 @@ class AppDatabase {
       return 0;
     }
 
-    // TODO: Why does this throw an exception?
-    // var row = {
-    //   'name': name,
-    //   'spec': spec,
-    // };
-    // await _database.insert('starred', row,
-    //     ConflictAlgorithm: ConflictAlgorithm.replace);
-
-    // TODO: until the exception issue is resolved, convert strings to hex
-    // to sanitize them for use in raw database operations.
-    final nameHex = encodeUtf8Hex(name);
-    final specHex = encodeUtf8Hex(spec);
-
-    List<Map> recordList = await _database
-        .rawQuery('SELECT * from starred WHERE name = "$nameHex"');
-    if (recordList.isEmpty) {
-      await _database.rawInsert(
-          'INSERT INTO starred (name, spec) VALUES("$nameHex", "$specHex")');
-    } else {
-      await _database.rawUpdate(
-          'UPDATE starred SET spec = ? WHERE name = ?', [specHex, nameHex]);
-    }
+    var row = {
+      'name': name,
+      'spec': spec,
+    };
+    await _database.insert('starred', row,
+        conflictAlgorithm: ConflictAlgorithm.replace);
 
     return 1;
   }
@@ -104,9 +101,9 @@ class AppDatabase {
       return 0;
     }
 
-    final nameHex = encodeUtf8Hex(name);
-    var count = await _database
-        .delete('starred', where: 'name = ?', whereArgs: [nameHex]);
+    var count =
+        await _database.delete('starred', where: 'name = ?', whereArgs: [name]);
+
     return count;
   }
 
