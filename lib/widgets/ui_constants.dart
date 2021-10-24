@@ -14,6 +14,7 @@
 
 import '../models/covid_series_id.dart';
 import '../models/region_metric_id.dart';
+import '../theme/graph_colors.dart';
 
 class UiConstants {
   // UI strings.
@@ -48,6 +49,33 @@ class UiConstants {
     return (metricId == RegionMetricId.None)
         ? noSortMetricName
         : metricIdLabel(metricId);
+  }
+
+  static String graphLineHighlightDescription(
+      GraphLineHighlightTypes highlightType) {
+    switch (highlightType) {
+      case GraphLineHighlightTypes.pop:
+        return 'Pop colors';
+      case GraphLineHighlightTypes.toTrueBlack:
+        return 'Shift to black';
+      case GraphLineHighlightTypes.toColoredBlack:
+        return 'Shift to colored black';
+    }
+  }
+
+  static String graphLineFadeDescription(GraphLineFadeTypes fadeType) {
+    switch (fadeType) {
+      case GraphLineFadeTypes.toTrueBlack:
+        return 'Shift to black';
+      case GraphLineFadeTypes.toColoredBlack:
+        return 'Shift to colored black';
+      case GraphLineFadeTypes.toTrueWhite:
+        return 'Shift to white';
+      case GraphLineFadeTypes.toColoredWhite:
+        return 'Shift to colored white';
+      case GraphLineFadeTypes.toGrey:
+        return 'Shift to grey';
+    }
   }
 
   // UI region popu menu sort metrics.
