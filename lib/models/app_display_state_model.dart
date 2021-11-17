@@ -12,14 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'package:covid_trends/models/starred_chart_examples.dart';
 import 'package:covid_trends/models/starred_model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../theme/graph_colors.dart';
 import 'app_data_cache.dart';
+import 'app_shared_preferences.dart';
 import 'comparison_graph_model.dart';
 import 'covid_series_id.dart';
 import 'region_metric_id.dart';
@@ -29,8 +30,8 @@ import 'starred_model.dart';
 /// Holds the main application display state in a model outside the widget tree.
 class AppDisplayStateModel with ChangeNotifier {
   var _appInfo = CovidAppInfo();
-  var _appPreferences = CovidAppSharedPreferences();
-  AppDataCache? appDataCache;
+  var _appPreferences = AppSharedPreferences();
+  var _appDataCache = AppDataCache('app_state');
   List<String> _entityPagePath = List<String>.empty();
   List<String> _chartPath = List<String>.empty();
   var _comparisonGraphModel = ComparisonGraphModel();
@@ -45,16 +46,30 @@ class AppDisplayStateModel with ChangeNotifier {
   AppDisplayStateModel(List<String> path)
       : _entityPagePath = List<String>.from(path),
         _chartPath = List<String>.from(path) {
-    appDataCache = AppDataCache('app_state', onInitFinish: () {
-      loadStar(ModelConstants.startupStarName);
-    });
-    _appInfo.load();
-    _appPreferences.load(notify);
+    initializeLocalDataStores();
+  }
+
+  void initializeLocalDataStores() async {
+    _appInfo.initialize();
+
+    await Future.wait<void>([
+      _appDataCache.initialize(),
+      _appPreferences.initialize(),
+    ]);
+    loadStar(ModelConstants.startupStarName);
+    if (_appPreferences.addExampleCharts) {
+      addStarredList(starredChartExamples);
+      _appPreferences.addExampleCharts = false;
+    }
   }
 
   String get appName => _appInfo.appName;
   String get appVersion => _appInfo.version;
   String get appBuild => _appInfo.buildNumber;
+
+  set addExampleChartsPreference(bool value) {
+    _appPreferences.addExampleCharts = value;
+  }
 
   List<String> entityPagePath() {
     return List<String>.from(_entityPagePath);
@@ -216,7 +231,7 @@ class AppDisplayStateModel with ChangeNotifier {
   }
 
   List<String> getStarredNames() {
-    return appDataCache?.getStarredNames() ?? [];
+    return _appDataCache.getStarredNames() ?? [];
   }
 
   String get selectedStarName => _selectedStarName;
@@ -243,26 +258,33 @@ class AppDisplayStateModel with ChangeNotifier {
       _comparisonGraphModel.highlightType,
       _comparisonGraphModel.highlightFactor,
     );
-    appDataCache?.addStarred(name, star);
+    _appDataCache.addStarred(name, star);
+    notifyListeners();
+  }
+
+  void addStarredList(List<StarredModel> stars) {
+    for (var star in stars) {
+      _appDataCache.addStarred(star.name, star);
+    }
     notifyListeners();
   }
 
   void deleteStar(String name) {
-    appDataCache?.deleteStarred(name);
+    _appDataCache.deleteStarred(name);
     notifyListeners();
   }
 
   void renameStar(String oldName, String newName) {
-    var star = appDataCache?.getStarred(oldName);
+    var star = _appDataCache.getStarred(oldName);
     if (star != null) {
-      appDataCache!.deleteStarred(oldName);
-      appDataCache!.addStarred(newName, star);
+      _appDataCache.deleteStarred(oldName);
+      _appDataCache.addStarred(newName, star);
     }
     notifyListeners();
   }
 
   void loadStar(String name) {
-    var star = appDataCache?.getStarred(name);
+    var star = _appDataCache.getStarred(name);
     if (star != null) {
       _compareRegion = star.compareRegion;
       _per100k = star.per100k;
@@ -341,41 +363,13 @@ class AppDisplayStateModel with ChangeNotifier {
   }
 }
 
-/// Covid app shared preferences settings.
-class CovidAppSharedPreferences {
-  final String _singleChartStrokeWidthKey = 'SingleChartStrokeWidth';
-  double _singleChartStrokeWidth = 3.0;
-
-  SharedPreferences? _preferences;
-
-  void load(void Function() callback) async {
-    _preferences = await SharedPreferences.getInstance();
-
-    double? value = _preferences?.getDouble(_singleChartStrokeWidthKey);
-    if (value != null) {
-      _singleChartStrokeWidth = value;
-    }
-
-    callback();
-  }
-
-  double get singleChartStrokeWidth => _singleChartStrokeWidth;
-
-  set singleChartStrokeWidth(double value) {
-    _singleChartStrokeWidth = value;
-    if (_preferences != null) {
-      _preferences?.setDouble(_singleChartStrokeWidthKey, value);
-    }
-  }
-}
-
 /// Holds app version and build info.
 class CovidAppInfo {
   String appName = 'Covid Flows';
   String version = '1.0';
   String buildNumber = '';
 
-  void load() async {
+  void initialize() async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
 
     appName = packageInfo.appName;

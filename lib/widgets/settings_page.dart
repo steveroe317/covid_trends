@@ -16,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../models/app_display_state_model.dart';
+import '../models/starred_chart_examples.dart';
 import '../theme/size_scale.dart';
 
 enum SingleChartLineWidth {
@@ -80,9 +81,26 @@ class SettingsPage extends StatelessWidget {
     var pageModel = Provider.of<AppDisplayStateModel>(context);
     var singleStrokeWidth = SingleChartLineWidthDoubles.fromDouble(
         pageModel.singleChartStrokeWidth);
+
     var settingsItems = <Widget>[];
     settingsItems.add(ListTile(
-      title: Text('Single chart line width (experiment)'),
+      leading: Icon(Icons.refresh),
+      title: Text('Reload Saved Example Charts',
+          style: TextStyle(fontSize: SizeScale.px16)),
+      onTap: () {
+        pageModel.addStarredList(starredChartExamples);
+      },
+    ));
+    settingsItems.add(ListTile(
+      leading: Icon(Icons.science),
+      title: Text('Reload Saved Example Charts on Startup',
+          style: TextStyle(fontSize: SizeScale.px16)),
+      onTap: () {
+        pageModel.addExampleChartsPreference = true;
+      },
+    ));
+    settingsItems.add(ListTile(
+      title: Text('Set single chart line width (experiment)'),
     ));
     SingleChartLineWidth.values.forEach((value) {
       settingsItems.add(RadioListTile<SingleChartLineWidth>(
@@ -96,6 +114,7 @@ class SettingsPage extends StatelessWidget {
         },
       ));
     });
+
     return Scaffold(
         appBar: AppBar(title: Text('Settings')),
         body: Center(
