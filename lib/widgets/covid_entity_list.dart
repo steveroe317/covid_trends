@@ -36,12 +36,11 @@ class CovidEntityList extends StatelessWidget {
     var timeseriesModel = Provider.of<CovidTimeseriesModel>(context);
     var pageModel = Provider.of<AppDisplayStateModel>(context);
     var uiParameters = context.watch<UiParameters>();
-    final childNames = timeseriesModel.entityChildNames(
-        pageModel.entityPagePath(),
+    final childNames = timeseriesModel.entityChildNames(pageModel.parentPath(),
         sortMetricId: pageModel.sortMetric,
         sortUp: false,
         per100k: pageModel.per100k);
-    final currentPath = pageModel.entityPagePath();
+    final currentPath = pageModel.parentPath();
     final numberFormatter = NumberFormat('#,###');
 
     // Add the entity list header.

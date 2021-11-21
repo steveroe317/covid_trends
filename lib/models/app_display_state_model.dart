@@ -32,7 +32,7 @@ class AppDisplayStateModel with ChangeNotifier {
   var _appInfo = CovidAppInfo();
   var _appPreferences = AppSharedPreferences();
   var _appDataCache = AppDataCache('app_state');
-  List<String> _entityPagePath = List<String>.empty();
+  List<String> _parentPath = List<String>.empty();
   List<String> _chartPath = List<String>.empty();
   var _comparisonGraphModel = ComparisonGraphModel();
   RegionMetricId _sortMetric = RegionMetricId.None;
@@ -44,7 +44,7 @@ class AppDisplayStateModel with ChangeNotifier {
   String _entitySearchString = '';
 
   AppDisplayStateModel(List<String> path)
-      : _entityPagePath = List<String>.from(path),
+      : _parentPath = List<String>.from(path),
         _chartPath = List<String>.from(path) {
     initializeLocalDataStores();
   }
@@ -71,12 +71,12 @@ class AppDisplayStateModel with ChangeNotifier {
     _appPreferences.addExampleCharts = value;
   }
 
-  List<String> entityPagePath() {
-    return List<String>.from(_entityPagePath);
+  List<String> parentPath() {
+    return List<String>.from(_parentPath);
   }
 
-  void setEntityPagePath(List<String> path) {
-    _entityPagePath = List<String>.from(path);
+  void setParentPath(List<String> path) {
+    _parentPath = List<String>.from(path);
     notifyListeners();
   }
 
@@ -150,7 +150,7 @@ class AppDisplayStateModel with ChangeNotifier {
   List<List<String>> getAllModelPaths() {
     // TODO: filter duplicate paths.
     List<List<String>> allPaths = [];
-    allPaths.add(_entityPagePath);
+    allPaths.add(_parentPath);
     allPaths.add(_chartPath);
     for (var path in _comparisonGraphModel.pathList) {
       allPaths.add(path);
@@ -247,7 +247,7 @@ class AppDisplayStateModel with ChangeNotifier {
       _compareRegion,
       per100k,
       seriesLength,
-      _entityPagePath,
+      _parentPath,
       _chartPath,
       _comparisonGraphModel.pathList,
       _comparisonGraphModel.pathColorIndexes,
@@ -289,7 +289,7 @@ class AppDisplayStateModel with ChangeNotifier {
       _compareRegion = star.compareRegion;
       _per100k = star.per100k;
       _seriesLength = star.seriesLength;
-      _entityPagePath = star.path.toList();
+      _parentPath = star.path.toList();
       _comparisonGraphModel.clear();
       _chartPath = star.chartPath.toList();
 

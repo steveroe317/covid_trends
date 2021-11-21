@@ -104,12 +104,12 @@ class CovidEntityListItem extends StatelessWidget {
   }
 
   void _openParentPath() {
-    _pageModel.setEntityPagePath(_path.sublist(0, _path.length - 1));
+    _pageModel.setParentPath(_path.sublist(0, _path.length - 1));
   }
 
   void _openPath() {
     _timeseriesModel.loadEntity(_path);
-    _pageModel.setEntityPagePath(_path);
+    _pageModel.setParentPath(_path);
   }
 
   String _metricValueString() {

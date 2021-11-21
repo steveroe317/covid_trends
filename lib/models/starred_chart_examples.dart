@@ -21,7 +21,7 @@ var starredChartExamples = <StarredModel>[
     true,
     true,
     0,
-    ['World', 'United States', 'California'],
+    ['World', 'United States'],
     ['World', 'United States', 'California'],
     [
       ['World', 'United States', 'California'],
@@ -40,7 +40,7 @@ var starredChartExamples = <StarredModel>[
     false,
     true,
     240,
-    ['World', 'Israel'],
+    ['World'],
     ['World', 'Israel'],
     [
       ['World', 'Israel'],
@@ -58,7 +58,7 @@ var starredChartExamples = <StarredModel>[
     true,
     true,
     60,
-    ['World', 'United States'],
+    ['World', 'United States', 'Washington'],
     ['World', 'United States'],
     [
       ['World', 'United States'],
@@ -79,7 +79,7 @@ var starredChartExamples = <StarredModel>[
     true,
     true,
     0,
-    ['World', 'Australia'],
+    ['World'],
     ['World', 'Australia'],
     [
       ['World', 'Australia'],
@@ -98,8 +98,8 @@ var starredChartExamples = <StarredModel>[
     true,
     true,
     0,
-    ['World', 'Finland'],
-    ['World', 'Finland'],
+    ['World'],
+    ['World', 'Sweden'],
     [
       ['World', 'Finland'],
       ['World', 'Denmark'],
@@ -119,7 +119,7 @@ var starredChartExamples = <StarredModel>[
     false,
     true,
     240,
-    ['World', 'United Kingdom'],
+    ['World'],
     ['World', 'United Kingdom'],
     [
       ['World', 'United Kingdom'],
