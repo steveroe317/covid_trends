@@ -24,7 +24,7 @@ import 'experiments_page.dart';
 import 'settings_page.dart';
 import 'ui_parameters.dart';
 
-class CovidTrendsNavigationSidebar extends StatelessWidget {
+class CovidEntityPageDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var uiParameters = context.read<UiParameters>();

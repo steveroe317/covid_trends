@@ -26,7 +26,7 @@ import 'covid_entity_list.dart';
 import 'date_range_popup_menu.dart';
 import 'highlight_region_popup_menu.dart';
 //import 'debug_popup_menu.dart';
-import 'navigation_sidebar.dart';
+import 'covid_entity_page_drawer.dart';
 import 'per_100k_popup_menu.dart';
 import 'share_button.dart';
 import 'sort_popup_menu.dart';
@@ -91,7 +91,7 @@ class _CovidEntitiesPageState extends State<CovidEntitiesPage> {
           bottom: true,
           minimum: EdgeInsets.zero,
           child: _CovidEntitiesWideListBody(chartGroupKey)),
-      drawer: CovidTrendsNavigationSidebar(),
+      drawer: CovidEntityPageDrawer(),
     );
   }
 }
@@ -117,7 +117,7 @@ Scaffold _buildNarrowScaffold(BuildContext context) {
       actions: actions,
     ),
     body: _CovidEntitiesNarrowListBody(),
-    drawer: CovidTrendsNavigationSidebar(),
+    drawer: CovidEntityPageDrawer(),
   );
 }
 
