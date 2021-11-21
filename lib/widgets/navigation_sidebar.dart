@@ -20,6 +20,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../theme/palette_colors.dart';
 import 'covid_about_list_tile.dart';
+import 'experiments_page.dart';
 import 'settings_page.dart';
 import 'ui_parameters.dart';
 
@@ -71,6 +72,17 @@ class CovidTrendsNavigationSidebar extends StatelessWidget {
                         MaterialPageRoute(
                             builder: (context) =>
                                 Container(child: SettingsPage())));
+                  }),
+              ListTile(
+                  leading: Icon(Icons.science),
+                  title: Text('Experiments'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                Container(child: ExperimentsPage())));
                   }),
               ListTile(
                 leading: Icon(Icons.help),
