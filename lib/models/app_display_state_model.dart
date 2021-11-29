@@ -231,7 +231,7 @@ class AppDisplayStateModel with ChangeNotifier {
   }
 
   List<String> getStarredNames() {
-    return _appDataCache.getStarredNames() ?? [];
+    return _appDataCache.getStarredNames();
   }
 
   String get selectedStarName => _selectedStarName;
