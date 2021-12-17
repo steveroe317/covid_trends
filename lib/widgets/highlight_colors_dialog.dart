@@ -35,6 +35,86 @@ Widget buildTallHighlightColorDialog(BuildContext context, bool isTall) {
   var pageModel = Provider.of<AppDisplayStateModel>(context);
 
   // Widgets for chart highlight color adjustments.
+  List<Widget> highlightColorWidgets = editHighlightsWidgets(pageModel);
+
+  var closeButtonWidget = TextButton(
+    onPressed: () {
+      Navigator.of(context).pop();
+    },
+    child: Text('Close'),
+  );
+
+  // Set up chart and highlight widgets in either portrait or landscape mode.
+  var chartHighlightColorWidgets = (isTall)
+      ? Column(children: [
+          Container(
+            constraints: BoxConstraints(maxHeight: 290, maxWidth: 320),
+            child:
+                Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+              Scrollbar(
+                  isAlwaysShown: true,
+                  thickness: SizeScale.px8,
+                  child: Container(
+                      color: UiColors.entityListLeaf,
+                      constraints:
+                          BoxConstraints(maxHeight: 250, maxWidth: 320),
+                      child: ListView(children: highlightColorWidgets)))
+            ]),
+          ),
+          Container(
+            constraints: BoxConstraints(maxHeight: 220, maxWidth: 320),
+            padding: EdgeInsets.fromLTRB(
+                SizeScale.px8, SizeScale.px16, SizeScale.px8, 0),
+            child: CovidChart(CovidSeriesId.ConfirmedDaily, false, null),
+          ),
+          closeButtonWidget,
+        ])
+      : Container(
+          constraints: BoxConstraints(maxHeight: 270, maxWidth: 575),
+          child: Row(children: [
+            Container(
+              color: UiColors.entityListLeaf,
+              constraints: BoxConstraints(maxHeight: 270, maxWidth: 225),
+              child:
+                  Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+                Scrollbar(
+                  isAlwaysShown: true,
+                  thickness: SizeScale.px8,
+                  child: Container(
+                      constraints:
+                          BoxConstraints(maxHeight: 230, maxWidth: 225),
+                      child: ListView(children: highlightColorWidgets)),
+                )
+              ]),
+            ),
+            Container(
+              child: Column(
+                children: [
+                  Container(
+                    constraints: BoxConstraints(maxHeight: 220, maxWidth: 350),
+                    padding: EdgeInsets.fromLTRB(
+                        SizeScale.px16, SizeScale.px16, SizeScale.px16, 0),
+                    child:
+                        CovidChart(CovidSeriesId.ConfirmedDaily, false, null),
+                  ),
+                  closeButtonWidget,
+                ],
+              ),
+            ),
+          ]));
+
+  return Dialog(
+      child: Column(
+    mainAxisSize: MainAxisSize.min,
+    crossAxisAlignment: CrossAxisAlignment.center,
+    children: [
+      chartHighlightColorWidgets,
+    ],
+  ));
+}
+
+List<Widget> editHighlightsWidgets(AppDisplayStateModel pageModel) {
+  // Widgets for chart highlight color adjustments.
   var highlightColorWidgets = <Widget>[];
 
   // Create widgets for the dialog's hightlight options column.
@@ -151,78 +231,5 @@ Widget buildTallHighlightColorDialog(BuildContext context, bool isTall) {
           pageModel.restoreHighlightFadeDefaults();
         },
       )));
-  var closeButtonWidget = TextButton(
-    onPressed: () {
-      Navigator.of(context).pop();
-    },
-    child: Text('Close'),
-  );
-
-  // Set up chart and highlight widgets in either portrait or landscape mode.
-  var chartHighlightColorWidgets = (isTall)
-      ? Column(children: [
-          Container(
-            constraints: BoxConstraints(maxHeight: 290, maxWidth: 320),
-            child:
-                Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-              Scrollbar(
-                  isAlwaysShown: true,
-                  thickness: SizeScale.px8,
-                  child: Container(
-                      color: UiColors.entityListLeaf,
-                      constraints:
-                          BoxConstraints(maxHeight: 250, maxWidth: 320),
-                      child: ListView(children: highlightColorWidgets)))
-            ]),
-          ),
-          Container(
-            constraints: BoxConstraints(maxHeight: 220, maxWidth: 320),
-            padding: EdgeInsets.fromLTRB(
-                SizeScale.px8, SizeScale.px16, SizeScale.px8, 0),
-            child: CovidChart(CovidSeriesId.ConfirmedDaily, false, null),
-          ),
-          closeButtonWidget,
-        ])
-      : Container(
-          constraints: BoxConstraints(maxHeight: 270, maxWidth: 575),
-          child: Row(children: [
-            Container(
-              color: UiColors.entityListLeaf,
-              constraints: BoxConstraints(maxHeight: 270, maxWidth: 225),
-              child:
-                  Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-                Scrollbar(
-                  isAlwaysShown: true,
-                  thickness: SizeScale.px8,
-                  child: Container(
-                      constraints:
-                          BoxConstraints(maxHeight: 230, maxWidth: 225),
-                      child: ListView(children: highlightColorWidgets)),
-                )
-              ]),
-            ),
-            Container(
-              child: Column(
-                children: [
-                  Container(
-                    constraints: BoxConstraints(maxHeight: 220, maxWidth: 350),
-                    padding: EdgeInsets.fromLTRB(
-                        SizeScale.px16, SizeScale.px16, SizeScale.px16, 0),
-                    child:
-                        CovidChart(CovidSeriesId.ConfirmedDaily, false, null),
-                  ),
-                  closeButtonWidget,
-                ],
-              ),
-            ),
-          ]));
-
-  return Dialog(
-      child: Column(
-    mainAxisSize: MainAxisSize.min,
-    crossAxisAlignment: CrossAxisAlignment.center,
-    children: [
-      chartHighlightColorWidgets,
-    ],
-  ));
+  return highlightColorWidgets;
 }

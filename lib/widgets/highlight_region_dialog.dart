@@ -54,22 +54,8 @@ Widget buildTallHighlightRegionDialog(BuildContext context, bool isTall) {
   ));
 
   // Create region highlight widgets for the dialog's fade options column.
-  var regionWidgets = <Widget>[];
-  for (var path in pageModel.comparisonPathList) {
-    var pathName = RegionPath.name(path);
-    bool highlighted = regionHighlighted[pathName] ?? false;
-    regionWidgets.add(ListTile(
-      leading:
-          Opacity(opacity: highlighted ? 1.0 : 0.0, child: Icon(Icons.check)),
-      title: Text(path.last, style: TextStyle(fontWeight: FontWeight.bold)),
-      visualDensity: listDensity,
-      tileColor: UiColors.entityListLeaf,
-      onTap: () {
-        var highlighted = regionHighlighted[pathName] ?? false;
-        pageModel.setComparisonPathHighlight(path, !highlighted);
-      },
-    ));
-  }
+  List<Widget> regionWidgets = editHighlightRegionsWidgets(
+      pageModel, true, regionHighlighted, listDensity);
 
   var closeButtonWidget = TextButton(
     onPressed: () {
@@ -138,4 +124,46 @@ Widget buildTallHighlightRegionDialog(BuildContext context, bool isTall) {
       chartHighlightWidgets,
     ],
   ));
+}
+
+List<Widget> editHighlightRegionsWidgets(
+    AppDisplayStateModel pageModel,
+    bool isMenuSegment,
+    Map<String, bool> regionHighlighted,
+    VisualDensity listDensity) {
+  var regionWidgets = <Widget>[];
+
+  if (isMenuSegment) {
+    // Create region header widget. The Material widget is used so that the
+    // header widgets color will overlay a surrounding Container widget's color.
+    var regionHeader = Material(
+        child: ListTile(
+      visualDensity: listDensity,
+      title: Text('Highlight Regions',
+          style: TextStyle(fontWeight: FontWeight.bold)),
+      tileColor: UiColors.entityListHeader,
+      onTap: () {},
+    ));
+    regionWidgets.add(regionHeader);
+  }
+
+  var menuItemTextStyle = TextStyle(
+      fontWeight: (isMenuSegment) ? FontWeight.normal : FontWeight.bold);
+
+  for (var path in pageModel.comparisonPathList) {
+    var pathName = RegionPath.name(path);
+    bool highlighted = regionHighlighted[pathName] ?? false;
+    regionWidgets.add(ListTile(
+      leading:
+          Opacity(opacity: highlighted ? 1.0 : 0.0, child: Icon(Icons.check)),
+      title: Text(path.last, style: menuItemTextStyle),
+      visualDensity: listDensity,
+      tileColor: UiColors.entityListLeaf,
+      onTap: () {
+        var highlighted = regionHighlighted[pathName] ?? false;
+        pageModel.setComparisonPathHighlight(path, !highlighted);
+      },
+    ));
+  }
+  return regionWidgets;
 }

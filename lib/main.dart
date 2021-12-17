@@ -15,6 +15,7 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:covid_trends/models/model_constants.dart';
+import 'package:covid_trends/widgets/edit_chart_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -24,6 +25,7 @@ import 'models/covid_timeseries_model.dart';
 import 'models/app_display_state_model.dart';
 import 'theme/palette_colors.dart';
 import 'widgets/covid_entities_page.dart';
+import 'widgets/edit_chart_page.dart';
 import 'widgets/initialization_error_page.dart';
 import 'widgets/loading_page.dart';
 import 'widgets/starred_chart_page.dart';
@@ -197,6 +199,8 @@ class _CovidApp extends StatelessWidget {
           '/': (context) => const CovidEntitiesPage(title: 'Covid Flows'),
           '/starred_charts': (context) =>
               const StarredChartPage(title: 'Saved Charts'),
+          '/adjust_charts': (context) =>
+              const EditChartPage(title: 'Adjust Chart Options'),
         });
   }
 }

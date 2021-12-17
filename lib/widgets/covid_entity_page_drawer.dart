@@ -63,6 +63,17 @@ class CovidEntityPageDrawer extends StatelessWidget {
                     Navigator.pushNamed(context, '/starred_charts');
                   }),
               ListTile(
+                  leading: Icon(Icons.tune),
+                  title: Text('Adjust Chart Options'),
+                  onTap: () {
+                    pageModel.selectedStarName = '';
+                    // Explictly popping and pushing here because using
+                    // Navigator.pushNamedAndRemoveUntil here does not add
+                    // a back arrow to the scaffold.
+                    Navigator.pop(context);
+                    Navigator.pushNamed(context, '/adjust_charts');
+                  }),
+              ListTile(
                   leading: Icon(Icons.settings),
                   title: Text('Settings'),
                   onTap: () {
