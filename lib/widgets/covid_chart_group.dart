@@ -42,47 +42,61 @@ class CovidChartGroup extends StatelessWidget {
 }
 
 class CovidChartList extends StatelessWidget {
-  final double constraintsHeight;
-
   CovidChartList(this.constraintsHeight);
+
+  final double constraintsHeight;
+  final ScrollController _chartListController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
     var labelledChartHeight =
         max(UiConstants.minCovidChartHeight, constraintsHeight / 4);
-    return ListView(
-      children: <Widget>[
-        _LabelledCovidChart(CovidSeriesId.ConfirmedDaily, labelledChartHeight),
-        _LabelledCovidChart(CovidSeriesId.DeathsDaily, labelledChartHeight),
-        _LabelledCovidChart(CovidSeriesId.Confirmed, labelledChartHeight),
-        _LabelledCovidChart(CovidSeriesId.Deaths, labelledChartHeight),
-      ],
-    );
+    return Scrollbar(
+        isAlwaysShown: true,
+        controller: _chartListController,
+        thickness: SizeScale.px8,
+        child: ListView(
+          controller: _chartListController,
+          children: <Widget>[
+            _LabelledCovidChart(
+                CovidSeriesId.ConfirmedDaily, labelledChartHeight),
+            _LabelledCovidChart(CovidSeriesId.DeathsDaily, labelledChartHeight),
+            _LabelledCovidChart(CovidSeriesId.Confirmed, labelledChartHeight),
+            _LabelledCovidChart(CovidSeriesId.Deaths, labelledChartHeight),
+          ],
+        ));
   }
 }
 
 class CovidChartTable extends StatelessWidget {
-  final double constraintsHeight;
-
   CovidChartTable(this.constraintsHeight);
+
+  final double constraintsHeight;
+  final ScrollController _chartTableController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
     var labelledChartHeight =
         max(UiConstants.minCovidChartHeight, constraintsHeight / 2);
-    return GridView.count(
-      primary: false,
-      padding: const EdgeInsets.all(0),
-      crossAxisSpacing: SizeScale.px8,
-      mainAxisSpacing: 0,
-      crossAxisCount: 2,
-      children: [
-        _LabelledCovidChart(CovidSeriesId.ConfirmedDaily, labelledChartHeight),
-        _LabelledCovidChart(CovidSeriesId.Confirmed, labelledChartHeight),
-        _LabelledCovidChart(CovidSeriesId.DeathsDaily, labelledChartHeight),
-        _LabelledCovidChart(CovidSeriesId.Deaths, labelledChartHeight),
-      ],
-    );
+    return Scrollbar(
+        isAlwaysShown: true,
+        controller: _chartTableController,
+        thickness: SizeScale.px8,
+        child: GridView.count(
+          primary: false,
+          padding: const EdgeInsets.all(0),
+          crossAxisSpacing: SizeScale.px8,
+          mainAxisSpacing: 0,
+          crossAxisCount: 2,
+          controller: _chartTableController,
+          children: [
+            _LabelledCovidChart(
+                CovidSeriesId.ConfirmedDaily, labelledChartHeight),
+            _LabelledCovidChart(CovidSeriesId.Confirmed, labelledChartHeight),
+            _LabelledCovidChart(CovidSeriesId.DeathsDaily, labelledChartHeight),
+            _LabelledCovidChart(CovidSeriesId.Deaths, labelledChartHeight),
+          ],
+        ));
   }
 }
 
