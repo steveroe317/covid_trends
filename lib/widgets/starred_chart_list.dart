@@ -24,9 +24,10 @@ import 'ui_colors.dart';
 import 'ui_parameters.dart';
 
 class StarredChartList extends StatelessWidget {
-  final void Function(AppDisplayStateModel, String) _onSavedChartPressed;
-
   StarredChartList(this._onSavedChartPressed);
+
+  final void Function(AppDisplayStateModel, String) _onSavedChartPressed;
+  final ScrollController _starredListController = ScrollController();
 
   @override
   build(BuildContext context) {
@@ -43,7 +44,6 @@ class StarredChartList extends StatelessWidget {
       ])
     ];
 
-    // TODO: This code is also in star_popup_menu.dart.  Refactor it.
     var starNames = List<String>.from(pageModel
         .getStarredNames()
         .where((element) => element != ModelConstants.startupStarName));
@@ -53,7 +53,13 @@ class StarredChartList extends StatelessWidget {
     for (var starName in starNames) {
       starredCharts.add(_StarredChartListItem(starName, _onSavedChartPressed));
     }
-    starList.add(Expanded(child: ListView(children: starredCharts)));
+    starList.add(Expanded(
+        child: Scrollbar(
+            isAlwaysShown: true,
+            controller: _starredListController,
+            thickness: SizeScale.px8,
+            child: ListView(
+                controller: _starredListController, children: starredCharts))));
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -98,10 +104,10 @@ class _StarredChartListHeader extends StatelessWidget {
 }
 
 class _StarredChartListItem extends StatelessWidget {
+  _StarredChartListItem(this.savedChartName, this.onSavedChartPressed);
+
   final String savedChartName;
   final void Function(AppDisplayStateModel, String) onSavedChartPressed;
-
-  _StarredChartListItem(this.savedChartName, this.onSavedChartPressed);
 
   @override
   build(BuildContext context) {

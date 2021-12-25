@@ -17,6 +17,7 @@ import 'package:provider/provider.dart';
 
 import '../models/app_display_state_model.dart';
 import 'covid_chart_group.dart';
+import 'covid_chart_group_page.dart';
 import 'edit_chart_list.dart';
 import 'ui_colors.dart';
 import 'ui_parameters.dart';
@@ -59,13 +60,26 @@ class EditChartNarrowBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // showChartGroup is inside build so it has access to the build context.
+    void showChartGroup() {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => Container(child: CovidChartGroupPage())),
+      );
+    }
+
     return Column(children: [
       Expanded(
           flex: 2,
-          child: Card(
-              elevation: 5.0,
-              child: RepaintBoundary(
-                  key: _chartGroupPage, child: CovidChartGroup()))),
+          child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: showChartGroup,
+              onLongPress: showChartGroup,
+              child: Card(
+                  elevation: 5.0,
+                  child: RepaintBoundary(
+                      key: _chartGroupPage, child: CovidChartGroup())))),
       Expanded(
           flex: 3,
           child: SafeArea(

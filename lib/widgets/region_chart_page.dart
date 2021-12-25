@@ -25,9 +25,9 @@ import 'ui_colors.dart';
 import 'ui_parameters.dart';
 
 class CovidEntitiesWideBody extends StatelessWidget {
-  final Key _chartGroupPage;
-
   CovidEntitiesWideBody(this._chartGroupPage);
+
+  final Key _chartGroupPage;
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +35,7 @@ class CovidEntitiesWideBody extends StatelessWidget {
     var uiParameters = context.read<UiParameters>();
 
     // This onRegionPressed() function does not need the build context,
-    // so it could be defined outside build().
+    // so if pageModel was passed to it, it could be defined outside build().
     void onRegionPressed(
         CovidTimeseriesModel timeseriesModel, List<String> path) {
       timeseriesModel.loadEntity(path);
@@ -43,10 +43,12 @@ class CovidEntitiesWideBody extends StatelessWidget {
     }
 
     return Row(children: [
-      Container(
-          width: uiParameters.entityRowWidth,
-          color: UiColors.entityListLeaf,
-          child: CovidEntityList(onRegionPressed)),
+      Card(
+          elevation: 10.0,
+          child: Container(
+              width: uiParameters.entityRowWidth,
+              color: UiColors.entityListLeaf,
+              child: CovidEntityList(onRegionPressed))),
       Expanded(
         child: RepaintBoundary(key: _chartGroupPage, child: CovidChartGroup()),
       )
@@ -55,18 +57,23 @@ class CovidEntitiesWideBody extends StatelessWidget {
 }
 
 class CovidEntitiesNarrowBody extends StatelessWidget {
-  CovidEntitiesNarrowBody();
+  CovidEntitiesNarrowBody(this._chartGroupPage);
+
+  final Key _chartGroupPage;
 
   @override
   Widget build(BuildContext context) {
     var pageModel = Provider.of<AppDisplayStateModel>(context);
 
-    // onRegionPressed is inside build so that it has access to the context.
+    // onRegionPressed is inside build so that it has access to the page model.
     void onRegionPressed(
         CovidTimeseriesModel timeseriesModel, List<String> path) {
       timeseriesModel.loadEntity(path);
       pageModel.setChartPath(path);
+    }
 
+    // showChartGroup is inside build so it has access to the build context.
+    void showChartGroup() {
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -74,8 +81,25 @@ class CovidEntitiesNarrowBody extends StatelessWidget {
       );
     }
 
-    return Container(
-        color: UiColors.entityListLeaf,
-        child: CovidEntityList(onRegionPressed));
+    return Column(children: [
+      Expanded(
+          flex: 2,
+          child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: showChartGroup,
+              onLongPress: showChartGroup,
+              child: Card(
+                  elevation: 5.0,
+                  child: RepaintBoundary(
+                      key: _chartGroupPage, child: CovidChartGroup())))),
+      Expanded(
+          flex: 3,
+          child: SafeArea(
+              child: Card(
+                  elevation: 5.0,
+                  child: Container(
+                      color: UiColors.entityListLeaf,
+                      child: CovidEntityList(onRegionPressed)))))
+    ]);
   }
 }

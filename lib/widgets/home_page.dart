@@ -131,7 +131,7 @@ class NarrowHomePage extends StatelessWidget {
   static final chartGroupKey = GlobalKey();
 
   static List<Widget> narrowPages = [
-    CovidEntitiesNarrowBody(),
+    CovidEntitiesNarrowBody(chartGroupKey),
     StarredChartNarrowBody(chartGroupKey),
     EditChartNarrowBody(chartGroupKey),
   ];

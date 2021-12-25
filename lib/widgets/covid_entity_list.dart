@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.import 'dart:collection';
 
+import 'package:covid_trends/theme/size_scale.dart';
 import 'package:covid_trends/widgets/ui_parameters.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -27,9 +28,10 @@ import 'ui_colors.dart';
 import 'ui_parameters.dart';
 
 class CovidEntityList extends StatelessWidget {
-  final void Function(CovidTimeseriesModel, List<String>) _onRegionPressed;
-
   CovidEntityList(this._onRegionPressed);
+
+  final void Function(CovidTimeseriesModel, List<String>) _onRegionPressed;
+  final ScrollController _childRegionScrollController = ScrollController();
 
   @override
   build(BuildContext context) {
@@ -96,7 +98,14 @@ class CovidEntityList extends StatelessWidget {
             numberFormatter));
       }
     }
-    stemEntityList.add(Expanded(child: ListView(children: childEntityList)));
+    stemEntityList.add(Expanded(
+        child: Scrollbar(
+            isAlwaysShown: true,
+            controller: _childRegionScrollController,
+            thickness: SizeScale.px8,
+            child: ListView(
+                controller: _childRegionScrollController,
+                children: childEntityList))));
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
