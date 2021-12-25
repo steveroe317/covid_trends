@@ -25,14 +25,8 @@ PopupMenuButton<String> buildStarPopupMenuButton(BuildContext context,
       icon: const Icon(Icons.star),
       tooltip: 'Starred Charts',
       onSelected: (String starName) {
-        var pageModel =
-            Provider.of<AppDisplayStateModel>(context, listen: false);
         if (starName == UiConstants.saveStar) {
           showDialog(context: context, builder: buildSaveStarDialog);
-        } else if (starName == UiConstants.viewStar) {
-          pageModel.selectedStarName = '';
-          Navigator.pushNamedAndRemoveUntil(
-              context, '/starred_charts', ModalRoute.withName('/'));
         }
       },
       itemBuilder: (BuildContext context) {
@@ -47,13 +41,6 @@ PopupMenuButton<String> buildStarPopupMenuButton(BuildContext context,
                 title: Text(
                   UiConstants.saveStar,
                   style: saveStyle,
-                ),
-              )),
-          PopupMenuItem(
-              value: UiConstants.viewStar,
-              child: ListTile(
-                title: Text(
-                  UiConstants.viewStar,
                 ),
               )),
         ];

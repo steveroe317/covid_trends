@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.import 'dart:collection';
 
-import 'package:covid_trends/models/app_display_state_model.dart';
 import 'package:covid_trends/theme/size_scale.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -24,11 +23,10 @@ import 'experiments_page.dart';
 import 'settings_page.dart';
 import 'ui_parameters.dart';
 
-class CovidEntityPageDrawer extends StatelessWidget {
+class HomePageDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var uiParameters = context.read<UiParameters>();
-    var pageModel = context.watch<AppDisplayStateModel>();
     return SafeArea(
         left: true,
         right: true,
@@ -51,28 +49,6 @@ class CovidEntityPageDrawer extends StatelessWidget {
                             fontSize: SizeScale.px24,
                             fontWeight: FontWeight.w500)),
                   )),
-              ListTile(
-                  leading: Icon(Icons.star),
-                  title: Text('Saved Charts'),
-                  onTap: () {
-                    pageModel.selectedStarName = '';
-                    // Explictly popping and pushing here because using
-                    // Navigator.pushNamedAndRemoveUntil here does not add
-                    // a back arrow to the scaffold.
-                    Navigator.pop(context);
-                    Navigator.pushNamed(context, '/starred_charts');
-                  }),
-              ListTile(
-                  leading: Icon(Icons.tune),
-                  title: Text('Adjust Chart Options'),
-                  onTap: () {
-                    pageModel.selectedStarName = '';
-                    // Explictly popping and pushing here because using
-                    // Navigator.pushNamedAndRemoveUntil here does not add
-                    // a back arrow to the scaffold.
-                    Navigator.pop(context);
-                    Navigator.pushNamed(context, '/adjust_charts');
-                  }),
               ListTile(
                   leading: Icon(Icons.settings),
                   title: Text('Settings'),

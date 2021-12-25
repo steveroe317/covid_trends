@@ -16,91 +16,16 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../models/app_display_state_model.dart';
-
-import 'compare_region_popup_menu.dart';
 import 'covid_chart_group.dart';
 import 'covid_chart_group_page.dart';
-import 'date_range_popup_menu.dart';
-import 'highlight_region_popup_menu.dart';
-import 'per_100k_popup_menu.dart';
-import 'share_button.dart';
 import 'starred_chart_list.dart';
 import 'ui_colors.dart';
 import 'ui_parameters.dart';
 
-class StarredChartPage extends StatefulWidget {
-  final String title;
-
-  const StarredChartPage({Key? key, required this.title}) : super(key: key);
-
-  @override
-  _StarredChartPageState createState() => _StarredChartPageState();
-}
-
-class _StarredChartPageState extends State<StarredChartPage> {
-  @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (context, constraints) {
-      if (constraints.maxWidth > 700) {
-        return ChangeNotifierProvider<UiParameters>(
-            create: (_) => UiParameters(UiAppShape.Wide),
-            child: _buildWideScaffold(context, widget.title));
-      } else if (constraints.maxWidth >= 350) {
-        return ChangeNotifierProvider<UiParameters>(
-            create: (_) => UiParameters(UiAppShape.Narrow),
-            child: _buildNarrowScaffold(context));
-      } else {
-        return ChangeNotifierProvider<UiParameters>(
-            create: (_) => UiParameters(UiAppShape.Mini),
-            child: _buildNarrowScaffold(context));
-      }
-    });
-  }
-
-  Scaffold _buildWideScaffold(BuildContext context, String title) {
-    final chartGroupKey = GlobalKey();
-    var pageModel = Provider.of<AppDisplayStateModel>(context);
-
-    var actions = [
-      buildCompareRegionPopupMenuButton(context),
-      buildDateRangePopupMenuButton(context),
-      buildper100kPopupMenuButton(context),
-      buildShareButton(context, chartGroupKey),
-    ];
-    if (pageModel.compareRegion && pageModel.comparisonPathList.length > 1) {
-      actions.insert(
-          actions.length - 1, buildHighlightRegionPopupMenuButton(context));
-    }
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(title),
-        actions: actions,
-      ),
-      body: SafeArea(
-          left: true,
-          right: true,
-          top: true,
-          bottom: true,
-          minimum: EdgeInsets.zero,
-          child: _StarredChartWideListBody(chartGroupKey)),
-    );
-  }
-}
-
-Scaffold _buildNarrowScaffold(BuildContext context) {
-  return Scaffold(
-    appBar: AppBar(
-      title: null,
-      actions: [],
-    ),
-    body: _StarredChartNarrowListBody(),
-  );
-}
-
-class _StarredChartWideListBody extends StatelessWidget {
+class StarredChartWideBody extends StatelessWidget {
   final Key _chartGroupPage;
 
-  _StarredChartWideListBody(this._chartGroupPage);
+  StarredChartWideBody(this._chartGroupPage);
 
   void onSavedChartPressed(
       AppDisplayStateModel pageModel, String savedChartName) {
@@ -114,10 +39,12 @@ class _StarredChartWideListBody extends StatelessWidget {
 
     return Row(
       children: [
-        Container(
-            width: uiParameters.entityRowWidth,
-            color: UiColors.entityListLeaf,
-            child: StarredChartList(onSavedChartPressed)),
+        Card(
+            elevation: 10.0,
+            child: Container(
+                width: uiParameters.entityRowWidth,
+                color: UiColors.entityListLeaf,
+                child: StarredChartList(onSavedChartPressed))),
         Expanded(
             child: RepaintBoundary(
                 key: _chartGroupPage, child: CovidChartGroup())),
@@ -126,15 +53,21 @@ class _StarredChartWideListBody extends StatelessWidget {
   }
 }
 
-class _StarredChartNarrowListBody extends StatelessWidget {
+class StarredChartNarrowBody extends StatelessWidget {
+  final Key _chartGroupPage;
+
+  StarredChartNarrowBody(this._chartGroupPage);
+
+  void onSavedChartPressed(
+      AppDisplayStateModel pageModel, String savedChartName) {
+    pageModel.loadStar(savedChartName);
+    pageModel.selectedStarName = savedChartName;
+  }
+
   @override
   Widget build(BuildContext context) {
-    // onSavedChartPressed is inside build so that it has access to the context.
-    void onSavedChartPressed(
-        AppDisplayStateModel pageModel, String savedChartName) {
-      pageModel.loadStar(savedChartName);
-      pageModel.selectedStarName = savedChartName;
-
+    // showChartGroup is inside build so it has access to the build context.
+    void showChartGroup() {
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -142,8 +75,24 @@ class _StarredChartNarrowListBody extends StatelessWidget {
       );
     }
 
-    return Container(
-        color: UiColors.entityListLeaf,
-        child: StarredChartList(onSavedChartPressed));
+    return Column(children: [
+      Expanded(
+          flex: 2,
+          child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: showChartGroup,
+              onLongPress: showChartGroup,
+              child: Card(
+                  elevation: 5.0,
+                  child: RepaintBoundary(
+                      key: _chartGroupPage, child: CovidChartGroup())))),
+      Expanded(
+          flex: 3,
+          child: Card(
+              elevation: 5.0,
+              child: Container(
+                  color: UiColors.entityListLeaf,
+                  child: StarredChartList(onSavedChartPressed))))
+    ]);
   }
 }

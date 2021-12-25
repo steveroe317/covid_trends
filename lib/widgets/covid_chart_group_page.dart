@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.import 'dart:collection';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -20,7 +19,6 @@ import '../models/app_display_state_model.dart';
 import 'covid_chart_group.dart';
 import 'compare_region_popup_menu.dart';
 import 'date_range_popup_menu.dart';
-import 'highlight_region_popup_menu.dart';
 import 'per_100k_popup_menu.dart';
 import 'share_button.dart';
 import 'star_popup_menu.dart';
@@ -47,10 +45,6 @@ class _CovidChartGroupPageState extends State<CovidChartGroupPage> {
         buildStarPopupMenuButton(context),
         buildShareButton(context, chartGroupKey),
       ];
-      if (pageModel.compareRegion && pageModel.comparisonPathList.length > 1) {
-        actions.insert(
-            actions.length - 2, buildHighlightRegionPopupMenuButton(context));
-      }
 
       return Scaffold(
           appBar: AppBar(actions: actions),

@@ -14,7 +14,6 @@
 
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 
 import '../models/app_display_state_model.dart';

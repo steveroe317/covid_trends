@@ -14,7 +14,6 @@
 
 import 'package:covid_trends/models/starred_chart_examples.dart';
 import 'package:covid_trends/models/starred_model.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
@@ -27,11 +26,18 @@ import 'region_metric_id.dart';
 import 'model_constants.dart';
 import 'starred_model.dart';
 
+class CovidFlowTab {
+  static const int regions = 0;
+  static const int starred = 0;
+  static const int colors = 0;
+}
+
 /// Holds the main application display state in a model outside the widget tree.
 class AppDisplayStateModel with ChangeNotifier {
   var _appInfo = CovidAppInfo();
   var _appPreferences = AppSharedPreferences();
   var _appDataCache = AppDataCache('app_state');
+  int _selectedTab = CovidFlowTab.regions;
   List<String> _parentPath = List<String>.empty();
   List<String> _chartPath = List<String>.empty();
   var _comparisonGraphModel = ComparisonGraphModel();
@@ -69,6 +75,13 @@ class AppDisplayStateModel with ChangeNotifier {
 
   set addExampleChartsPreference(bool value) {
     _appPreferences.addExampleCharts = value;
+  }
+
+  int get selectedTab => _selectedTab;
+
+  void goToTab(index) {
+    _selectedTab = index;
+    notifyListeners();
   }
 
   List<String> parentPath() {

@@ -13,7 +13,6 @@
 // limitations under the License.import 'dart:collection';
 
 import 'package:covid_trends/widgets/ui_constants.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -23,7 +22,6 @@ import '../theme/size_scale.dart';
 import 'covid_chart.dart';
 import 'compare_region_popup_menu.dart';
 import 'date_range_popup_menu.dart';
-import 'highlight_region_popup_menu.dart';
 import 'per_100k_popup_menu.dart';
 import 'share_button.dart';
 import 'star_popup_menu.dart';
@@ -44,10 +42,6 @@ class CovidChartPage extends StatelessWidget {
         buildStarPopupMenuButton(context),
         buildShareButton(context, chartGroupKey),
       ];
-      if (pageModel.compareRegion && pageModel.comparisonPathList.length > 1) {
-        actions.insert(
-            actions.length - 2, buildHighlightRegionPopupMenuButton(context));
-      }
 
       return Scaffold(
           appBar: AppBar(actions: actions),

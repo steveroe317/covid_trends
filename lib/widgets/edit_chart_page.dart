@@ -16,91 +16,15 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../models/app_display_state_model.dart';
-
-import 'compare_region_popup_menu.dart';
 import 'covid_chart_group.dart';
-import 'date_range_popup_menu.dart';
-import 'per_100k_popup_menu.dart';
 import 'edit_chart_list.dart';
 import 'ui_colors.dart';
 import 'ui_parameters.dart';
 
-class EditChartPage extends StatefulWidget {
-  final String title;
-
-  const EditChartPage({Key? key, required this.title}) : super(key: key);
-
-  @override
-  _EditChartPageState createState() => _EditChartPageState();
-}
-
-class _EditChartPageState extends State<EditChartPage> {
-  @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (context, constraints) {
-      if (constraints.maxWidth > 700) {
-        return ChangeNotifierProvider<UiParameters>(
-            create: (_) => UiParameters(UiAppShape.Wide),
-            child: _buildWideScaffold(context, widget.title));
-      } else if (constraints.maxWidth >= 350) {
-        return ChangeNotifierProvider<UiParameters>(
-            create: (_) => UiParameters(UiAppShape.Narrow),
-            child: _buildNarrowScaffold(context, widget.title));
-      } else {
-        return ChangeNotifierProvider<UiParameters>(
-            create: (_) => UiParameters(UiAppShape.Mini),
-            child: _buildNarrowScaffold(context, widget.title));
-      }
-    });
-  }
-
-  Scaffold _buildWideScaffold(BuildContext context, String title) {
-    final chartGroupKey = GlobalKey();
-
-    var actions = [
-      buildCompareRegionPopupMenuButton(context),
-      buildDateRangePopupMenuButton(context),
-      buildper100kPopupMenuButton(context),
-    ];
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(title),
-        actions: actions,
-      ),
-      body: SafeArea(
-          left: true,
-          right: true,
-          top: true,
-          bottom: true,
-          minimum: EdgeInsets.zero,
-          child: _EditChartWideListBody(chartGroupKey)),
-    );
-  }
-}
-
-Scaffold _buildNarrowScaffold(BuildContext context, String title) {
-  final chartGroupKey = GlobalKey();
-
-  var actions = [
-    buildCompareRegionPopupMenuButton(context),
-    buildDateRangePopupMenuButton(context),
-    buildper100kPopupMenuButton(context),
-  ];
-
-  return Scaffold(
-    appBar: AppBar(
-      title: Text(title),
-      actions: actions,
-    ),
-    body: _EditChartNarrowListBody(chartGroupKey),
-  );
-}
-
-class _EditChartWideListBody extends StatelessWidget {
+class EditChartWideBody extends StatelessWidget {
   final Key _chartGroupPage;
 
-  _EditChartWideListBody(this._chartGroupPage);
+  EditChartWideBody(this._chartGroupPage);
 
   void onSavedChartPressed(
       AppDisplayStateModel pageModel, String savedChartName) {
@@ -128,10 +52,10 @@ class _EditChartWideListBody extends StatelessWidget {
   }
 }
 
-class _EditChartNarrowListBody extends StatelessWidget {
+class EditChartNarrowBody extends StatelessWidget {
   final Key _chartGroupPage;
 
-  _EditChartNarrowListBody(this._chartGroupPage);
+  EditChartNarrowBody(this._chartGroupPage);
 
   @override
   Widget build(BuildContext context) {

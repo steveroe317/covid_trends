@@ -16,9 +16,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../models/app_display_state_model.dart';
+import '../theme/graph_colors.dart';
 import '../theme/size_scale.dart';
-import 'highlight_colors_dialog.dart';
-import 'highlight_region_dialog.dart';
+import 'ui_colors.dart';
+import 'ui_constants.dart';
 
 class EditChartList extends StatelessWidget {
   final ScrollController _optionsListController = ScrollController();
@@ -56,5 +57,168 @@ class EditChartList extends StatelessWidget {
                       controller: _optionsListController,
                       children: optionsWidgets))));
     });
+  }
+
+  List<Widget> editHighlightRegionsWidgets(
+      AppDisplayStateModel pageModel,
+      bool isMenuSegment,
+      Map<String, bool> regionHighlighted,
+      VisualDensity listDensity) {
+    var regionWidgets = <Widget>[];
+
+    if (isMenuSegment) {
+      // Create region header widget. The Material widget is used so that the
+      // header widgets color will overlay a surrounding Container widget's color.
+      var regionHeader = Material(
+          child: ListTile(
+        visualDensity: listDensity,
+        title: Text('Highlight Regions',
+            style: TextStyle(fontWeight: FontWeight.bold)),
+        tileColor: UiColors.entityListHeader,
+        onTap: () {},
+      ));
+      regionWidgets.add(regionHeader);
+    }
+
+    var menuItemTextStyle = TextStyle(
+        fontWeight: (isMenuSegment) ? FontWeight.normal : FontWeight.bold);
+
+    for (var path in pageModel.comparisonPathList) {
+      var pathName = RegionPath.name(path);
+      bool highlighted = regionHighlighted[pathName] ?? false;
+      regionWidgets.add(ListTile(
+        leading:
+            Opacity(opacity: highlighted ? 1.0 : 0.0, child: Icon(Icons.check)),
+        title: Text(path.last, style: menuItemTextStyle),
+        visualDensity: listDensity,
+        tileColor: UiColors.entityListLeaf,
+        onTap: () {
+          var highlighted = regionHighlighted[pathName] ?? false;
+          pageModel.setComparisonPathHighlight(path, !highlighted);
+        },
+      ));
+    }
+    return regionWidgets;
+  }
+
+  List<Widget> editHighlightsWidgets(AppDisplayStateModel pageModel) {
+    // Widgets for chart highlight color adjustments.
+    var highlightColorWidgets = <Widget>[];
+
+    // Create widgets for the dialog's hightlight options column.
+    var selectedHighlightType = pageModel.highlightType;
+    highlightColorWidgets.add(Container(
+        padding: EdgeInsets.all(SizeScale.px12),
+        alignment: Alignment.centerLeft,
+        color: UiColors.entityListHeader,
+        child: Text('Highlight Options',
+            style: TextStyle(
+                fontWeight: FontWeight.bold, fontSize: SizeScale.px16))));
+    for (var highlightType in GraphLineHighlightTypes.values) {
+      highlightColorWidgets.add(RadioListTile<GraphLineHighlightTypes>(
+          value: highlightType,
+          title: Text(UiConstants.graphLineHighlightDescription(highlightType)),
+          groupValue: selectedHighlightType,
+          onChanged: (value) {
+            if (value != null) {
+              selectedHighlightType = value;
+              pageModel.highlightType = selectedHighlightType;
+            }
+          }));
+    }
+    highlightColorWidgets.add(Padding(
+        padding: EdgeInsets.fromLTRB(
+            SizeScale.px24, SizeScale.px12, SizeScale.px24, 0),
+        child: Text(
+          'Highlight Intensity ${pageModel.highlightFactor.toStringAsFixed(2)}',
+          style: TextStyle(fontSize: SizeScale.px16),
+        )));
+    highlightColorWidgets.add(Padding(
+        padding: EdgeInsets.symmetric(horizontal: SizeScale.px16),
+        child: Slider(
+            label: 'Highlight Intensity',
+            value: pageModel.highlightFactor,
+            min: 0.0,
+            max: 1.0,
+            onChanged: (value) {
+              pageModel.highlightFactor = value;
+            })));
+
+    // Create widgets for the dialog's fade options column.
+    var selectedFadeType = pageModel.fadeType;
+    highlightColorWidgets.add(Container(
+        padding: EdgeInsets.all(SizeScale.px12),
+        alignment: Alignment.centerLeft,
+        color: UiColors.entityListHeader,
+        child: Text('Fade Options',
+            style: TextStyle(
+                fontWeight: FontWeight.bold, fontSize: SizeScale.px16))));
+    for (var fadeType in GraphLineFadeTypes.values) {
+      highlightColorWidgets.add(RadioListTile<GraphLineFadeTypes>(
+          value: fadeType,
+          title: Text(UiConstants.graphLineFadeDescription(fadeType)),
+          groupValue: selectedFadeType,
+          onChanged: (value) {
+            if (value != null) {
+              selectedFadeType = value;
+              pageModel.fadeType = selectedFadeType;
+            }
+          }));
+    }
+    highlightColorWidgets.add(Padding(
+        padding: EdgeInsets.fromLTRB(
+            SizeScale.px24, SizeScale.px12, SizeScale.px24, 0),
+        child: Text(
+          'Fade Intensity ${pageModel.fadeFactor.toStringAsFixed(2)}',
+          style: TextStyle(fontSize: SizeScale.px16),
+        )));
+    highlightColorWidgets.add(Padding(
+        padding: EdgeInsets.symmetric(horizontal: SizeScale.px16),
+        child: Slider(
+            label: 'Fade Intensity',
+            value: pageModel.fadeFactor,
+            min: 0.0,
+            max: 1.0,
+            onChanged: (value) {
+              pageModel.fadeFactor = value;
+            })));
+    // The fade transparency widgets show internal color alpha integer values of
+    // 255 to 0 as transparency double values from 0.0 to 1.0.
+    highlightColorWidgets.add(Padding(
+        padding: EdgeInsets.fromLTRB(
+            SizeScale.px24, SizeScale.px12, SizeScale.px24, 0),
+        child: Text(
+          'Fade Transparency ${(1.0 - pageModel.fadeAlpha / 255).toStringAsFixed(2)}',
+          style: TextStyle(fontSize: SizeScale.px16),
+        )));
+    highlightColorWidgets.add(Padding(
+        padding: EdgeInsets.symmetric(horizontal: SizeScale.px16),
+        child: Slider(
+            label: 'Fade Transparency',
+            value: 255 - pageModel.fadeAlpha.roundToDouble(),
+            min: 0,
+            max: 255,
+            divisions: 10,
+            onChanged: (value) {
+              pageModel.fadeAlpha = 255 - value.round();
+            })));
+
+    // Create widgets to restore highlight and fade defaults.
+    highlightColorWidgets.add(Container(
+        padding: EdgeInsets.all(SizeScale.px12),
+        alignment: Alignment.centerLeft,
+        color: UiColors.entityListHeader,
+        child: Text('Restore',
+            style: TextStyle(
+                fontWeight: FontWeight.bold, fontSize: SizeScale.px16))));
+    highlightColorWidgets.add(Padding(
+        padding: EdgeInsets.symmetric(horizontal: SizeScale.px24),
+        child: ListTile(
+          title: Text('Restore Default Options'),
+          onTap: () {
+            pageModel.restoreHighlightFadeDefaults();
+          },
+        )));
+    return highlightColorWidgets;
   }
 }
