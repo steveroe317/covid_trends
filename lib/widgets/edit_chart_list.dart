@@ -102,6 +102,16 @@ class EditChartList extends StatelessWidget {
   }
 
   List<Widget> editHighlightsWidgets(AppDisplayStateModel pageModel) {
+    var highlightOptions = <GraphLineHighlightTypes>[
+      GraphLineHighlightTypes.pop,
+      GraphLineHighlightTypes.toColoredBlack,
+    ];
+    var fadeOptions = <GraphLineFadeTypes>[
+      GraphLineFadeTypes.toColoredBlack,
+      GraphLineFadeTypes.toColoredWhite,
+      GraphLineFadeTypes.toGrey,
+    ];
+
     // Widgets for chart highlight color adjustments.
     var highlightColorWidgets = <Widget>[];
 
@@ -114,7 +124,7 @@ class EditChartList extends StatelessWidget {
         child: Text('Highlight Options',
             style: TextStyle(
                 fontWeight: FontWeight.bold, fontSize: SizeScale.px16))));
-    for (var highlightType in GraphLineHighlightTypes.values) {
+    for (var highlightType in highlightOptions) {
       highlightColorWidgets.add(RadioListTile<GraphLineHighlightTypes>(
           value: highlightType,
           title: Text(UiConstants.graphLineHighlightDescription(highlightType)),
@@ -153,7 +163,7 @@ class EditChartList extends StatelessWidget {
         child: Text('Fade Options',
             style: TextStyle(
                 fontWeight: FontWeight.bold, fontSize: SizeScale.px16))));
-    for (var fadeType in GraphLineFadeTypes.values) {
+    for (var fadeType in fadeOptions) {
       highlightColorWidgets.add(RadioListTile<GraphLineFadeTypes>(
           value: fadeType,
           title: Text(UiConstants.graphLineFadeDescription(fadeType)),

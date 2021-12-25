@@ -57,22 +57,22 @@ class UiConstants {
       case GraphLineHighlightTypes.pop:
         return 'Pop colors';
       case GraphLineHighlightTypes.toTrueBlack:
-        return 'Shift to black';
+        return 'Shift to true black';
       case GraphLineHighlightTypes.toColoredBlack:
-        return 'Shift to colored black';
+        return 'Shift to black';
     }
   }
 
   static String graphLineFadeDescription(GraphLineFadeTypes fadeType) {
     switch (fadeType) {
       case GraphLineFadeTypes.toTrueBlack:
-        return 'Shift to black';
+        return 'Shift to true black';
       case GraphLineFadeTypes.toColoredBlack:
-        return 'Shift to colored black';
+        return 'Shift to black';
       case GraphLineFadeTypes.toTrueWhite:
-        return 'Shift to white';
+        return 'Shift to true white';
       case GraphLineFadeTypes.toColoredWhite:
-        return 'Shift to colored white';
+        return 'Shift to white';
       case GraphLineFadeTypes.toGrey:
         return 'Shift to grey';
     }

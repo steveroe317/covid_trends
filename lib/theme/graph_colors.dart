@@ -14,6 +14,7 @@
 
 import 'package:flutter/material.dart';
 
+// TODO: remove toTrueBlack and toTrueWhite if not used.
 enum GraphLineFadeTypes {
   toTrueBlack,
   toColoredBlack,
@@ -22,6 +23,7 @@ enum GraphLineFadeTypes {
   toGrey,
 }
 
+// TODO: remove toTrueBlack if not used.
 enum GraphLineHighlightTypes {
   pop,
   toTrueBlack,
