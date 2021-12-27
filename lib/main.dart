@@ -187,10 +187,11 @@ class _CovidApp extends StatelessWidget {
     Future<void>(timeseriesModel.markStale);
     return MaterialApp(
         title: 'Covid Flows',
-        theme: ThemeData(
-          primarySwatch: PaletteColors.lightBlueVivid,
+        theme: ThemeData.from(
+          colorScheme: ColorScheme.fromSwatch(
+              primarySwatch: PaletteColors.lightBlueVivid,
+              backgroundColor: Colors.white),
         ),
-        //home: CovidEntitiesPage(title: 'Covid Flows'),
         initialRoute: '/',
         routes: {
           '/': (context) => const HomePage(title: 'Covid Flows'),

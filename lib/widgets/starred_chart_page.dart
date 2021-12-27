@@ -18,6 +18,7 @@ import 'package:provider/provider.dart';
 import '../models/app_display_state_model.dart';
 import 'covid_chart_group.dart';
 import 'covid_chart_group_page.dart';
+import 'home_page_navigation.dart';
 import 'starred_chart_list.dart';
 import 'ui_colors.dart';
 import 'ui_parameters.dart';
@@ -39,6 +40,7 @@ class StarredChartWideBody extends StatelessWidget {
 
     return Row(
       children: [
+        HomePageNavigationRail(),
         Card(
             elevation: 10.0,
             child: Container(

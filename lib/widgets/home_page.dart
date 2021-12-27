@@ -22,6 +22,7 @@ import 'compare_region_popup_menu.dart';
 import 'date_range_popup_menu.dart';
 //import 'debug_popup_menu.dart';
 import 'home_page_drawer.dart';
+import 'home_page_navigation.dart';
 import 'per_100k_popup_menu.dart';
 import 'region_chart_page.dart';
 import 'share_button.dart';
@@ -96,31 +97,19 @@ class WideHomePage extends StatelessWidget {
       ],
     ];
     return Scaffold(
-        appBar: AppBar(
-          title: Text(title),
-          actions: wideActions[pageModel.selectedTab],
-        ),
-        body: SafeArea(
-            left: true,
-            right: true,
-            top: true,
-            bottom: true,
-            minimum: EdgeInsets.zero,
-            child: widePages[pageModel.selectedTab]),
-        drawer: HomePageDrawer(),
-        bottomNavigationBar: BottomNavigationBar(
-          items: [
-            BottomNavigationBarItem(
-                icon: Icon(Icons.language), label: 'Regions'),
-            BottomNavigationBarItem(icon: Icon(Icons.star), label: 'Starred'),
-            BottomNavigationBarItem(icon: Icon(Icons.tune), label: 'Adjust'),
-          ],
-          landscapeLayout: BottomNavigationBarLandscapeLayout.centered,
-          currentIndex: pageModel.selectedTab,
-          onTap: (int index) {
-            pageModel.goToTab(index);
-          },
-        ));
+      appBar: AppBar(
+        title: Text(title),
+        actions: wideActions[pageModel.selectedTab],
+      ),
+      body: SafeArea(
+          left: true,
+          right: true,
+          top: true,
+          bottom: true,
+          minimum: EdgeInsets.zero,
+          child: widePages[pageModel.selectedTab]),
+      drawer: HomePageDrawer(),
+    );
   }
 }
 
@@ -160,23 +149,13 @@ class NarrowHomePage extends StatelessWidget {
     ];
 
     return Scaffold(
-        appBar: AppBar(
-          title: title.isNotEmpty ? Text(title) : null,
-          actions: narrowActions[pageModel.selectedTab],
-        ),
-        body: narrowPages[pageModel.selectedTab],
-        drawer: HomePageDrawer(),
-        bottomNavigationBar: BottomNavigationBar(
-          items: [
-            BottomNavigationBarItem(
-                icon: Icon(Icons.language), label: 'Regions'),
-            BottomNavigationBarItem(icon: Icon(Icons.star), label: 'Starred'),
-            BottomNavigationBarItem(icon: Icon(Icons.tune), label: 'Adjust'),
-          ],
-          currentIndex: pageModel.selectedTab,
-          onTap: (int index) {
-            pageModel.goToTab(index);
-          },
-        ));
+      appBar: AppBar(
+        title: title.isNotEmpty ? Text(title) : null,
+        actions: narrowActions[pageModel.selectedTab],
+      ),
+      body: narrowPages[pageModel.selectedTab],
+      drawer: HomePageDrawer(),
+      bottomNavigationBar: HomePageNavigationBar(),
+    );
   }
 }

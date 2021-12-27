@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.import 'dart:collection';
 
+import 'package:covid_trends/widgets/home_page_navigation.dart';
 import 'package:covid_trends/widgets/ui_parameters.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -43,6 +44,7 @@ class CovidEntitiesWideBody extends StatelessWidget {
     }
 
     return Row(children: [
+      HomePageNavigationRail(),
       Card(
           elevation: 10.0,
           child: Container(

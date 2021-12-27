@@ -19,6 +19,7 @@ import '../models/app_display_state_model.dart';
 import 'covid_chart_group.dart';
 import 'covid_chart_group_page.dart';
 import 'edit_chart_list.dart';
+import 'home_page_navigation.dart';
 import 'ui_colors.dart';
 import 'ui_parameters.dart';
 
@@ -39,6 +40,7 @@ class EditChartWideBody extends StatelessWidget {
 
     return Row(
       children: [
+        HomePageNavigationRail(),
         Card(
             elevation: 10.0,
             child: Container(
