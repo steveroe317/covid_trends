@@ -19,6 +19,7 @@ import 'package:provider/provider.dart';
 
 import '../models/app_display_state_model.dart';
 import '../models/covid_timeseries_model.dart';
+import '../theme/size_scale.dart';
 import 'covid_chart_group.dart';
 import 'covid_chart_group_page.dart';
 import 'covid_entity_list.dart';
@@ -43,18 +44,39 @@ class CovidEntitiesWideBody extends StatelessWidget {
       pageModel.setChartPath(path);
     }
 
-    return Row(children: [
-      HomePageNavigationRail(),
-      Card(
-          elevation: 10.0,
-          child: Container(
-              width: uiParameters.entityRowWidth,
-              color: UiColors.entityListLeaf,
-              child: CovidEntityList(onRegionPressed))),
-      Expanded(
-        child: RepaintBoundary(key: _chartGroupPage, child: CovidChartGroup()),
-      )
-    ]);
+    // showChartGroup is inside build so it has access to the build context.
+    void showChartGroup() {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => Container(child: CovidChartGroupPage())),
+      );
+    }
+
+    return Row(
+      children: [
+        HomePageNavigationRail(),
+        Card(
+            elevation: 5.0,
+            margin: EdgeInsets.fromLTRB(
+                SizeScale.px8, SizeScale.px8, SizeScale.px8, SizeScale.px8),
+            child: Container(
+                width: uiParameters.entityRowWidth,
+                color: UiColors.entityListLeaf,
+                child: CovidEntityList(onRegionPressed))),
+        Expanded(
+            child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: showChartGroup,
+                onLongPress: showChartGroup,
+                child: Card(
+                    elevation: 5.0,
+                    margin: EdgeInsets.fromLTRB(
+                        0.0, SizeScale.px8, SizeScale.px8, SizeScale.px8),
+                    child: RepaintBoundary(
+                        key: _chartGroupPage, child: CovidChartGroup())))),
+      ],
+    );
   }
 }
 
@@ -92,16 +114,19 @@ class CovidEntitiesNarrowBody extends StatelessWidget {
               onLongPress: showChartGroup,
               child: Card(
                   elevation: 5.0,
+                  margin: EdgeInsets.fromLTRB(SizeScale.px8, SizeScale.px8,
+                      SizeScale.px8, SizeScale.px8),
                   child: RepaintBoundary(
                       key: _chartGroupPage, child: CovidChartGroup())))),
       Expanded(
           flex: 3,
-          child: SafeArea(
-              child: Card(
-                  elevation: 5.0,
-                  child: Container(
-                      color: UiColors.entityListLeaf,
-                      child: CovidEntityList(onRegionPressed)))))
+          child: Card(
+              elevation: 5.0,
+              margin: EdgeInsets.fromLTRB(
+                  SizeScale.px8, 0.0, SizeScale.px8, SizeScale.px8),
+              child: Container(
+                  color: UiColors.entityListLeaf,
+                  child: CovidEntityList(onRegionPressed))))
     ]);
   }
 }

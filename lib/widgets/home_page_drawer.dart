@@ -28,11 +28,6 @@ class HomePageDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     var uiParameters = context.read<UiParameters>();
     return SafeArea(
-        left: true,
-        right: true,
-        top: true,
-        bottom: true,
-        minimum: EdgeInsets.zero,
         child: Container(
             width: 250,
             color: PaletteColors.coolGrey.shade100,

@@ -75,6 +75,8 @@ class WideHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var pageModel = Provider.of<AppDisplayStateModel>(context);
+    // TODO: Create these as inline widgets, not as alls to helper functions.
+    // This should reduce overhead during animations.
     List<List<Widget>> wideActions = [
       [
         buildSortPopupMenuButton(context),
@@ -101,13 +103,7 @@ class WideHomePage extends StatelessWidget {
         title: Text(title),
         actions: wideActions[pageModel.selectedTab],
       ),
-      body: SafeArea(
-          left: true,
-          right: true,
-          top: true,
-          bottom: true,
-          minimum: EdgeInsets.zero,
-          child: widePages[pageModel.selectedTab]),
+      body: SafeArea(child: widePages[pageModel.selectedTab]),
       drawer: HomePageDrawer(),
     );
   }
@@ -153,7 +149,7 @@ class NarrowHomePage extends StatelessWidget {
         title: title.isNotEmpty ? Text(title) : null,
         actions: narrowActions[pageModel.selectedTab],
       ),
-      body: narrowPages[pageModel.selectedTab],
+      body: SafeArea(child: narrowPages[pageModel.selectedTab]),
       drawer: HomePageDrawer(),
       bottomNavigationBar: HomePageNavigationBar(),
     );

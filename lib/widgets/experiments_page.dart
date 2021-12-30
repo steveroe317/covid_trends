@@ -109,9 +109,11 @@ class ExperimentsPage extends StatelessWidget {
 
     return Scaffold(
         appBar: AppBar(title: Text('Settings')),
-        body: Center(
+        body: SafeArea(
+            child: Card(
+          margin: EdgeInsets.all(SizeScale.px8),
           child: ListView(
               padding: EdgeInsets.all(SizeScale.px4), children: settingsItems),
-        ));
+        )));
   }
 }

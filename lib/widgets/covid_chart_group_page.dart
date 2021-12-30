@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.import 'dart:collection';
 
+import 'package:covid_trends/theme/size_scale.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -22,6 +23,7 @@ import 'date_range_popup_menu.dart';
 import 'per_100k_popup_menu.dart';
 import 'share_button.dart';
 import 'star_popup_menu.dart';
+import 'ui_colors.dart';
 
 class CovidChartGroupPage extends StatefulWidget {
   CovidChartGroupPage({Key? key}) : super(key: key);
@@ -54,7 +56,10 @@ class _CovidChartGroupPageState extends State<CovidChartGroupPage> {
             top: true,
             bottom: true,
             minimum: EdgeInsets.zero,
-            child: Center(
+            child: Card(
+                elevation: 5.0,
+                margin: EdgeInsets.all(SizeScale.px8),
+                color: UiColors.chartBackground,
                 child: RepaintBoundary(
                     key: chartGroupKey, child: CovidChartGroup())),
           ));

@@ -101,7 +101,7 @@ class UiConstants {
   // to allow for padding, legends, and titles.
   static const minCovidChartHeight = 200.0;
   static const minCovidGraphHeight = 200.0;
-  static const desiredCovidChartAspectRatio = 1.2;
+  static const desiredCovidChartAspectRatio = 1.6;
 
   // Layout design breakpoints.
   static const chartTableWidthBreakpoint = 600.0;

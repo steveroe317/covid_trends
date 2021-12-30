@@ -34,7 +34,7 @@ class CovidChartGroup extends StatelessWidget {
                 UiConstants.chartTableAspectRatioBreakpoint) {
           return CovidChartList(constraints.maxHeight);
         } else {
-          return CovidChartTable(constraints.maxHeight);
+          return CovidChartTable(constraints.maxHeight, constraints.maxWidth);
         }
       },
     );
@@ -69,15 +69,18 @@ class CovidChartList extends StatelessWidget {
 }
 
 class CovidChartTable extends StatelessWidget {
-  CovidChartTable(this.constraintsHeight);
+  CovidChartTable(this.constraintsHeight, this.constraintsWidth);
 
   final double constraintsHeight;
+  final double constraintsWidth;
   final ScrollController _chartTableController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
     var labelledChartHeight =
         max(UiConstants.minCovidChartHeight, constraintsHeight / 2);
+    var labelledChartWidth = constraintsWidth / 2;
+    var labelledChartAspectRatio = labelledChartWidth / labelledChartHeight;
     return Scrollbar(
         isAlwaysShown: true,
         controller: _chartTableController,
@@ -88,6 +91,7 @@ class CovidChartTable extends StatelessWidget {
           crossAxisSpacing: SizeScale.px8,
           mainAxisSpacing: 0,
           crossAxisCount: 2,
+          childAspectRatio: labelledChartAspectRatio,
           controller: _chartTableController,
           children: [
             _LabelledCovidChart(
@@ -124,19 +128,27 @@ class _LabelledCovidChart extends StatelessWidget {
         ? UiConstants.averagedSubtitle
         : '';
     var subtitleTextStyle = TextStyle(fontWeight: FontWeight.normal);
+
     Size titleSize = paintedTextSize(title, titleTextStyle, context);
     Size subtitleSize = paintedTextSize(
         UiConstants.averagedSubtitle, subtitleTextStyle, context);
 
     // The SizeScale pixel amounts must match the column children paddings.
+    var columnVerticalPaddingPixels = SizeScale.px16 + SizeScale.px8;
+    var titleVerticalPadding = SizeScale.px12;
+
+    // Add padding between charts.  This also covers 4.5 vertical pixels
+    // from an unidentified source.
+    var betweenChartPadding = SizeScale.px12;
+
     var chartHeight = labelledChartHeight -
-        (SizeScale.px16 +
-            SizeScale.px8 +
+        (columnVerticalPaddingPixels +
             titleSize.height +
             subtitleSize.height +
-            SizeScale.px12);
+            titleVerticalPadding +
+            betweenChartPadding);
     var approxLegendHeight = (paths.length / 2).ceil() * subtitleSize.height;
-    if (chartHeight - approxLegendHeight < UiConstants.minCovidGraphHeight) {
+    if (chartHeight < approxLegendHeight + UiConstants.minCovidGraphHeight) {
       chartHeight = approxLegendHeight + UiConstants.minCovidGraphHeight;
     }
 

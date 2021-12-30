@@ -16,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../models/app_display_state_model.dart';
+import '../theme/size_scale.dart';
 import 'covid_chart_group.dart';
 import 'covid_chart_group_page.dart';
 import 'home_page_navigation.dart';
@@ -38,18 +39,37 @@ class StarredChartWideBody extends StatelessWidget {
   Widget build(BuildContext context) {
     var uiParameters = context.read<UiParameters>();
 
+    // showChartGroup is inside build so it has access to the build context.
+    void showChartGroup() {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => Container(child: CovidChartGroupPage())),
+      );
+    }
+
     return Row(
       children: [
         HomePageNavigationRail(),
         Card(
-            elevation: 10.0,
+            elevation: 5.0,
+            margin: EdgeInsets.fromLTRB(
+                SizeScale.px8, SizeScale.px8, SizeScale.px8, SizeScale.px8),
             child: Container(
                 width: uiParameters.entityRowWidth,
                 color: UiColors.entityListLeaf,
                 child: StarredChartList(onSavedChartPressed))),
         Expanded(
-            child: RepaintBoundary(
-                key: _chartGroupPage, child: CovidChartGroup())),
+            child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: showChartGroup,
+                onLongPress: showChartGroup,
+                child: Card(
+                    elevation: 5.0,
+                    margin: EdgeInsets.fromLTRB(
+                        0.0, SizeScale.px8, SizeScale.px8, SizeScale.px8),
+                    child: RepaintBoundary(
+                        key: _chartGroupPage, child: CovidChartGroup())))),
       ],
     );
   }
@@ -86,12 +106,16 @@ class StarredChartNarrowBody extends StatelessWidget {
               onLongPress: showChartGroup,
               child: Card(
                   elevation: 5.0,
+                  margin: EdgeInsets.fromLTRB(SizeScale.px8, SizeScale.px8,
+                      SizeScale.px8, SizeScale.px8),
                   child: RepaintBoundary(
                       key: _chartGroupPage, child: CovidChartGroup())))),
       Expanded(
           flex: 3,
           child: Card(
               elevation: 5.0,
+              margin: EdgeInsets.fromLTRB(
+                  SizeScale.px8, 0.0, SizeScale.px8, SizeScale.px8),
               child: Container(
                   color: UiColors.entityListLeaf,
                   child: StarredChartList(onSavedChartPressed))))

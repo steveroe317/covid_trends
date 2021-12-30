@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.import 'dart:collection';
 
+import 'package:flutter/material.dart';
+
 import '../theme/palette_colors.dart';
 
 class UiColors {
@@ -21,4 +23,5 @@ class UiColors {
   static final entityListSelected = PaletteColors.lightBlueVivid.shade200;
   static final entityListStem = PaletteColors.coolGrey.shade100;
   static final entityListHeader = PaletteColors.coolGrey.shade200;
+  static final chartBackground = Colors.grey[50];
 }

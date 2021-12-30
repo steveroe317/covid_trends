@@ -22,7 +22,7 @@ import 'package:firebase_core/firebase_core.dart';
 
 import 'models/covid_timeseries_model.dart';
 import 'models/app_display_state_model.dart';
-import 'theme/palette_colors.dart';
+import 'theme/app_theme.dart';
 import 'widgets/home_page.dart';
 import 'widgets/initialization_error_page.dart';
 import 'widgets/loading_page.dart';
@@ -187,11 +187,7 @@ class _CovidApp extends StatelessWidget {
     Future<void>(timeseriesModel.markStale);
     return MaterialApp(
         title: 'Covid Flows',
-        theme: ThemeData.from(
-          colorScheme: ColorScheme.fromSwatch(
-              primarySwatch: PaletteColors.lightBlueVivid,
-              backgroundColor: Colors.white),
-        ),
+        theme: AppTheme().themeData,
         initialRoute: '/',
         routes: {
           '/': (context) => const HomePage(title: 'Covid Flows'),
