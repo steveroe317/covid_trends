@@ -40,7 +40,7 @@ class CovidChartPage extends StatelessWidget {
         buildCompareRegionPopupMenuButton(context),
         buildDateRangePopupMenuButton(context),
         buildper100kPopupMenuButton(context),
-        buildStarPopupMenuButton(context),
+        buildStarPopupDialogButton(context),
         buildShareButton(context, chartGroupKey),
       ];
 

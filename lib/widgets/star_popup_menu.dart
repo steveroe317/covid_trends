@@ -12,40 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.import 'dart:collection';
 
-import 'package:covid_trends/widgets/ui_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../models/app_display_state_model.dart';
-import 'ui_constants.dart';
 
-PopupMenuButton<String> buildStarPopupMenuButton(BuildContext context,
+IconButton buildStarPopupDialogButton(BuildContext context,
     {bool openChartPage = false}) {
-  return PopupMenuButton<String>(
-      icon: const Icon(Icons.star),
-      tooltip: 'Starred Charts',
-      onSelected: (String starName) {
-        if (starName == UiConstants.saveStar) {
-          showDialog(context: context, builder: buildSaveStarDialog);
-        }
-      },
-      itemBuilder: (BuildContext context) {
-        var menuEntries = <PopupMenuEntry<String>>[];
-        TextStyle? saveStyle =
-            (openChartPage) ? TextStyle(color: UiColors.disabledText) : null;
-        menuEntries = <PopupMenuEntry<String>>[
-          PopupMenuItem(
-              value: UiConstants.saveStar,
-              enabled: !openChartPage,
-              child: ListTile(
-                title: Text(
-                  UiConstants.saveStar,
-                  style: saveStyle,
-                ),
-              )),
-        ];
-        return menuEntries;
-      });
+  return IconButton(
+    icon: const Icon(Icons.star),
+    tooltip: 'Save Chart',
+    onPressed: () {
+      showDialog(context: context, builder: buildSaveStarDialog);
+    },
+  );
 }
 
 Widget buildSaveStarDialog(BuildContext context) {

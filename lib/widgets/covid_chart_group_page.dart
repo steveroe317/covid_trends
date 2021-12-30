@@ -44,7 +44,7 @@ class _CovidChartGroupPageState extends State<CovidChartGroupPage> {
         buildCompareRegionPopupMenuButton(context),
         buildDateRangePopupMenuButton(context),
         buildper100kPopupMenuButton(context),
-        buildStarPopupMenuButton(context),
+        buildStarPopupDialogButton(context),
         buildShareButton(context, chartGroupKey),
       ];
 

@@ -83,7 +83,7 @@ class WideHomePage extends StatelessWidget {
         buildCompareRegionPopupMenuButton(context),
         buildDateRangePopupMenuButton(context),
         buildper100kPopupMenuButton(context),
-        buildStarPopupMenuButton(context),
+        buildStarPopupDialogButton(context),
         buildShareButton(context, chartGroupKey),
       ],
       [
@@ -130,7 +130,7 @@ class NarrowHomePage extends StatelessWidget {
         buildCompareRegionPopupMenuButton(context),
         buildDateRangePopupMenuButton(context),
         buildper100kPopupMenuButton(context),
-        buildStarPopupMenuButton(context, openChartPage: true),
+        buildStarPopupDialogButton(context, openChartPage: true),
       ],
       [
         buildCompareRegionPopupMenuButton(context),
