@@ -36,7 +36,6 @@ class AdminEntity {
     'Confirmed 7-Day': RegionMetricId.ConfirmedDaily,
     'Deaths': RegionMetricId.Deaths,
     'Deaths 7-Day': RegionMetricId.DeathsDaily,
-    'Rise': RegionMetricId.Rise,
     'Spike': RegionMetricId.Spike,
     'Population': RegionMetricId.Population,
   };

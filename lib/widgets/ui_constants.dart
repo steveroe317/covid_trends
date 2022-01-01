@@ -34,8 +34,6 @@ class UiConstants {
         return 'Deaths';
       case RegionMetricId.DeathsDaily:
         return 'Daily Deaths';
-      case RegionMetricId.Rise:
-        return 'Rise';
       case RegionMetricId.Spike:
         return 'Spike';
       case RegionMetricId.Population:
@@ -83,7 +81,6 @@ class UiConstants {
     RegionMetricId.ConfirmedDaily,
     RegionMetricId.Deaths,
     RegionMetricId.DeathsDaily,
-    RegionMetricId.Rise,
     RegionMetricId.Spike,
   ];
 
