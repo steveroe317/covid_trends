@@ -75,8 +75,6 @@ class WideHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var pageModel = Provider.of<AppDisplayStateModel>(context);
-    // TODO: Create these as inline widgets, not as alls to helper functions.
-    // This should reduce overhead during animations.
     List<List<Widget>> wideActions = [
       [
         SortPopupMenuButton(),
