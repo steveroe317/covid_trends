@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.import 'dart:collection';
 
-import 'package:covid_trends/widgets/edit_chart_page.dart';
+import 'package:covid_trends/widgets/edit_chart_tab.dart';
 import 'package:covid_trends/widgets/ui_parameters.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -24,11 +24,11 @@ import 'date_range_popup_menu.dart';
 import 'home_page_drawer.dart';
 import 'home_page_navigation.dart';
 import 'per_100k_popup_menu.dart';
-import 'regions_chart_page.dart';
+import 'regions_tab.dart';
 import 'share_button.dart';
 import 'sort_popup_menu.dart';
 import 'star_popup_menu.dart';
-import 'starred_chart_page.dart';
+import 'starred_chart_tab.dart';
 import 'ui_parameters.dart';
 
 class HomePage extends StatefulWidget {
@@ -67,9 +67,9 @@ class WideHomePage extends StatelessWidget {
   static final chartGroupKey = GlobalKey();
 
   static List<Widget> widePages = [
-    RegionsTabWideBody(chartGroupKey),
-    StarredChartWideBody(chartGroupKey),
-    EditChartWideBody(chartGroupKey),
+    RegionsWideBodyTab(chartGroupKey),
+    StarredChartWideBodyTab(chartGroupKey),
+    EditChartWideBodyTab(chartGroupKey),
   ];
 
   @override
@@ -116,9 +116,9 @@ class NarrowHomePage extends StatelessWidget {
   static final chartGroupKey = GlobalKey();
 
   static List<Widget> narrowPages = [
-    RegionTabNarrowBody(chartGroupKey),
-    StarredChartNarrowBody(chartGroupKey),
-    EditChartNarrowBody(chartGroupKey),
+    RegionsNarrowBodyTab(chartGroupKey),
+    StarredChartNarrowBodyTab(chartGroupKey),
+    EditChartNarrowBodyTab(chartGroupKey),
   ];
 
   @override

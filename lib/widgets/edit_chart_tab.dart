@@ -12,37 +12,32 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.import 'dart:collection';
 
-import 'package:covid_trends/widgets/home_page_navigation.dart';
-import 'package:covid_trends/widgets/ui_parameters.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../models/app_display_state_model.dart';
-import '../models/covid_timeseries_model.dart';
 import '../theme/size_scale.dart';
 import 'covid_chart_group.dart';
 import 'covid_chart_group_page.dart';
-import 'regions_list.dart';
+import 'edit_chart_list.dart';
+import 'home_page_navigation.dart';
 import 'ui_colors.dart';
 import 'ui_parameters.dart';
 
-class RegionsTabWideBody extends StatelessWidget {
-  RegionsTabWideBody(this._chartGroupPage);
-
+class EditChartWideBodyTab extends StatelessWidget {
   final Key _chartGroupPage;
+
+  EditChartWideBodyTab(this._chartGroupPage);
+
+  void onSavedChartPressed(
+      AppDisplayStateModel pageModel, String savedChartName) {
+    pageModel.loadStar(savedChartName);
+    pageModel.selectedStarName = savedChartName;
+  }
 
   @override
   Widget build(BuildContext context) {
-    var pageModel = Provider.of<AppDisplayStateModel>(context);
     var uiParameters = context.read<UiParameters>();
-
-    // This onRegionPressed() function does not need the build context,
-    // so if pageModel was passed to it, it could be defined outside build().
-    void onRegionPressed(
-        CovidTimeseriesModel timeseriesModel, List<String> path) {
-      timeseriesModel.loadRegion(path);
-      pageModel.setChartPath(path);
-    }
 
     // showChartGroup is inside build so it has access to the build context.
     void showChartGroup() {
@@ -63,7 +58,7 @@ class RegionsTabWideBody extends StatelessWidget {
             child: Container(
                 width: uiParameters.regionRowWidth,
                 color: UiColors.regionListLeaf,
-                child: RegionsList(onRegionPressed))),
+                child: EditChartList())),
         Expanded(
             child: GestureDetector(
                 behavior: HitTestBehavior.opaque,
@@ -80,22 +75,13 @@ class RegionsTabWideBody extends StatelessWidget {
   }
 }
 
-class RegionTabNarrowBody extends StatelessWidget {
-  RegionTabNarrowBody(this._chartGroupPage);
-
+class EditChartNarrowBodyTab extends StatelessWidget {
   final Key _chartGroupPage;
+
+  EditChartNarrowBodyTab(this._chartGroupPage);
 
   @override
   Widget build(BuildContext context) {
-    var pageModel = Provider.of<AppDisplayStateModel>(context);
-
-    // onRegionPressed is inside build so that it has access to the page model.
-    void onRegionPressed(
-        CovidTimeseriesModel timeseriesModel, List<String> path) {
-      timeseriesModel.loadRegion(path);
-      pageModel.setChartPath(path);
-    }
-
     // showChartGroup is inside build so it has access to the build context.
     void showChartGroup() {
       Navigator.push(
@@ -126,7 +112,8 @@ class RegionTabNarrowBody extends StatelessWidget {
                   SizeScale.px8, 0.0, SizeScale.px8, SizeScale.px8),
               child: Container(
                   color: UiColors.regionListLeaf,
-                  child: RegionsList(onRegionPressed))))
+                  margin: const EdgeInsets.only(bottom: 6.0),
+                  child: EditChartList())))
     ]);
   }
 }

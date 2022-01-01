@@ -19,15 +19,15 @@ import '../models/app_display_state_model.dart';
 import '../theme/size_scale.dart';
 import 'covid_chart_group.dart';
 import 'covid_chart_group_page.dart';
-import 'edit_chart_list.dart';
 import 'home_page_navigation.dart';
+import 'starred_chart_list.dart';
 import 'ui_colors.dart';
 import 'ui_parameters.dart';
 
-class EditChartWideBody extends StatelessWidget {
+class StarredChartWideBodyTab extends StatelessWidget {
   final Key _chartGroupPage;
 
-  EditChartWideBody(this._chartGroupPage);
+  StarredChartWideBodyTab(this._chartGroupPage);
 
   void onSavedChartPressed(
       AppDisplayStateModel pageModel, String savedChartName) {
@@ -58,7 +58,7 @@ class EditChartWideBody extends StatelessWidget {
             child: Container(
                 width: uiParameters.regionRowWidth,
                 color: UiColors.regionListLeaf,
-                child: EditChartList())),
+                child: StarredChartList(onSavedChartPressed))),
         Expanded(
             child: GestureDetector(
                 behavior: HitTestBehavior.opaque,
@@ -75,10 +75,16 @@ class EditChartWideBody extends StatelessWidget {
   }
 }
 
-class EditChartNarrowBody extends StatelessWidget {
+class StarredChartNarrowBodyTab extends StatelessWidget {
   final Key _chartGroupPage;
 
-  EditChartNarrowBody(this._chartGroupPage);
+  StarredChartNarrowBodyTab(this._chartGroupPage);
+
+  void onSavedChartPressed(
+      AppDisplayStateModel pageModel, String savedChartName) {
+    pageModel.loadStar(savedChartName);
+    pageModel.selectedStarName = savedChartName;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -112,8 +118,7 @@ class EditChartNarrowBody extends StatelessWidget {
                   SizeScale.px8, 0.0, SizeScale.px8, SizeScale.px8),
               child: Container(
                   color: UiColors.regionListLeaf,
-                  margin: const EdgeInsets.only(bottom: 6.0),
-                  child: EditChartList())))
+                  child: StarredChartList(onSavedChartPressed))))
     ]);
   }
 }
