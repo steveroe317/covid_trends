@@ -66,42 +66,44 @@ class WideHomePage extends StatelessWidget {
   final title;
   static final chartGroupKey = GlobalKey();
 
-  static List<Widget> widePages = [
+  final List<Widget> wideTabs = [
     RegionsWideBodyTab(chartGroupKey),
     StarredChartWideBodyTab(chartGroupKey),
     EditChartWideBodyTab(chartGroupKey),
   ];
 
+  final List<List<Widget>> wideActions = [
+    [
+      SortPopupMenuButton(),
+      CompareRegionPopupMenuButton(),
+      DateRangePopupMenuButton(),
+      Per100kPopupMenuButton(),
+      StarPopupDialogButton(),
+      ShareButton(chartGroupKey),
+    ],
+    [
+      CompareRegionPopupMenuButton(),
+      DateRangePopupMenuButton(),
+      Per100kPopupMenuButton(),
+      ShareButton(chartGroupKey),
+    ],
+    [
+      CompareRegionPopupMenuButton(),
+      DateRangePopupMenuButton(),
+      Per100kPopupMenuButton(),
+    ],
+  ];
+
   @override
   Widget build(BuildContext context) {
-    var pageModel = Provider.of<AppDisplayStateModel>(context);
-    List<List<Widget>> wideActions = [
-      [
-        SortPopupMenuButton(),
-        CompareRegionPopupMenuButton(),
-        DateRangePopupMenuButton(),
-        Per100kPopupMenuButton(),
-        StarPopupDialogButton(),
-        ShareButton(chartGroupKey),
-      ],
-      [
-        CompareRegionPopupMenuButton(),
-        DateRangePopupMenuButton(),
-        Per100kPopupMenuButton(),
-        ShareButton(chartGroupKey),
-      ],
-      [
-        CompareRegionPopupMenuButton(),
-        DateRangePopupMenuButton(),
-        Per100kPopupMenuButton(),
-      ],
-    ];
+    var selectedTab = context.select((AppDisplayStateModel m) => m.selectedTab);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(title),
-        actions: wideActions[pageModel.selectedTab],
+        actions: wideActions[selectedTab],
       ),
-      body: SafeArea(child: widePages[pageModel.selectedTab]),
+      body: SafeArea(child: wideTabs[selectedTab]),
       drawer: HomePageDrawer(),
     );
   }
@@ -113,41 +115,42 @@ class NarrowHomePage extends StatelessWidget {
   final title;
   static final chartGroupKey = GlobalKey();
 
-  static List<Widget> narrowPages = [
+  final List<Widget> narrowTabs = [
     RegionsNarrowBodyTab(chartGroupKey),
     StarredChartNarrowBodyTab(chartGroupKey),
     EditChartNarrowBodyTab(chartGroupKey),
   ];
 
+  final List<List<Widget>> narrowActions = [
+    [
+      SortPopupMenuButton(),
+      CompareRegionPopupMenuButton(),
+      DateRangePopupMenuButton(),
+      Per100kPopupMenuButton(),
+      StarPopupDialogButton(),
+    ],
+    [
+      CompareRegionPopupMenuButton(),
+      DateRangePopupMenuButton(),
+      Per100kPopupMenuButton(),
+    ],
+    [
+      CompareRegionPopupMenuButton(),
+      DateRangePopupMenuButton(),
+      Per100kPopupMenuButton(),
+    ],
+  ];
+
   @override
   Widget build(BuildContext context) {
-    var pageModel = Provider.of<AppDisplayStateModel>(context);
-    List<List<Widget>> narrowActions = [
-      [
-        SortPopupMenuButton(),
-        CompareRegionPopupMenuButton(),
-        DateRangePopupMenuButton(),
-        Per100kPopupMenuButton(),
-        StarPopupDialogButton(),
-      ],
-      [
-        CompareRegionPopupMenuButton(),
-        DateRangePopupMenuButton(),
-        Per100kPopupMenuButton(),
-      ],
-      [
-        CompareRegionPopupMenuButton(),
-        DateRangePopupMenuButton(),
-        Per100kPopupMenuButton(),
-      ],
-    ];
+    var selectedTab = context.select((AppDisplayStateModel m) => m.selectedTab);
 
     return Scaffold(
       appBar: AppBar(
         title: title.isNotEmpty ? Text(title) : null,
-        actions: narrowActions[pageModel.selectedTab],
+        actions: narrowActions[selectedTab],
       ),
-      body: SafeArea(child: narrowPages[pageModel.selectedTab]),
+      body: SafeArea(child: narrowTabs[selectedTab]),
       drawer: HomePageDrawer(),
       bottomNavigationBar: HomePageNavigationBar(),
     );

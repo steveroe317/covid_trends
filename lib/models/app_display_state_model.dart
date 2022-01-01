@@ -26,10 +26,10 @@ import 'region_metric_id.dart';
 import 'model_constants.dart';
 import 'starred_model.dart';
 
-class CovidFlowTab {
+class HomePageTab {
   static const int regions = 0;
-  static const int starred = 0;
-  static const int colors = 0;
+  static const int starred = 1;
+  static const int colors = 2;
 }
 
 /// Holds the main application display state in a model outside the widget tree.
@@ -37,7 +37,7 @@ class AppDisplayStateModel with ChangeNotifier {
   var _appInfo = CovidAppInfo();
   var _appPreferences = AppSharedPreferences();
   var _appDataCache = AppDataCache('app_state');
-  int _selectedTab = CovidFlowTab.regions;
+  int _selectedTab = HomePageTab.regions;
   List<String> _parentPath = List<String>.empty();
   List<String> _chartPath = List<String>.empty();
   var _comparisonGraphModel = ComparisonGraphModel();
