@@ -56,8 +56,8 @@ class EditChartWideBody extends StatelessWidget {
             margin: EdgeInsets.fromLTRB(
                 SizeScale.px8, SizeScale.px8, SizeScale.px8, SizeScale.px8),
             child: Container(
-                width: uiParameters.entityRowWidth,
-                color: UiColors.entityListLeaf,
+                width: uiParameters.regionRowWidth,
+                color: UiColors.regionListLeaf,
                 child: EditChartList())),
         Expanded(
             child: GestureDetector(
@@ -111,7 +111,7 @@ class EditChartNarrowBody extends StatelessWidget {
               margin: EdgeInsets.fromLTRB(
                   SizeScale.px8, 0.0, SizeScale.px8, SizeScale.px8),
               child: Container(
-                  color: UiColors.entityListLeaf,
+                  color: UiColors.regionListLeaf,
                   margin: const EdgeInsets.only(bottom: 6.0),
                   child: EditChartList())))
     ]);

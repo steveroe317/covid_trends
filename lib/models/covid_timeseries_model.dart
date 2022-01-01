@@ -62,7 +62,7 @@ class CovidTimeseriesModel with ChangeNotifier {
 
   void loadEntities(List<List<String>> paths) async {
     for (var path in paths) {
-      await loadEntity(path);
+      await loadRegion(path);
     }
     notifyListeners();
 
@@ -73,13 +73,13 @@ class CovidTimeseriesModel with ChangeNotifier {
     await Future.delayed(Duration(milliseconds: 200));
     for (var path in paths) {
       if (_findEntity(path, null) == null) {
-        await loadEntity(path);
+        await loadRegion(path);
       }
     }
     notifyListeners();
   }
 
-  Future<void> loadEntity(List<String> path) async {
+  Future<void> loadRegion(List<String> path) async {
     AdminEntity? parent;
     bool entityCreated = false;
     for (var depth = 1; depth <= path.length; ++depth) {
@@ -124,7 +124,7 @@ class CovidTimeseriesModel with ChangeNotifier {
     }
   }
 
-  bool entityHasChildren(List<String> path) {
+  bool regionHasChildren(List<String> path) {
     if (path.length == 0) {
       return false;
     }
@@ -142,7 +142,7 @@ class CovidTimeseriesModel with ChangeNotifier {
     return false;
   }
 
-  List<String> entityChildNames(List<String> path,
+  List<String> regionChildNames(List<String> path,
       {RegionMetricId sortMetricId = RegionMetricId.None,
       bool sortUp = true,
       bool per100k = false}) {
@@ -155,7 +155,7 @@ class CovidTimeseriesModel with ChangeNotifier {
     }
   }
 
-  double entitySortMetric(
+  double regionSortMetric(
       List<String> path, RegionMetricId sortMetricId, bool per100k) {
     if (path.isEmpty) {
       return 0.0;

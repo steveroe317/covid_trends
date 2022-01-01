@@ -23,17 +23,17 @@ import 'metric_formatter.dart';
 import 'ui_colors.dart';
 import 'ui_parameters.dart';
 
-enum CovidEntityListItemDepth { root, stem, leaf }
+enum RegionsListItemDepth { root, stem, leaf }
 
-class CovidEntityListItem extends StatelessWidget {
+class RegionsListItem extends StatelessWidget {
   final List<String> _path;
-  final CovidEntityListItemDepth _depth;
+  final RegionsListItemDepth _depth;
   final void Function(CovidTimeseriesModel, List<String>) _onRegionPressed;
   final CovidTimeseriesModel _timeseriesModel;
   final AppDisplayStateModel _pageModel;
   final numberFormatter;
 
-  CovidEntityListItem(this._path, this._depth, this._onRegionPressed,
+  RegionsListItem(this._path, this._depth, this._onRegionPressed,
       this._pageModel, this._timeseriesModel, this.numberFormatter);
 
   void onRegionPressed() {
@@ -45,32 +45,32 @@ class CovidEntityListItem extends StatelessWidget {
     var pageModel = Provider.of<AppDisplayStateModel>(context);
     var uiParameters = context.read<UiParameters>();
     return Container(
-        width: uiParameters.entityRowWidth,
+        width: uiParameters.regionRowWidth,
         color: listEquals(_path, pageModel.chartPath())
-            ? UiColors.entityListSelected
+            ? UiColors.regionListSelected
             : null,
         padding: EdgeInsets.only(left: 0, right: SizeScale.px12),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Opacity(
-              opacity: (_depth != CovidEntityListItemDepth.root &&
-                      _timeseriesModel.entityHasChildren(_path))
+              opacity: (_depth != RegionsListItemDepth.root &&
+                      _timeseriesModel.regionHasChildren(_path))
                   ? 1.0
                   : 0.0,
               child: IconButton(
-                  icon: Icon(_depth == CovidEntityListItemDepth.leaf
+                  icon: Icon(_depth == RegionsListItemDepth.leaf
                       ? Icons.expand_more
                       : Icons.expand_less),
-                  onPressed: (_depth == CovidEntityListItemDepth.stem)
+                  onPressed: (_depth == RegionsListItemDepth.stem)
                       ? _openParentPath
-                      : (_depth == CovidEntityListItemDepth.leaf &&
-                              _timeseriesModel.entityHasChildren(_path))
+                      : (_depth == RegionsListItemDepth.leaf &&
+                              _timeseriesModel.regionHasChildren(_path))
                           ? _openPath
                           : null),
             ),
             SizedBox(
-              width: uiParameters.entityButtonWidth,
+              width: uiParameters.regionButtonWidth,
               child: TextButton(
                 onPressed: onRegionPressed,
                 onLongPress: onRegionLongPress,
@@ -82,16 +82,16 @@ class CovidEntityListItem extends StatelessWidget {
                     alignment: Alignment.centerLeft,
                     child: Text(
                       _path.last,
-                      style: uiParameters.entityButtonTextStyle,
+                      style: uiParameters.regionButtonTextStyle,
                     )),
               ),
             ),
             Container(
-              width: uiParameters.entityMetricWidth,
+              width: uiParameters.regionMetricWidth,
               child: Align(
                 alignment: Alignment.centerRight,
                 child: Text(_metricValueString(),
-                    style: uiParameters.entityMetricTextStyle),
+                    style: uiParameters.regionMetricTextStyle),
               ),
             ),
           ],
@@ -108,12 +108,12 @@ class CovidEntityListItem extends StatelessWidget {
   }
 
   void _openPath() {
-    _timeseriesModel.loadEntity(_path);
+    _timeseriesModel.loadRegion(_path);
     _pageModel.setParentPath(_path);
   }
 
   String _metricValueString() {
-    var metricValue = _timeseriesModel.entitySortMetric(
+    var metricValue = _timeseriesModel.regionSortMetric(
         _path, _pageModel.itemListMetric, _pageModel.per100k);
     var numberFormatter = (_pageModel.per100k)
         ? MetricFormatter.doubleFormatter(metricValue.abs(), graphScale: false)

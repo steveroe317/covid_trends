@@ -46,8 +46,8 @@ class AppDisplayStateModel with ChangeNotifier {
   bool _per100k = false;
   bool _compareRegion = false;
   String _selectedStarName = '';
-  bool _entitySearchActive = false;
-  String _entitySearchString = '';
+  bool _isRegionSearchActive = false;
+  String _regionSearchString = '';
 
   AppDisplayStateModel(List<String> path)
       : _parentPath = List<String>.from(path),
@@ -176,12 +176,12 @@ class AppDisplayStateModel with ChangeNotifier {
     notifyListeners();
   }
 
-  /// Sort metric for entity list leaf regions.
+  /// Sort metric for region list leaf regions.
   ///
   /// A sort metric of "None" sorts by region name.
   RegionMetricId get sortMetric => _sortMetric;
 
-  /// Display metric for entity list regions.
+  /// Display metric for region list regions.
   RegionMetricId get itemListMetric => (_sortMetric != RegionMetricId.None)
       ? _sortMetric
       : RegionMetricId.ConfirmedDaily;
@@ -346,20 +346,20 @@ class AppDisplayStateModel with ChangeNotifier {
     }
   }
 
-  bool get entitySearchActive => _entitySearchActive;
+  bool get isRegionSearchActive => _isRegionSearchActive;
 
-  set entitySearchActive(bool value) {
-    if (_entitySearchActive != value) {
-      _entitySearchActive = value;
+  set isRegionSearchActive(bool value) {
+    if (_isRegionSearchActive != value) {
+      _isRegionSearchActive = value;
       notifyListeners();
     }
   }
 
-  String get entitySearchString => _entitySearchString;
+  String get regionSearchString => _regionSearchString;
 
-  set entitySearchString(String value) {
-    if (entitySearchString != value) {
-      _entitySearchString = value;
+  set regionSearchString(String value) {
+    if (regionSearchString != value) {
+      _regionSearchString = value;
       notifyListeners();
     }
   }

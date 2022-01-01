@@ -23,27 +23,27 @@ enum UiAppShape { Wide, Narrow, Mini }
 
 class UiParameters with ChangeNotifier {
   UiAppShape _uiShape;
-  var _entityButtonWidth = 170.0;
-  var _entityMetricWidth = 120.0;
+  var _regionButtonWidth = 170.0;
+  var _regionMetricWidth = 120.0;
   var _starredButtonWidth = 290.0;
   var _drawerHeaderHeight = 75.0;
 
-  var _entityButtonTextStyle = TextStyle(
+  var _regionButtonTextStyle = TextStyle(
       color: PaletteColors.coolGrey.shade900,
       fontSize: SizeScale.px20,
       fontWeight: FontWeight.w500);
 
-  var _entityMetricTextStyle = TextStyle(
+  var _regionMetricTextStyle = TextStyle(
       color: PaletteColors.coolGrey.shade900,
       fontSize: SizeScale.px14,
       fontWeight: FontWeight.w400);
 
   UiParameters(UiAppShape shape) : _uiShape = shape {
     if (uiShape == UiAppShape.Mini) {
-      _entityButtonWidth = 140.0;
-      _entityMetricWidth = 120.0;
+      _regionButtonWidth = 140.0;
+      _regionMetricWidth = 120.0;
       _starredButtonWidth = 260.0;
-      _entityButtonTextStyle = TextStyle(
+      _regionButtonTextStyle = TextStyle(
           color: PaletteColors.coolGrey.shade900,
           fontSize: SizeScale.px16,
           fontWeight: FontWeight.w500);
@@ -52,13 +52,13 @@ class UiParameters with ChangeNotifier {
 
   UiAppShape get uiShape => _uiShape;
 
-  double get entityButtonWidth => _entityButtonWidth;
-  double get entityMetricWidth => _entityMetricWidth;
+  double get regionButtonWidth => _regionButtonWidth;
+  double get regionMetricWidth => _regionMetricWidth;
   double get starredButtonWidth => _starredButtonWidth;
   double get drawerHeaderHeight => _drawerHeaderHeight;
-  TextStyle get entityButtonTextStyle => _entityButtonTextStyle;
-  TextStyle get entityMetricTextStyle => _entityMetricTextStyle;
+  TextStyle get regionButtonTextStyle => _regionButtonTextStyle;
+  TextStyle get regionMetricTextStyle => _regionMetricTextStyle;
 
-  double get entityRowWidth =>
-      entityButtonWidth + entityMetricWidth + UiConstants.iconWidth + 24 + 12;
+  double get regionRowWidth =>
+      regionButtonWidth + regionMetricWidth + UiConstants.iconWidth + 24 + 12;
 }

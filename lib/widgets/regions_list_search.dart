@@ -20,17 +20,17 @@ import '../theme/size_scale.dart';
 import 'ui_colors.dart';
 import 'ui_parameters.dart';
 
-class CovidEntityListSearch extends StatelessWidget {
+class RegionsListSearch extends StatelessWidget {
   final AppDisplayStateModel _pageModel;
 
-  CovidEntityListSearch(this._pageModel);
+  RegionsListSearch(this._pageModel);
 
   @override
   build(BuildContext context) {
     var uiParameters = context.read<UiParameters>();
     return Container(
-        color: UiColors.entityListStem,
-        width: uiParameters.entityRowWidth,
+        color: UiColors.regionListStem,
+        width: uiParameters.regionRowWidth,
         padding: EdgeInsets.fromLTRB(
             0, SizeScale.px8, SizeScale.px12, SizeScale.px12),
         child: Row(
@@ -39,31 +39,31 @@ class CovidEntityListSearch extends StatelessWidget {
             IconButton(
               icon: Icon(Icons.close),
               onPressed: () {
-                _pageModel.entitySearchActive = false;
-                _pageModel.entitySearchString = '';
+                _pageModel.isRegionSearchActive = false;
+                _pageModel.regionSearchString = '';
               },
             ),
             SizedBox(
-              width: uiParameters.entityButtonWidth,
+              width: uiParameters.regionButtonWidth,
               child: TextField(
                   autofocus: true,
                   onChanged: (value) {
-                    _pageModel.entitySearchString = value;
+                    _pageModel.regionSearchString = value;
                   },
                   decoration: InputDecoration(
                     labelText: 'Search',
-                    hintText: _pageModel.entitySearchString,
+                    hintText: _pageModel.regionSearchString,
                     border: OutlineInputBorder(),
                     contentPadding: EdgeInsets.all(SizeScale.px4),
                   )),
             ),
             Container(
-              width: uiParameters.entityMetricWidth,
+              width: uiParameters.regionMetricWidth,
               child: Align(
                 alignment: Alignment.centerRight,
                 child: Text(
                   '',
-                  style: uiParameters.entityMetricTextStyle,
+                  style: uiParameters.regionMetricTextStyle,
                   textAlign: TextAlign.right,
                 ),
               ),

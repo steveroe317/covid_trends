@@ -22,12 +22,12 @@ import '../models/covid_timeseries_model.dart';
 import '../theme/size_scale.dart';
 import 'covid_chart_group.dart';
 import 'covid_chart_group_page.dart';
-import 'covid_entity_list.dart';
+import 'regions_list.dart';
 import 'ui_colors.dart';
 import 'ui_parameters.dart';
 
-class CovidEntitiesWideBody extends StatelessWidget {
-  CovidEntitiesWideBody(this._chartGroupPage);
+class RegionsTabWideBody extends StatelessWidget {
+  RegionsTabWideBody(this._chartGroupPage);
 
   final Key _chartGroupPage;
 
@@ -40,7 +40,7 @@ class CovidEntitiesWideBody extends StatelessWidget {
     // so if pageModel was passed to it, it could be defined outside build().
     void onRegionPressed(
         CovidTimeseriesModel timeseriesModel, List<String> path) {
-      timeseriesModel.loadEntity(path);
+      timeseriesModel.loadRegion(path);
       pageModel.setChartPath(path);
     }
 
@@ -61,9 +61,9 @@ class CovidEntitiesWideBody extends StatelessWidget {
             margin: EdgeInsets.fromLTRB(
                 SizeScale.px8, SizeScale.px8, SizeScale.px8, SizeScale.px8),
             child: Container(
-                width: uiParameters.entityRowWidth,
-                color: UiColors.entityListLeaf,
-                child: CovidEntityList(onRegionPressed))),
+                width: uiParameters.regionRowWidth,
+                color: UiColors.regionListLeaf,
+                child: RegionsList(onRegionPressed))),
         Expanded(
             child: GestureDetector(
                 behavior: HitTestBehavior.opaque,
@@ -80,8 +80,8 @@ class CovidEntitiesWideBody extends StatelessWidget {
   }
 }
 
-class CovidEntitiesNarrowBody extends StatelessWidget {
-  CovidEntitiesNarrowBody(this._chartGroupPage);
+class RegionTabNarrowBody extends StatelessWidget {
+  RegionTabNarrowBody(this._chartGroupPage);
 
   final Key _chartGroupPage;
 
@@ -92,7 +92,7 @@ class CovidEntitiesNarrowBody extends StatelessWidget {
     // onRegionPressed is inside build so that it has access to the page model.
     void onRegionPressed(
         CovidTimeseriesModel timeseriesModel, List<String> path) {
-      timeseriesModel.loadEntity(path);
+      timeseriesModel.loadRegion(path);
       pageModel.setChartPath(path);
     }
 
@@ -125,8 +125,8 @@ class CovidEntitiesNarrowBody extends StatelessWidget {
               margin: EdgeInsets.fromLTRB(
                   SizeScale.px8, 0.0, SizeScale.px8, SizeScale.px8),
               child: Container(
-                  color: UiColors.entityListLeaf,
-                  child: CovidEntityList(onRegionPressed))))
+                  color: UiColors.regionListLeaf,
+                  child: RegionsList(onRegionPressed))))
     ]);
   }
 }

@@ -24,7 +24,7 @@ import 'date_range_popup_menu.dart';
 import 'home_page_drawer.dart';
 import 'home_page_navigation.dart';
 import 'per_100k_popup_menu.dart';
-import 'region_chart_page.dart';
+import 'regions_chart_page.dart';
 import 'share_button.dart';
 import 'sort_popup_menu.dart';
 import 'star_popup_menu.dart';
@@ -67,7 +67,7 @@ class WideHomePage extends StatelessWidget {
   static final chartGroupKey = GlobalKey();
 
   static List<Widget> widePages = [
-    CovidEntitiesWideBody(chartGroupKey),
+    RegionsTabWideBody(chartGroupKey),
     StarredChartWideBody(chartGroupKey),
     EditChartWideBody(chartGroupKey),
   ];
@@ -116,7 +116,7 @@ class NarrowHomePage extends StatelessWidget {
   static final chartGroupKey = GlobalKey();
 
   static List<Widget> narrowPages = [
-    CovidEntitiesNarrowBody(chartGroupKey),
+    RegionTabNarrowBody(chartGroupKey),
     StarredChartNarrowBody(chartGroupKey),
     EditChartNarrowBody(chartGroupKey),
   ];

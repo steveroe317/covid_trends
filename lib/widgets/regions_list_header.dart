@@ -22,17 +22,17 @@ import 'ui_colors.dart';
 import 'ui_constants.dart';
 import 'ui_parameters.dart';
 
-class CovidEntityListHeader extends StatelessWidget {
+class RegionsListHeader extends StatelessWidget {
   final AppDisplayStateModel _pageModel;
   final CovidTimeseriesModel _timeseriesModel;
 
-  CovidEntityListHeader(this._pageModel, this._timeseriesModel);
+  RegionsListHeader(this._pageModel, this._timeseriesModel);
 
   @override
   build(BuildContext context) {
     var uiParameters = context.read<UiParameters>();
     return Container(
-        width: uiParameters.entityRowWidth,
+        width: uiParameters.regionRowWidth,
         padding: EdgeInsets.only(left: 0, right: SizeScale.px12),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -40,11 +40,11 @@ class CovidEntityListHeader extends StatelessWidget {
             IconButton(
               icon: Icon(Icons.search),
               onPressed: () {
-                _pageModel.entitySearchActive = true;
+                _pageModel.isRegionSearchActive = true;
               },
             ),
             SizedBox(
-              width: uiParameters.entityButtonWidth,
+              width: uiParameters.regionButtonWidth,
               child: TextButton(
                 onPressed: null,
                 style: ButtonStyle(
@@ -55,17 +55,17 @@ class CovidEntityListHeader extends StatelessWidget {
                     alignment: Alignment.centerLeft,
                     child: Text(
                       'Region',
-                      style: uiParameters.entityButtonTextStyle,
+                      style: uiParameters.regionButtonTextStyle,
                     )),
               ),
             ),
             Container(
-              width: uiParameters.entityMetricWidth,
+              width: uiParameters.regionMetricWidth,
               child: Align(
                 alignment: Alignment.centerRight,
                 child: Text(
                   _sortMetricName(),
-                  style: uiParameters.entityMetricTextStyle,
+                  style: uiParameters.regionMetricTextStyle,
                   textAlign: TextAlign.right,
                 ),
               ),

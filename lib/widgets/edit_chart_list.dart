@@ -74,7 +74,7 @@ class EditChartList extends StatelessWidget {
         visualDensity: listDensity,
         title: Text('Highlight Regions',
             style: TextStyle(fontWeight: FontWeight.bold)),
-        tileColor: UiColors.entityListHeader,
+        tileColor: UiColors.regionListHeader,
         onTap: () {},
       ));
       regionWidgets.add(regionHeader);
@@ -91,7 +91,7 @@ class EditChartList extends StatelessWidget {
             Opacity(opacity: highlighted ? 1.0 : 0.0, child: Icon(Icons.check)),
         title: Text(path.last, style: menuItemTextStyle),
         visualDensity: listDensity,
-        tileColor: UiColors.entityListLeaf,
+        tileColor: UiColors.regionListLeaf,
         onTap: () {
           var highlighted = regionHighlighted[pathName] ?? false;
           pageModel.setComparisonPathHighlight(path, !highlighted);
@@ -120,7 +120,7 @@ class EditChartList extends StatelessWidget {
     highlightColorWidgets.add(Container(
         padding: EdgeInsets.all(SizeScale.px12),
         alignment: Alignment.centerLeft,
-        color: UiColors.entityListHeader,
+        color: UiColors.regionListHeader,
         child: Text('Highlight Options',
             style: TextStyle(
                 fontWeight: FontWeight.bold, fontSize: SizeScale.px16))));
@@ -159,7 +159,7 @@ class EditChartList extends StatelessWidget {
     highlightColorWidgets.add(Container(
         padding: EdgeInsets.all(SizeScale.px12),
         alignment: Alignment.centerLeft,
-        color: UiColors.entityListHeader,
+        color: UiColors.regionListHeader,
         child: Text('Fade Options',
             style: TextStyle(
                 fontWeight: FontWeight.bold, fontSize: SizeScale.px16))));
@@ -217,7 +217,7 @@ class EditChartList extends StatelessWidget {
     highlightColorWidgets.add(Container(
         padding: EdgeInsets.all(SizeScale.px12),
         alignment: Alignment.centerLeft,
-        color: UiColors.entityListHeader,
+        color: UiColors.regionListHeader,
         child: Text('Restore',
             style: TextStyle(
                 fontWeight: FontWeight.bold, fontSize: SizeScale.px16))));

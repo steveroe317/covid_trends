@@ -38,8 +38,8 @@ class StarredChartList extends StatelessWidget {
       Row(children: [
         Expanded(
             child: Container(
-                width: uiParameters.entityRowWidth,
-                color: UiColors.entityListHeader,
+                width: uiParameters.regionRowWidth,
+                color: UiColors.regionListHeader,
                 child: _StarredChartListHeader())),
       ])
     ];
@@ -73,11 +73,11 @@ class _StarredChartListHeader extends StatelessWidget {
   build(BuildContext context) {
     var uiParameters = context.read<UiParameters>();
     return Container(
-      width: uiParameters.entityRowWidth,
+      width: uiParameters.regionRowWidth,
       padding: EdgeInsets.only(left: 0, right: SizeScale.px12),
       child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
         SizedBox(
-          width: uiParameters.entityButtonWidth,
+          width: uiParameters.regionButtonWidth,
           child: TextButton(
             onPressed: null,
             style: ButtonStyle(
@@ -88,7 +88,7 @@ class _StarredChartListHeader extends StatelessWidget {
                 alignment: Alignment.centerLeft,
                 child: Text(
                   'Saved Charts',
-                  style: uiParameters.entityButtonTextStyle,
+                  style: uiParameters.regionButtonTextStyle,
                 )),
           ),
         ),
@@ -114,9 +114,9 @@ class _StarredChartListItem extends StatelessWidget {
     var uiParameters = context.read<UiParameters>();
     var pageModel = Provider.of<AppDisplayStateModel>(context, listen: false);
     return Container(
-      width: uiParameters.entityRowWidth,
+      width: uiParameters.regionRowWidth,
       color: (savedChartName == pageModel.selectedStarName)
-          ? UiColors.entityListSelected
+          ? UiColors.regionListSelected
           : null,
       padding: EdgeInsets.only(left: 0, right: SizeScale.px12),
       child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
@@ -134,7 +134,7 @@ class _StarredChartListItem extends StatelessWidget {
                 alignment: Alignment.centerLeft,
                 child: Text(
                   savedChartName,
-                  style: uiParameters.entityButtonTextStyle,
+                  style: uiParameters.regionButtonTextStyle,
                 )),
           ),
         ),

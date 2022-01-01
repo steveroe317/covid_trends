@@ -20,15 +20,15 @@ import 'package:provider/provider.dart';
 
 import '../models/app_display_state_model.dart';
 import '../models/covid_timeseries_model.dart';
-import 'covid_entity_list_header.dart';
-import 'covid_entity_list_item.dart';
-import 'covid_entity_list_search.dart';
+import 'regions_list_header.dart';
+import 'regions_list_item.dart';
+import 'regions_list_search.dart';
 //import 'debug_popup_menu.dart';
 import 'ui_colors.dart';
 import 'ui_parameters.dart';
 
-class CovidEntityList extends StatelessWidget {
-  CovidEntityList(this._onRegionPressed);
+class RegionsList extends StatelessWidget {
+  RegionsList(this._onRegionPressed);
 
   final void Function(CovidTimeseriesModel, List<String>) _onRegionPressed;
   final ScrollController _childRegionScrollController = ScrollController();
@@ -38,78 +38,77 @@ class CovidEntityList extends StatelessWidget {
     var timeseriesModel = Provider.of<CovidTimeseriesModel>(context);
     var pageModel = Provider.of<AppDisplayStateModel>(context);
     var uiParameters = context.watch<UiParameters>();
-    final childNames = timeseriesModel.entityChildNames(pageModel.parentPath(),
+    final childNames = timeseriesModel.regionChildNames(pageModel.parentPath(),
         sortMetricId: pageModel.sortMetric,
         sortUp: false,
         per100k: pageModel.per100k);
     final currentPath = pageModel.parentPath();
     final numberFormatter = NumberFormat('#,###');
 
-    // Add the entity list header.
-    List<Widget> stemEntityList = [
+    // Add the region list header.
+    List<Widget> stemRegionList = [
       Row(children: [
         Expanded(
             child: Container(
-          width: uiParameters.entityRowWidth,
-          color: UiColors.entityListHeader,
-          child: CovidEntityListHeader(pageModel, timeseriesModel),
+          width: uiParameters.regionRowWidth,
+          color: UiColors.regionListHeader,
+          child: RegionsListHeader(pageModel, timeseriesModel),
         ))
       ])
     ];
 
-    // Add the parent entities to the list.
+    // Add the parent region to the list.
     for (var index = 0; index < currentPath.length; ++index) {
       final path = currentPath.sublist(0, index + 1);
-      var depth = (index == 0)
-          ? CovidEntityListItemDepth.root
-          : CovidEntityListItemDepth.stem;
-      stemEntityList.add(Row(children: [
+      var depth =
+          (index == 0) ? RegionsListItemDepth.root : RegionsListItemDepth.stem;
+      stemRegionList.add(Row(children: [
         Expanded(
             child: Container(
-                color: UiColors.entityListStem,
-                child: CovidEntityListItem(path, depth, _onRegionPressed,
-                    pageModel, timeseriesModel, numberFormatter)))
+                color: UiColors.regionListStem,
+                child: RegionsListItem(path, depth, _onRegionPressed, pageModel,
+                    timeseriesModel, numberFormatter)))
       ]));
     }
 
-    if (pageModel.entitySearchActive) {
-      stemEntityList.add(Row(children: [
+    if (pageModel.isRegionSearchActive) {
+      stemRegionList.add(Row(children: [
         Expanded(
             child: Container(
-          width: uiParameters.entityRowWidth,
-          color: UiColors.entityListHeader,
-          child: CovidEntityListSearch(pageModel),
+          width: uiParameters.regionRowWidth,
+          color: UiColors.regionListHeader,
+          child: RegionsListSearch(pageModel),
         ))
       ]));
     }
 
-    // Add the children of the last parent entity.
-    List<Widget> childEntityList = [];
+    // Add the children of the last parent region.
+    List<Widget> childRegionList = [];
     for (var name in childNames) {
       if (name
           .toLowerCase()
-          .contains(pageModel.entitySearchString.toLowerCase())) {
-        childEntityList.add(CovidEntityListItem(
+          .contains(pageModel.regionSearchString.toLowerCase())) {
+        childRegionList.add(RegionsListItem(
             [...currentPath, name],
-            CovidEntityListItemDepth.leaf,
+            RegionsListItemDepth.leaf,
             _onRegionPressed,
             pageModel,
             timeseriesModel,
             numberFormatter));
       }
     }
-    stemEntityList.add(Expanded(
+    stemRegionList.add(Expanded(
         child: Scrollbar(
             isAlwaysShown: true,
             controller: _childRegionScrollController,
             thickness: SizeScale.px8,
             child: ListView(
                 controller: _childRegionScrollController,
-                children: childEntityList))));
+                children: childRegionList))));
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: stemEntityList,
+      children: stemRegionList,
     );
   }
 }
