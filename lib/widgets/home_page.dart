@@ -79,23 +79,23 @@ class WideHomePage extends StatelessWidget {
     // This should reduce overhead during animations.
     List<List<Widget>> wideActions = [
       [
-        buildSortPopupMenuButton(context),
-        buildCompareRegionPopupMenuButton(context),
-        buildDateRangePopupMenuButton(context),
-        buildper100kPopupMenuButton(context),
-        buildStarPopupDialogButton(context),
-        buildShareButton(context, chartGroupKey),
+        SortPopupMenuButton(),
+        CompareRegionPopupMenuButton(),
+        DateRangePopupMenuButton(),
+        Per100kPopupMenuButton(),
+        StarPopupDialogButton(),
+        ShareButton(chartGroupKey),
       ],
       [
-        buildCompareRegionPopupMenuButton(context),
-        buildDateRangePopupMenuButton(context),
-        buildper100kPopupMenuButton(context),
-        buildShareButton(context, chartGroupKey),
+        CompareRegionPopupMenuButton(),
+        DateRangePopupMenuButton(),
+        Per100kPopupMenuButton(),
+        ShareButton(chartGroupKey),
       ],
       [
-        buildCompareRegionPopupMenuButton(context),
-        buildDateRangePopupMenuButton(context),
-        buildper100kPopupMenuButton(context),
+        CompareRegionPopupMenuButton(),
+        DateRangePopupMenuButton(),
+        Per100kPopupMenuButton(),
       ],
     ];
     return Scaffold(
@@ -126,21 +126,21 @@ class NarrowHomePage extends StatelessWidget {
     var pageModel = Provider.of<AppDisplayStateModel>(context);
     List<List<Widget>> narrowActions = [
       [
-        buildSortPopupMenuButton(context),
-        buildCompareRegionPopupMenuButton(context),
-        buildDateRangePopupMenuButton(context),
-        buildper100kPopupMenuButton(context),
-        buildStarPopupDialogButton(context, openChartPage: true),
+        SortPopupMenuButton(),
+        CompareRegionPopupMenuButton(),
+        DateRangePopupMenuButton(),
+        Per100kPopupMenuButton(),
+        StarPopupDialogButton(),
       ],
       [
-        buildCompareRegionPopupMenuButton(context),
-        buildDateRangePopupMenuButton(context),
-        buildper100kPopupMenuButton(context),
+        CompareRegionPopupMenuButton(),
+        DateRangePopupMenuButton(),
+        Per100kPopupMenuButton(),
       ],
       [
-        buildCompareRegionPopupMenuButton(context),
-        buildDateRangePopupMenuButton(context),
-        buildper100kPopupMenuButton(context),
+        CompareRegionPopupMenuButton(),
+        DateRangePopupMenuButton(),
+        Per100kPopupMenuButton(),
       ],
     ];
 

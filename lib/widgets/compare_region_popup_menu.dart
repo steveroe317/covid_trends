@@ -17,30 +17,32 @@ import 'package:provider/provider.dart';
 
 import '../models/app_display_state_model.dart';
 
-PopupMenuButton<String> buildCompareRegionPopupMenuButton(
-    BuildContext context) {
-  final singleRegionLabel = 'Show One Region';
-  final multipleRegionLabel = 'Compare Regions';
-  var pageModel = Provider.of<AppDisplayStateModel>(context);
-  var compareActions = <String>[singleRegionLabel, multipleRegionLabel];
+class CompareRegionPopupMenuButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final singleRegionLabel = 'Show One Region';
+    final multipleRegionLabel = 'Compare Regions';
+    var pageModel = Provider.of<AppDisplayStateModel>(context);
+    var compareActions = <String>[singleRegionLabel, multipleRegionLabel];
 
-  var menuItems = List<PopupMenuEntry<String>>.from(compareActions.map((name) =>
-      CheckedPopupMenuItem(
-          value: name,
-          child: Text(name),
-          checked: pageModel.compareRegion ^ (name == singleRegionLabel))));
+    var menuItems = List<PopupMenuEntry<String>>.from(compareActions.map(
+        (name) => CheckedPopupMenuItem(
+            value: name,
+            child: Text(name),
+            checked: pageModel.compareRegion ^ (name == singleRegionLabel))));
 
-  return PopupMenuButton<String>(
-      icon: const Icon(Icons.stacked_line_chart),
-      tooltip: 'Single or Comparison Region Charts',
-      onSelected: (String menuAction) {
-        if (menuAction == singleRegionLabel) {
-          pageModel.setCompareRegion(false);
-        } else if (menuAction == multipleRegionLabel) {
-          pageModel.setCompareRegion(true);
-        }
-      },
-      itemBuilder: (BuildContext context) {
-        return menuItems;
-      });
+    return PopupMenuButton<String>(
+        icon: const Icon(Icons.stacked_line_chart),
+        tooltip: 'Single or Comparison Region Charts',
+        onSelected: (String menuAction) {
+          if (menuAction == singleRegionLabel) {
+            pageModel.setCompareRegion(false);
+          } else if (menuAction == multipleRegionLabel) {
+            pageModel.setCompareRegion(true);
+          }
+        },
+        itemBuilder: (BuildContext context) {
+          return menuItems;
+        });
+  }
 }

@@ -17,27 +17,30 @@ import 'package:provider/provider.dart';
 
 import '../models/app_display_state_model.dart';
 
-PopupMenuButton<int> buildDateRangePopupMenuButton(BuildContext context) {
-  return PopupMenuButton<int>(
-      icon: const Icon(Icons.date_range),
-      tooltip: 'Date Range',
-      onSelected: (int seriesLength) {
-        var pageModel =
-            Provider.of<AppDisplayStateModel>(context, listen: false);
-        pageModel.setSeriesLength(seriesLength);
-      },
-      itemBuilder: (BuildContext context) {
-        var pageModel =
-            Provider.of<AppDisplayStateModel>(context, listen: false);
-        return List<PopupMenuEntry<int>>.from([0, 365, 240, 120, 60].map(
-          (days) => CheckedPopupMenuItem(
-              child: Text(days == 0
-                  ? 'Full History'
-                  : (days == 365)
-                      ? 'Past Year'
-                      : '$days Days'),
-              value: days,
-              checked: days == pageModel.seriesLength),
-        ));
-      });
+class DateRangePopupMenuButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return PopupMenuButton<int>(
+        icon: const Icon(Icons.date_range),
+        tooltip: 'Date Range',
+        onSelected: (int seriesLength) {
+          var pageModel =
+              Provider.of<AppDisplayStateModel>(context, listen: false);
+          pageModel.setSeriesLength(seriesLength);
+        },
+        itemBuilder: (BuildContext context) {
+          var pageModel =
+              Provider.of<AppDisplayStateModel>(context, listen: false);
+          return List<PopupMenuEntry<int>>.from([0, 365, 240, 120, 60].map(
+            (days) => CheckedPopupMenuItem(
+                child: Text(days == 0
+                    ? 'Full History'
+                    : (days == 365)
+                        ? 'Past Year'
+                        : '$days Days'),
+                value: days,
+                checked: days == pageModel.seriesLength),
+          ));
+        });
+  }
 }

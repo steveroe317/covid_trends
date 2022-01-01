@@ -41,11 +41,11 @@ class _CovidChartGroupPageState extends State<CovidChartGroupPage> {
   Widget build(BuildContext context) {
     return Consumer<AppDisplayStateModel>(builder: (context, pageModel, child) {
       var actions = [
-        buildCompareRegionPopupMenuButton(context),
-        buildDateRangePopupMenuButton(context),
-        buildper100kPopupMenuButton(context),
-        buildStarPopupDialogButton(context),
-        buildShareButton(context, chartGroupKey),
+        CompareRegionPopupMenuButton(),
+        DateRangePopupMenuButton(),
+        Per100kPopupMenuButton(),
+        StarPopupDialogButton(),
+        ShareButton(chartGroupKey),
       ];
 
       return Scaffold(

@@ -17,15 +17,17 @@ import 'package:provider/provider.dart';
 
 import '../models/app_display_state_model.dart';
 
-IconButton buildStarPopupDialogButton(BuildContext context,
-    {bool openChartPage = false}) {
-  return IconButton(
-    icon: const Icon(Icons.star),
-    tooltip: 'Save Chart',
-    onPressed: () {
-      showDialog(context: context, builder: buildSaveStarDialog);
-    },
-  );
+class StarPopupDialogButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      icon: const Icon(Icons.star),
+      tooltip: 'Save Chart',
+      onPressed: () {
+        showDialog(context: context, builder: buildSaveStarDialog);
+      },
+    );
+  }
 }
 
 Widget buildSaveStarDialog(BuildContext context) {
