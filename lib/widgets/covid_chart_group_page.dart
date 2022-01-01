@@ -51,11 +51,6 @@ class _CovidChartGroupPageState extends State<CovidChartGroupPage> {
       return Scaffold(
           appBar: AppBar(actions: actions),
           body: SafeArea(
-            left: true,
-            right: true,
-            top: true,
-            bottom: true,
-            minimum: EdgeInsets.zero,
             child: Card(
                 elevation: 5.0,
                 margin: EdgeInsets.all(SizeScale.px8),
