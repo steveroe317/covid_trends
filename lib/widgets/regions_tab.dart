@@ -130,3 +130,33 @@ class RegionsNarrowBodyTab extends StatelessWidget {
     ]);
   }
 }
+
+class RegionsMiniBodyTab extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    var pageModel = Provider.of<AppDisplayStateModel>(context);
+
+    // onRegionPressed is inside build so that it has access to the page model.
+    void onRegionPressed(
+        CovidTimeseriesModel timeseriesModel, List<String> path) {
+      timeseriesModel.loadRegion(path);
+      pageModel.setChartPath(path);
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => Container(child: CovidChartGroupPage())),
+      );
+    }
+
+    return Column(children: [
+      Expanded(
+          child: Card(
+              elevation: 5.0,
+              margin: EdgeInsets.fromLTRB(
+                  SizeScale.px8, 0.0, SizeScale.px8, SizeScale.px8),
+              child: Container(
+                  color: UiColors.regionListLeaf,
+                  child: RegionsList(onRegionPressed))))
+    ]);
+  }
+}

@@ -122,3 +122,34 @@ class StarredChartNarrowBodyTab extends StatelessWidget {
     ]);
   }
 }
+
+class StarredChartMiniBodyTab extends StatelessWidget {
+  final Key _chartGroupPage;
+
+  StarredChartMiniBodyTab(this._chartGroupPage);
+
+  @override
+  Widget build(BuildContext context) {
+    void onSavedChartPressed(
+        AppDisplayStateModel pageModel, String savedChartName) {
+      pageModel.loadStar(savedChartName);
+      pageModel.selectedStarName = savedChartName;
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => Container(child: CovidChartGroupPage())),
+      );
+    }
+
+    return Column(children: [
+      Expanded(
+          child: Card(
+              elevation: 5.0,
+              margin: EdgeInsets.fromLTRB(
+                  SizeScale.px8, 0.0, SizeScale.px8, SizeScale.px8),
+              child: Container(
+                  color: UiColors.regionListLeaf,
+                  child: StarredChartList(onSavedChartPressed))))
+    ]);
+  }
+}

@@ -47,14 +47,14 @@ class _HomePageState extends State<HomePage> {
         return ChangeNotifierProvider<UiParameters>(
             create: (_) => UiParameters(UiAppShape.Wide),
             child: WideHomePage(widget.title));
-      } else if (constraints.maxWidth >= 350) {
+      } else if (constraints.maxWidth > 375 && constraints.maxHeight > 375) {
         return ChangeNotifierProvider<UiParameters>(
             create: (_) => UiParameters(UiAppShape.Narrow),
             child: NarrowHomePage(widget.title));
       } else {
         return ChangeNotifierProvider<UiParameters>(
             create: (_) => UiParameters(UiAppShape.Mini),
-            child: NarrowHomePage(widget.title));
+            child: MiniHomePage(widget.title));
       }
     });
   }
@@ -148,6 +148,54 @@ class NarrowHomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: title.isNotEmpty ? Text(title) : null,
+        actions: narrowActions[selectedTab],
+      ),
+      body: SafeArea(child: narrowTabs[selectedTab]),
+      drawer: HomePageDrawer(),
+      bottomNavigationBar: HomePageNavigationBar(),
+    );
+  }
+}
+
+class MiniHomePage extends StatelessWidget {
+  MiniHomePage(this.title);
+
+  final title;
+  static final chartGroupKey = GlobalKey();
+
+  final List<Widget> narrowTabs = [
+    RegionsMiniBodyTab(),
+    StarredChartMiniBodyTab(chartGroupKey),
+    EditChartNarrowBodyTab(chartGroupKey),
+  ];
+
+  final List<List<Widget>> narrowActions = [
+    [
+      SortPopupMenuButton(),
+      CompareRegionPopupMenuButton(),
+      DateRangePopupMenuButton(),
+      Per100kPopupMenuButton(),
+      StarPopupDialogButton(),
+    ],
+    [
+      CompareRegionPopupMenuButton(),
+      DateRangePopupMenuButton(),
+      Per100kPopupMenuButton(),
+    ],
+    [
+      CompareRegionPopupMenuButton(),
+      DateRangePopupMenuButton(),
+      Per100kPopupMenuButton(),
+    ],
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    var selectedTab = context.select((AppDisplayStateModel m) => m.selectedTab);
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("XX"), //title.isNotEmpty ? Text(title) : null,
         actions: narrowActions[selectedTab],
       ),
       body: SafeArea(child: narrowTabs[selectedTab]),
