@@ -18,6 +18,7 @@ enum RegionMetricId {
   ConfirmedDaily,
   Deaths,
   DeathsDaily,
+  Rise,
   Spike,
   Population,
 }
