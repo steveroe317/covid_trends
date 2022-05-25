@@ -48,7 +48,7 @@ class RegionsListSearch extends StatelessWidget {
               child: TextField(
                   autofocus: true,
                   onChanged: (value) {
-                    _pageModel.regionSearchString = value;
+                    _pageModel.regionSearchString = value.trim();
                   },
                   decoration: InputDecoration(
                     labelText: 'Search',
